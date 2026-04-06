@@ -294,7 +294,7 @@ export const SITE_CONFIG: {
 │   ├── 5. npm run test → 전부 통과 확인 (실패 시 수정 후 재실행)
 │   ├── 6. npm run build → 빌드 성공 확인 (실패 시 수정 후 재실행)
 │   ├── 7. 리팩토링 (필요시, 리팩 후 다시 test + build 확인)
-│   ├── 8. git add -A && git commit -m "<커밋 메시지>"
+│   ├── 8. git add -A && git commit -m "<커밋 메시지>" && git push
 │   └── 9. 결과 보고: "Task N 완료 — <commit-hash> — HH:MM"
 │
 ├── [태스크 보드 업데이트: Task N → completed, 시간 기록]
@@ -309,6 +309,6 @@ export const SITE_CONFIG: {
 | 파일 생성/수정/삭제 | ❌ 절대 금지 | ✅ 수행 |
 | 테스트 실행 | ❌ 절대 금지 | ✅ 수행 |
 | 빌드 실행 | ❌ 절대 금지 | ✅ 수행 |
-| git commit | ❌ 절대 금지 | ✅ 수행 |
+| git commit + push | ❌ 절대 금지 | ✅ 수행 |
 | 태스크 보드 관리 | ✅ 수행 | ❌ 불필요 |
 | 서브테스크 위임 | ✅ 수행 | ❌ 불필요 |

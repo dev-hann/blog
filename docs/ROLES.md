@@ -23,7 +23,7 @@
 5. `npm run test` → 전부 통과 확인 (실패 시 수정 후 재실행)
 6. `npm run build` → 빌드 성공 확인 (실패 시 수정 후 재실행)
 7. 리팩토링 (필요시, 리팩 후 다시 test + build 확인)
-8. `git add -A && git commit -m "<커밋 메시지>"`
+8. `git add -A && git commit -m "<커밋 메시지>" && git push`
 9. 메인에 결과 보고: "Task N 완료 — `<commit-hash>` — HH:MM"
 
 ### 서브테스크 prompt 필수 항목
@@ -35,7 +35,7 @@
 - 담당 파일 목록
 - 테스트 케이스 목록 (docs/ROLES.md 또는 docs/TEST_PLAN.md에서)
 - 커밋 메시지
-- "반드시 npm run test && npm run build 통과 후 git commit"
+- "반드시 npm run test && npm run build 통과 후 git commit && git push"
 
 ### 실행 원칙
 
@@ -43,16 +43,6 @@
 2. **타입 계약(types/post.ts)은 모든 Role이 공유** — Task 1에서 확정
 3. **TDD**: 테스트 먼저 작성(Red) → 구현(Green) → 리팩토링(Refactor)
 4. **각 Task 완료 후 반드시 `npm run build` + `npm run test` 통과 확인**
-
----
-
-## 완료된 태스크
-
-| Task | 커밋 | 상태 |
-|---|---|---|
-| Task 0: 문서 + 테스트 인프라 | `e33bda5` | ✅ |
-| Task 1: 기반 인프라 | `30adf7a` | ✅ |
-| Task 2: 레이아웃 & UI 파운데이션 | `5cc99ce` | ✅ |
 
 ---
 
@@ -100,7 +90,7 @@ Task 3: 포스트 핵심 기능 (목록 + 상세 + MDX 렌더링)
 - __tests__/integration/mdx/mdx-rendering.test.tsx
 
 커밋: feat: post system — list, detail, MDX rendering with custom components
-반드시 npm run test && npm run build 통과 후 git commit
+반드시 npm run test && npm run build 통과 후 git commit && git push
 ```
 
 ---
@@ -143,7 +133,7 @@ Task 4: 태그 & 카테고리
 - __tests__/unit/components/TagBadge.test.tsx
 
 커밋: feat: tag system — tag list, tag detail, TagBadge component
-반드시 npm run test && npm run build 통과 후 git commit
+반드시 npm run test && npm run build 통과 후 git commit && git push
 ```
 
 ---
@@ -180,7 +170,7 @@ Task 5: 홈 페이지
 - __tests__/integration/pages/home.test.tsx
 
 커밋: feat: home page — hero section with latest posts
-반드시 npm run test && npm run build 통과 후 git commit
+반드시 npm run test && npm run build 통과 후 git commit && git push
 ```
 
 ---
@@ -219,7 +209,7 @@ Task 6: 정적 페이지 (About, Projects)
 - __tests__/integration/pages/projects.test.tsx
 
 커밋: feat: static pages — about and projects
-반드시 npm run test && npm run build 통과 후 git commit
+반드시 npm run test && npm run build 통과 후 git commit && git push
 ```
 
 ---
@@ -261,7 +251,7 @@ Task 7: 검색 기능
 - __tests__/unit/components/SearchBar.test.tsx
 
 커밋: feat: search — client-side post search with debounced input
-반드시 npm run test && npm run build 통과 후 git commit
+반드시 npm run test && npm run build 통과 후 git commit && git push
 ```
 
 ---
@@ -300,7 +290,7 @@ Task 8: 댓글 (Giscus)
 - __tests__/unit/components/Giscus.test.tsx
 
 커밋: feat: comments — Giscus integration on post detail
-반드시 npm run test && npm run build 통과 후 git commit
+반드시 npm run test && npm run build 통과 후 git commit && git push
 ```
 
 ---
@@ -344,7 +334,7 @@ Task 9: SEO & RSS & Sitemap
 - __tests__/unit/components/Meta.test.tsx
 
 커밋: feat: SEO — RSS feed, sitemap, robots, Open Graph meta tags
-반드시 npm run test && npm run build 통과 후 git commit
+반드시 npm run test && npm run build 통과 후 git commit && git push
 ```
 
 ---
@@ -388,7 +378,7 @@ Task 10: E2E 테스트
 - playwright.config.ts
 
 커밋: test: E2E tests — full user flow validation with Playwright
-반드시 npm run build 후 Playwright 테스트 통과 후 git commit
+반드시 npm run build 후 Playwright 테스트 통과 후 git commit && git push
 ```
 
 ---
@@ -428,5 +418,5 @@ Task 11: 통합 & 최적화 & 마무리
 - __tests__/unit/components/TableOfContents.test.tsx
 
 커밋: feat: polish — TOC, 404, optimization, final production build
-반드시 npm run test && npm run build 통과 후 git commit
+반드시 npm run test && npm run build 통과 후 git commit && git push
 ```

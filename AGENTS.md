@@ -58,7 +58,7 @@ Next.js 16 + Tailwind CSS v4 + MDX 기반 개인 기술 블로그 (미니멀 다
 5. `npm run test` → 전부 통과 확인 (실패 시 수정 후 재실행)
 6. `npm run build` → 빌드 성공 확인 (실패 시 수정 후 재실행)
 7. 리팩토링 (필요시, 리팩 후 다시 test + build 확인)
-8. `git add -A && git commit -m "<커밋 메시지>"`
+8. `git add -A && git commit -m "<커밋 메시지>" && git push`
 9. 메인에 결과 보고: "Task N 완료 — `<commit-hash>` — HH:MM"
 
 ### 서브테스크 prompt 필수 항목
@@ -71,7 +71,7 @@ Next.js 16 + Tailwind CSS v4 + MDX 기반 개인 기술 블로그 (미니멀 다
 - 담당 파일 목록
 - 테스트 케이스 목록 (docs/ROLES.md 또는 docs/TEST_PLAN.md에서)
 - 커밋 메시지
-- "반드시 npm run test && npm run build 통과 후 git commit"
+- "반드시 npm run test && npm run build 통과 후 git commit && git push"
 ```
 
 ## 완료된 태스크
