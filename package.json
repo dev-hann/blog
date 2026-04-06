@@ -12,9 +12,14 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "gray-matter": "^4.0.3",
     "next": "16.2.2",
+    "next-mdx-remote": "^6.0.0",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "rehype-pretty-code": "^0.14.3",
+    "rehype-slug": "^6.0.0",
+    "shiki": "^4.0.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
