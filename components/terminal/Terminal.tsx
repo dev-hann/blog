@@ -3,65 +3,13 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import CommandInput from "./CommandInput";
 import OutputRenderer from "./OutputRenderer";
-import type { TerminalLine, CommandContext, CommandResult } from "@/lib/terminal/types";
+import type { TerminalLine } from "@/lib/terminal/types";
+import { executeCommand } from "@/lib/terminal/commands";
 import { SITE_CONFIG } from "@/lib/constants";
 import type { Post } from "@/types/post";
 
-function helpCommand(): CommandResult {
-  const lines: TerminalLine[] = [
-    { id: crypto.randomUUID(), type: "output", content: `Available commands:` },
-    { id: crypto.randomUUID(), type: "output", content: `  help     Show this help message` },
-    { id: crypto.randomUUID(), type: "output", content: `  ls       List all posts` },
-    { id: crypto.randomUUID(), type: "output", content: `  clear    Clear the terminal` },
-    { id: crypto.randomUUID(), type: "output", content: `  about    About me` },
-    { id: crypto.randomUUID(), type: "output", content: `  date     Show current date` },
-    { id: crypto.randomUUID(), type: "output", content: `  echo     Echo arguments` },
-    { id: crypto.randomUUID(), type: "output", content: `  whoami   Who am I?` },
-    { id: crypto.randomUUID(), type: "output", content: `` },
-  ];
-  return { lines };
-}
-
-function lsCommand(context: CommandContext): CommandResult {
-  if (context.posts.length === 0) {
-    return { lines: [{ id: crypto.randomUUID(), type: "output", content: "No posts found." }] };
-  }
-  const lines: TerminalLine[] = context.posts.map((post) => ({
-    id: crypto.randomUUID(),
-    type: "output",
-    content: `  ${post.date}\t<span class="output-accent">${post.title}</span>\t<span class="output-muted">${post.tags.join(", ")}</span>`,
-  }));
-  return { lines };
-}
-
-function aboutCommand(): CommandResult {
-  return {
-    lines: [
-      { id: crypto.randomUUID(), type: "output", content: `<span class="output-accent">${SITE_CONFIG.author}</span> — developer & writer` },
-      { id: crypto.randomUUID(), type: "output", content: `${SITE_CONFIG.description}` },
-      { id: crypto.randomUUID(), type: "output", content: `GitHub: <a href="${SITE_CONFIG.github}" target="_blank" rel="noopener">${SITE_CONFIG.github}</a>` },
-    ],
-  };
-}
-
-function dateCommand(): CommandResult {
-  return {
-    lines: [
-      { id: crypto.randomUUID(), type: "output", content: new Date().toLocaleString("ko-KR", { timeZone: "Asia/Seoul" }) },
-    ],
-  };
-}
-
-function echoCommand(args: string[]): CommandResult {
-  return {
-    lines: [{ id: crypto.randomUUID(), type: "output", content: args.join(" ") }],
-  };
-}
-
-function whoamiCommand(): CommandResult {
-  return {
-    lines: [{ id: crypto.randomUUID(), type: "output", content: SITE_CONFIG.author }],
-  };
+function genId(): string {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 9);
 }
 
 interface TerminalProps {
@@ -73,16 +21,13 @@ export default function Terminal({ posts, tags }: TerminalProps) {
   const [lines, setLines] = useState<TerminalLine[]>([]);
   const [history, setHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
-  const [isProcessing, setIsProcessing] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  const context: CommandContext = { posts, tags };
 
   useEffect(() => {
     const welcomeLines: TerminalLine[] = [
-      { id: crypto.randomUUID(), type: "output", content: `Welcome to ${SITE_CONFIG.author}'s blog terminal v1.0` },
-      { id: crypto.randomUUID(), type: "output", content: `Type 'help' for available commands.` },
-      { id: crypto.randomUUID(), type: "output", content: `` },
+      { id: genId(), type: "output", content: `Welcome to ${SITE_CONFIG.author}'s blog terminal v1.0` },
+      { id: genId(), type: "output", content: `Type 'help' for available commands.` },
+      { id: genId(), type: "output", content: "" },
     ];
     setLines(welcomeLines);
   }, []);
@@ -99,58 +44,24 @@ export default function Terminal({ posts, tags }: TerminalProps) {
       if (!input) return;
 
       const inputLine: TerminalLine = {
-        id: crypto.randomUUID(),
+        id: genId(),
         type: "input",
         content: input,
       };
 
-      setHistory((prev) => [...prev, input]);
-      setHistoryIndex(-1);
-
-      const parts = input.split(/\s+/);
-      const cmd = parts[0].toLowerCase();
-      const args = parts.slice(1);
-
-      if (cmd === "clear") {
+      if (input === "clear") {
         setLines([]);
+        setHistory((prev) => [...prev, input]);
+        setHistoryIndex(-1);
         return;
       }
 
-      let result: CommandResult;
-      switch (cmd) {
-        case "help":
-          result = helpCommand();
-          break;
-        case "ls":
-          result = lsCommand(context);
-          break;
-        case "about":
-          result = aboutCommand();
-          break;
-        case "date":
-          result = dateCommand();
-          break;
-        case "echo":
-          result = echoCommand(args);
-          break;
-        case "whoami":
-          result = whoamiCommand();
-          break;
-        default:
-          result = {
-            lines: [
-              {
-                id: crypto.randomUUID(),
-                type: "error",
-                content: `command not found: ${cmd}. Type 'help' for available commands.`,
-              },
-            ],
-          };
-      }
-
+      const result = executeCommand(input, { posts, tags }, history);
       setLines((prev) => [...prev, inputLine, ...result.lines]);
+      setHistory((prev) => [...prev, input]);
+      setHistoryIndex(-1);
     },
-    [context]
+    [posts, tags, history]
   );
 
   const handleHistoryUp = useCallback(() => {
