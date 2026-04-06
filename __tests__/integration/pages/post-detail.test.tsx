@@ -20,6 +20,10 @@ vi.mock("@/lib/mdx", () => ({
   ),
 }));
 
+vi.mock("@/components/comment/Giscus", () => ({
+  default: () => <div data-testid="giscus-comment-section">Comments</div>,
+}));
+
 describe("PostDetailPage", () => {
   it("renders post title, date, tags", async () => {
     const page = await PostDetailPage({ params: Promise.resolve({ slug: "nextjs-blog-guide" }) });
@@ -39,5 +43,11 @@ describe("PostDetailPage", () => {
   it("returns notFound for non-existent slug", async () => {
     const result = await PostDetailPage({ params: Promise.resolve({ slug: "non-existent-post" }) });
     expect(result).toBeNull();
+  });
+
+  it("renders comment section", async () => {
+    const page = await PostDetailPage({ params: Promise.resolve({ slug: "nextjs-blog-guide" }) });
+    render(page);
+    expect(screen.getByTestId("giscus-comment-section")).toBeTruthy();
   });
 });

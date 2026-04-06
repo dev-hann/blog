@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getPostBySlug, getAllPosts } from "@/lib/posts";
 import PostBody from "@/components/post/PostBody";
+import Giscus from "@/components/comment/Giscus";
 
 export function generateStaticParams() {
   const posts = getAllPosts();
@@ -50,6 +51,7 @@ export default async function PostDetailPage({
         </div>
       </header>
       <PostBody content={post.content} />
+      <Giscus />
     </article>
   );
 }
