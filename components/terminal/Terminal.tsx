@@ -22,11 +22,16 @@ export default function Terminal({ posts, tags }: TerminalProps) {
   const [history, setHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [completions, setCompletions] = useState<string[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const slugs = posts.map((p) => p.slug);
+  const tagNames = Object.keys(tags);
 
   useEffect(() => {
     const welcomeLines: TerminalLine[] = [
       { id: genId(), type: "output", content: `Welcome to ${SITE_CONFIG.author}'s blog terminal v1.0` },
+      { id: genId(), type: "output", content: "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" },
       { id: genId(), type: "output", content: `Type 'help' for available commands.` },
       { id: genId(), type: "output", content: "" },
     ];
@@ -37,11 +42,13 @@ export default function Terminal({ posts, tags }: TerminalProps) {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [lines]);
+  }, [lines, completions]);
 
   const execute = useCallback(
     async (rawInput: string) => {
       const input = rawInput.trim();
+      setCompletions([]);
+
       if (!input) return;
 
       const inputLine: TerminalLine = {
@@ -84,24 +91,42 @@ export default function Terminal({ posts, tags }: TerminalProps) {
     });
   }, []);
 
+  const handleShowCompletions = useCallback((items: string[]) => {
+    setCompletions(items);
+  }, []);
+
+  const handleBodyClick = () => {
+    const input = scrollRef.current?.querySelector(".command-input") as HTMLInputElement | null;
+    input?.focus();
+  };
+
   return (
-    <div className="flex h-screen flex-col bg-[var(--color-bg-primary)]">
+    <div className="flex h-[100dvh] flex-col bg-[var(--color-bg-primary)]">
       <div className="terminal-titlebar">
         <span className="terminal-dot terminal-dot-red" />
         <span className="terminal-dot terminal-dot-yellow" />
         <span className="terminal-dot terminal-dot-green" />
         <span className="terminal-title">hann@blog: ~</span>
       </div>
-      <div className="terminal-body" ref={scrollRef}>
+      <div className="terminal-body" ref={scrollRef} onClick={handleBodyClick}>
         {lines.map((line) => (
           <OutputRenderer key={line.id} line={line} />
         ))}
+        {completions.length > 0 && (
+          <div className="output-line output-muted">
+            {completions.join("  ")}
+          </div>
+        )}
         <CommandInput
           onSubmit={execute}
           history={history}
           historyIndex={historyIndex}
           onHistoryUp={handleHistoryUp}
           onHistoryDown={handleHistoryDown}
+          onShowCompletions={handleShowCompletions}
+          completions={completions}
+          slugs={slugs}
+          tagNames={tagNames}
           disabled={isProcessing}
         />
       </div>

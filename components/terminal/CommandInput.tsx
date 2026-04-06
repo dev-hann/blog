@@ -8,7 +8,39 @@ interface CommandInputProps {
   historyIndex: number;
   onHistoryUp: () => void;
   onHistoryDown: () => void;
+  onShowCompletions: (completions: string[]) => void;
+  completions: string[];
+  slugs: string[];
+  tagNames: string[];
   disabled?: boolean;
+}
+
+const COMMAND_LIST = [
+  "help", "ls", "cat", "tags", "tag", "about", "projects",
+  "grep", "whoami", "neofetch", "date", "echo", "history", "clear",
+];
+
+function getCompletions(
+  input: string,
+  commands: string[],
+  slugs: string[],
+  tags: string[]
+): string[] {
+  const parts = input.split(/\s+/);
+
+  if (parts.length === 1) {
+    return commands.filter((cmd) => cmd.startsWith(parts[0]));
+  }
+
+  if (parts[0] === "cat" && parts.length === 2) {
+    return slugs.filter((s) => s.startsWith(parts[1]));
+  }
+
+  if (parts[0] === "tag" && parts.length === 2) {
+    return tags.filter((t) => t.startsWith(parts[1]));
+  }
+
+  return [];
 }
 
 export default function CommandInput({
@@ -17,6 +49,10 @@ export default function CommandInput({
   historyIndex,
   onHistoryUp,
   onHistoryDown,
+  onShowCompletions,
+  completions,
+  slugs,
+  tagNames,
   disabled,
 }: CommandInputProps) {
   const [input, setInput] = useState("");
@@ -45,15 +81,19 @@ export default function CommandInput({
     } else if (e.key === "ArrowDown") {
       e.preventDefault();
       onHistoryDown();
+    } else if (e.key === "Tab") {
+      e.preventDefault();
+      const available = getCompletions(input, COMMAND_LIST, slugs, tagNames);
+      if (available.length === 1) {
+        setInput(available[0] + " ");
+      } else if (available.length > 1) {
+        onShowCompletions(available);
+      }
     }
   };
 
-  const handleClick = () => {
-    inputRef.current?.focus();
-  };
-
   return (
-    <div className="command-input-line" onClick={handleClick}>
+    <div className="command-input-line">
       <span className="text-[var(--color-prompt)]">$ </span>
       <input
         ref={inputRef}

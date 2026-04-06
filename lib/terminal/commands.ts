@@ -235,6 +235,34 @@ function handleHistory(history: string[]): CommandResult {
   return { lines };
 }
 
+export const COMMAND_LIST = [
+  "help", "ls", "cat", "tags", "tag", "about", "projects",
+  "grep", "whoami", "neofetch", "date", "echo", "history", "clear",
+];
+
+export function getCompletions(
+  input: string,
+  commands: string[],
+  slugs: string[],
+  tags: string[]
+): string[] {
+  const parts = input.split(/\s+/);
+
+  if (parts.length === 1) {
+    return commands.filter((cmd) => cmd.startsWith(parts[0]));
+  }
+
+  if (parts[0] === "cat" && parts.length === 2) {
+    return slugs.filter((s) => s.startsWith(parts[1]));
+  }
+
+  if (parts[0] === "tag" && parts.length === 2) {
+    return tags.filter((t) => t.startsWith(parts[1]));
+  }
+
+  return [];
+}
+
 export async function executeCommand(
   input: string,
   context: CommandContext,

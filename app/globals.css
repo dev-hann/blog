@@ -240,3 +240,26 @@ code {
 .mdx-content th {
   background: var(--color-bg-secondary);
 }
+
+@media (max-width: 640px) {
+  body {
+    font-size: 12px;
+  }
+
+  .terminal-body {
+    padding: 8px;
+  }
+
+  .command-input {
+    font-size: 12px;
+  }
+
+  .terminal-titlebar {
+    padding: 6px 12px;
+  }
+
+  .terminal-dot {
+    width: 10px;
+    height: 10px;
+  }
+}
