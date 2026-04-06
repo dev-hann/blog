@@ -20,7 +20,7 @@
 | @testing-library/react | latest | React 컴포넌트 테스트 | `npm install -D @testing-library/react` |
 | @testing-library/jest-dom | latest | DOM 매처 (toBeInTheDocument 등) | `npm install -D @testing-library/jest-dom` |
 | @testing-library/user-event | latest | 사용자 인터랙션 시뮬레이션 | `npm install -D @testing-library/user-event` |
-| jsdom | latest | Vitest 브라우저 환경 시뮬레이션 | `npm install -D jsdom` |
+| happy-dom | latest | Vitest 브라우저 환경 시뮬레이션 (jsdom 대체, ESM 호환) | `npm install -D happy-dom` |
 | Playwright | latest | E2E 브라우저 테스트 | `npx playwright install` |
 
 ---
@@ -37,7 +37,7 @@ import { resolve } from "path";
 export default defineConfig({
   plugins: [react()],
   test: {
-    environment: "jsdom",
+    environment: "happy-dom",
     globals: true,
     setupFiles: ["./__tests__/setup.ts"],
     include: ["__tests__/**/*.test.{ts,tsx}"],
@@ -367,3 +367,19 @@ e2e/                                  # 브라우저 전체 플로우
 - [ ] 해당 Task의 Integration 테스트 전부 통과
 - [ ] `npm run build` 성공
 - [ ] 기존 테스트 회귀 없음 (이전 Task 테스트도 여전히 통과)
+
+---
+
+## 10. 서브테스크 실행 체크리스트
+
+서브테스크(Task 에이전트) 내부에서 **반드시 순서대로** 실행:
+
+1. [ ] `docs/` 관련 문서 읽기 → 요구사항 파악
+2. [ ] Role 분담 (단일 또는 A/B 병렬)
+3. [ ] **테스트 파일만 먼저 작성 (Red)**
+4. [ ] **소스 코드 구현 (Green)**
+5. [ ] `npm run test` — 전부 통과 (실패 시 수정 후 재실행)
+6. [ ] `npm run build` — 성공 (실패 시 수정 후 재실행)
+7. [ ] 리팩토링 (필요시, 리팩 후 다시 test + build)
+8. [ ] `git add -A && git commit -m "<커밋 메시지>"`
+9. [ ] 메인에 결과 보고: "Task N 완료 — `<commit-hash>` — HH:MM"
