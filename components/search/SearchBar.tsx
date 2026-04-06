@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import PostCard from "@/components/post/PostCard";
+import PostListItem from "@/components/post/PostListItem";
 import type { Post } from "@/types/post";
 
 interface SearchBarProps {
@@ -76,7 +76,7 @@ export default function SearchBar({ posts }: SearchBarProps) {
           </p>
           <div className="flex flex-col gap-4">
             {filtered.map((post) => (
-              <PostCard key={post.slug} {...post} />
+              <PostListItem key={post.slug} {...post} />
             ))}
           </div>
         </>

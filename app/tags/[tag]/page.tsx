@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getAllTags, getAllPosts } from "@/lib/posts";
-import PostCard from "@/components/post/PostCard";
+import PostListItem from "@/components/post/PostListItem";
 
 export function generateStaticParams() {
   const tags = getAllTags();
@@ -29,7 +29,7 @@ export default async function TagDetailPage({
       </h1>
       <div className="flex flex-col gap-4">
         {posts.map((post) => (
-          <PostCard key={post.slug} {...post} />
+          <PostListItem key={post.slug} {...post} />
         ))}
       </div>
     </div>

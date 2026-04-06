@@ -3,9 +3,13 @@ import { render, screen } from "@testing-library/react";
 import PostsPage from "@/app/posts/page";
 
 vi.mock("next/link", () => ({
-  default: ({ children, href }: { children: React.ReactNode; href: string }) => (
-    <a href={href}>{children}</a>
-  ),
+  default: ({
+    children,
+    href,
+  }: {
+    children: React.ReactNode;
+    href: string;
+  }) => <a href={href}>{children}</a>,
 }));
 
 vi.mock("next/navigation", () => ({
@@ -14,24 +18,23 @@ vi.mock("next/navigation", () => ({
 }));
 
 describe("PostsPage", () => {
+  it("renders cat ~/posts prompt", () => {
+    render(<PostsPage />);
+    expect(screen.getByText(/cat ~\/posts/)).toBeTruthy();
+  });
+
   it("renders all posts", () => {
     render(<PostsPage />);
     expect(screen.getByText("Next.js 16으로 블로그 만들기")).toBeTruthy();
-    expect(screen.getByText("React 19 Server Components 실전 가이드")).toBeTruthy();
+    expect(
+      screen.getByText("React 19 Server Components 실전 가이드")
+    ).toBeTruthy();
     expect(screen.getByText("TypeScript 6 새로운 기능")).toBeTruthy();
   });
 
-  it("posts sorted by date descending", () => {
+  it("groups posts by year", () => {
     render(<PostsPage />);
-    const titles = screen.getAllByRole("link").map((el) => el.textContent);
-    const postTitles = [
-      "Next.js 16으로 블로그 만들기",
-      "React 19 Server Components 실전 가이드",
-      "TypeScript 6 새로운 기능",
-    ];
-    for (const title of postTitles) {
-      expect(titles.find((t) => t?.includes(title))).toBeTruthy();
-    }
+    expect(screen.getByText(/## 2026/)).toBeTruthy();
   });
 
   it("each post links to detail", () => {

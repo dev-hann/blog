@@ -1,6 +1,5 @@
-import Link from "next/link";
 import { getAllPosts } from "@/lib/posts";
-import PostCard from "@/components/post/PostCard";
+import PostListItem from "@/components/post/PostListItem";
 import { SITE_CONFIG } from "@/lib/constants";
 
 export default function Home() {
@@ -8,36 +7,25 @@ export default function Home() {
 
   return (
     <div className="flex flex-col gap-12">
-      <section className="flex flex-col gap-4">
-        <h1 className="text-3xl font-bold text-[var(--color-text-primary)]">
-          {SITE_CONFIG.name}
-        </h1>
-        <p className="text-lg text-[var(--color-text-secondary)]">
-          {SITE_CONFIG.description}
+      <section className="flex flex-col gap-2">
+        <p className="font-mono text-[var(--color-prompt)]">
+          $ <span className="text-[var(--color-text-primary)]">whoami</span>
         </p>
-        <nav className="flex gap-4">
-          <Link
-            href="/posts"
-            className="text-sm text-[var(--color-text-accent)] hover:underline"
-          >
-            포스트
-          </Link>
-          <Link
-            href="/tags"
-            className="text-sm text-[var(--color-text-accent)] hover:underline"
-          >
-            태그
-          </Link>
-        </nav>
+        <h1 className="text-xl font-bold text-[var(--color-text-primary)]">
+          {SITE_CONFIG.author} — developer &amp; writer
+        </h1>
+        <p className="text-[var(--color-text-secondary)]">
+          &gt; {SITE_CONFIG.description}
+        </p>
       </section>
 
-      <section className="flex flex-col gap-6">
-        <h2 className="text-xl font-semibold text-[var(--color-text-primary)]">
-          최신 포스트
-        </h2>
-        <div className="flex flex-col gap-4">
+      <section className="flex flex-col gap-2">
+        <p className="font-mono text-[var(--color-prompt)]">
+          $ <span className="text-[var(--color-text-primary)]">ls -t ~/posts | head -5</span>
+        </p>
+        <div className="flex flex-col">
           {posts.map((post) => (
-            <PostCard key={post.slug} {...post} />
+            <PostListItem key={post.slug} {...post} />
           ))}
         </div>
       </section>
