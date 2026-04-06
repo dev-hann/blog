@@ -24,10 +24,10 @@ export default async function TagDetailPage({
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">
-        {tag}
-      </h1>
-      <div className="flex flex-col gap-4">
+      <p className="font-mono text-[var(--color-prompt)]">
+        $ <span className="text-[var(--color-text-primary)]">grep -r &quot;{tag}&quot; ~/posts</span>
+      </p>
+      <div className="flex flex-col">
         {posts.map((post) => (
           <PostListItem key={post.slug} {...post} />
         ))}

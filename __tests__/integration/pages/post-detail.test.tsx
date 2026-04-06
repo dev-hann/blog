@@ -31,13 +31,14 @@ vi.mock("@/components/post/TableOfContents", () => ({
 }));
 
 describe("PostDetailPage", () => {
-  it("renders post title, date, tags", async () => {
+  it("renders post title, date, tags in terminal style", async () => {
     const page = await PostDetailPage({ params: Promise.resolve({ slug: "nextjs-blog-guide" }) });
     render(page);
+    expect(screen.getByText(/cat ~\/posts\/nextjs-blog-guide\.mdx/)).toBeTruthy();
     expect(screen.getByText("Next.js 16으로 블로그 만들기")).toBeTruthy();
-    expect(screen.getByText(/2026년/)).toBeTruthy();
-    expect(screen.getByText("nextjs")).toBeTruthy();
-    expect(screen.getByText("react")).toBeTruthy();
+    expect(screen.getByText(/2026-/)).toBeTruthy();
+    expect(screen.getByText("[nextjs]")).toBeTruthy();
+    expect(screen.getByText("[react]")).toBeTruthy();
   });
 
   it("renders MDX content", async () => {
@@ -55,5 +56,19 @@ describe("PostDetailPage", () => {
     const page = await PostDetailPage({ params: Promise.resolve({ slug: "nextjs-blog-guide" }) });
     render(page);
     expect(screen.getByTestId("giscus-comment-section")).toBeTruthy();
+  });
+
+  it("renders frontmatter block with --- delimiters", async () => {
+    const page = await PostDetailPage({ params: Promise.resolve({ slug: "nextjs-blog-guide" }) });
+    render(page);
+    const delimiters = screen.getAllByText("---");
+    expect(delimiters.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it("renders TagBadge for each tag", async () => {
+    const page = await PostDetailPage({ params: Promise.resolve({ slug: "nextjs-blog-guide" }) });
+    render(page);
+    expect(screen.getByText("[nextjs]")).toBeTruthy();
+    expect(screen.getByText("[react]")).toBeTruthy();
   });
 });

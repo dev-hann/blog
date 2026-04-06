@@ -3,6 +3,7 @@ import { getPostBySlug, getAllPosts, extractHeadings } from "@/lib/posts";
 import PostBody from "@/components/post/PostBody";
 import TableOfContents from "@/components/post/TableOfContents";
 import Giscus from "@/components/comment/Giscus";
+import TagBadge from "@/components/tag/TagBadge";
 
 export function generateStaticParams() {
   const posts = getAllPosts();
@@ -11,7 +12,10 @@ export function generateStaticParams() {
 
 function formatDate(dateStr: string): string {
   const date = new Date(dateStr);
-  return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
 }
 
 export default async function PostDetailPage({
@@ -34,25 +38,36 @@ export default async function PostDetailPage({
   return (
     <article>
       <header className="mb-8">
-        <h1 className="text-3xl font-bold text-[var(--color-text-primary)]">
-          {post.title}
-        </h1>
-        <div className="mt-3 flex items-center gap-3">
-          <time className="text-sm text-[var(--color-text-muted)]">
-            {formatDate(post.date)}
-          </time>
-        </div>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {post.tags.map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full bg-[var(--color-accent)]/10 px-2 py-0.5 text-xs font-medium text-[var(--color-accent)]"
-            >
-              {tag}
+        <p className="font-mono text-[var(--color-prompt)]">
+          $ <span className="text-[var(--color-text-primary)]">cat ~/posts/{slug}.mdx</span>
+        </p>
+
+        <div className="mt-4 border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-4 font-mono text-sm">
+          <p className="text-[var(--color-text-muted)]">---</p>
+          <p>
+            <span className="text-[var(--color-text-muted)]">title:</span>{" "}
+            <span className="text-[var(--color-text-primary)]">{post.title}</span>
+          </p>
+          <p>
+            <span className="text-[var(--color-text-muted)]">date:</span>{" "}
+            <span className="text-[var(--color-text-primary)]">{formatDate(post.date)}</span>
+          </p>
+          <p>
+            <span className="text-[var(--color-text-muted)]">tags:</span>{" "}
+            <span className="text-[var(--color-text-primary)]">
+              [{post.tags.join(", ")}]
             </span>
+          </p>
+          <p className="text-[var(--color-text-muted)]">---</p>
+        </div>
+
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {post.tags.map((tag) => (
+            <TagBadge key={tag} tag={tag} />
           ))}
         </div>
       </header>
+
       <div className="lg:flex lg:gap-8">
         <div className="min-w-0 flex-1">
           <PostBody content={post.content} />
@@ -63,6 +78,7 @@ export default async function PostDetailPage({
           </div>
         </aside>
       </div>
+
       <Giscus />
     </article>
   );

@@ -14,16 +14,21 @@ vi.mock("next/navigation", () => ({
 }));
 
 describe("NotFound", () => {
-  it("renders 404 message", () => {
+  it("renders bash error message", () => {
     render(<NotFound />);
-    expect(screen.getByText("404")).toBeTruthy();
-    expect(screen.getByText(/페이지를 찾을 수 없습니다/)).toBeTruthy();
+    expect(screen.getByText(/no such file or directory/)).toBeTruthy();
   });
 
   it("has link to home", () => {
     render(<NotFound />);
-    const homeLink = screen.getByText(/홈으로 돌아가기/);
+    const homeLink = screen.getByText("Go to home");
     expect(homeLink).toBeTruthy();
     expect(homeLink.getAttribute("href")).toBe("/");
+  });
+
+  it("renders cd commands", () => {
+    render(<NotFound />);
+    expect(screen.getByText("cd ~/unknown-page")).toBeTruthy();
+    expect(screen.getByText("cd ~/")).toBeTruthy();
   });
 });

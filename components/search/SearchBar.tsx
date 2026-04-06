@@ -49,32 +49,34 @@ export default function SearchBar({ posts }: SearchBarProps) {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="relative">
+      <div className="flex items-center gap-2 font-mono">
+        <span className="shrink-0 text-sm text-[var(--color-prompt)]">$</span>
+        <span className="shrink-0 text-sm text-[var(--color-prompt)]">grep -r</span>
         <input
           type="text"
           value={query}
           onChange={handleInputChange}
-          placeholder="검색어를 입력하세요..."
-          className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-secondary)] px-4 py-3 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus:border-[var(--color-accent)] focus:outline-none"
+          placeholder="&quot;검색어&quot; ~/posts"
+          className="flex-1 border-none bg-transparent font-mono text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus:outline-none"
         />
       </div>
 
       {isSearching && hasQuery && (
-        <p className="text-sm text-[var(--color-text-muted)]">검색 중...</p>
+        <p className="text-sm text-[var(--color-text-muted)]">...</p>
       )}
 
       {!isSearching && hasQuery && filtered.length === 0 && (
-        <p className="text-sm text-[var(--color-text-muted)]">
-          &ldquo;{debouncedQuery}&rdquo; 검색 결과가 없습니다.
+        <p className="font-mono text-sm text-[var(--color-text-muted)]">
+          0 results found
         </p>
       )}
 
       {!isSearching && hasQuery && filtered.length > 0 && (
         <>
-          <p className="text-sm text-[var(--color-text-secondary)]">
-            &ldquo;{debouncedQuery}&rdquo; 검색 결과 ({filtered.length}건)
+          <p className="font-mono text-sm text-[var(--color-text-secondary)]">
+            {filtered.length} results found:
           </p>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col">
             {filtered.map((post) => (
               <PostListItem key={post.slug} {...post} />
             ))}

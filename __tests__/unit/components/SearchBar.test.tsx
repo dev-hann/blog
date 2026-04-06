@@ -38,15 +38,16 @@ describe("SearchBar", () => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
   });
 
-  it("renders search input", () => {
+  it("renders search input with grep prompt", () => {
     render(<SearchBar posts={mockPosts} />);
-    expect(screen.getByPlaceholderText("검색어를 입력하세요...")).toBeTruthy();
+    expect(screen.getByText("grep -r")).toBeTruthy();
+    expect(screen.getByPlaceholderText('"검색어" ~/posts')).toBeTruthy();
   });
 
   it("filters results by title", async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
     render(<SearchBar posts={mockPosts} />);
-    const input = screen.getByPlaceholderText("검색어를 입력하세요...");
+    const input = screen.getByPlaceholderText('"검색어" ~/posts');
     await user.type(input, "React Hooks");
     await act(async () => {
       vi.advanceTimersByTime(300);
@@ -57,7 +58,7 @@ describe("SearchBar", () => {
   it("filters results by tag", async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
     render(<SearchBar posts={mockPosts} />);
-    const input = screen.getByPlaceholderText("검색어를 입력하세요...");
+    const input = screen.getByPlaceholderText('"검색어" ~/posts');
     await user.type(input, "typescript");
     await act(async () => {
       vi.advanceTimersByTime(300);
@@ -68,18 +69,18 @@ describe("SearchBar", () => {
   it("shows empty message for no results", async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
     render(<SearchBar posts={mockPosts} />);
-    const input = screen.getByPlaceholderText("검색어를 입력하세요...");
+    const input = screen.getByPlaceholderText('"검색어" ~/posts');
     await user.type(input, "없는검색어");
     await act(async () => {
       vi.advanceTimersByTime(300);
     });
-    expect(screen.getByText(/검색 결과가 없습니다/)).toBeTruthy();
+    expect(screen.getByText("0 results found")).toBeTruthy();
   });
 
   it("debounces input", async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
     render(<SearchBar posts={mockPosts} />);
-    const input = screen.getByPlaceholderText("검색어를 입력하세요...");
+    const input = screen.getByPlaceholderText('"검색어" ~/posts');
     await user.type(input, "React");
     await act(async () => {
       vi.advanceTimersByTime(100);

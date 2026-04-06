@@ -9,9 +9,9 @@ vi.mock("next/link", () => ({
 }));
 
 describe("TagBadge", () => {
-  it("renders tag name", () => {
+  it("renders tag name in brackets", () => {
     render(<TagBadge tag="react" />);
-    expect(screen.getByText("react")).toBeTruthy();
+    expect(screen.getByText("[react]")).toBeTruthy();
   });
 
   it("renders count when provided", () => {

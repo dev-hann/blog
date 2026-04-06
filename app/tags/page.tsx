@@ -6,7 +6,9 @@ export default function TagsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">Tags</h1>
+      <p className="font-mono text-[var(--color-prompt)]">
+        $ <span className="text-[var(--color-text-primary)]">tags</span>
+      </p>
       <div className="flex flex-wrap gap-3">
         {Object.entries(tags).map(([tag, count]) => (
           <TagBadge key={tag} tag={tag} count={count} />

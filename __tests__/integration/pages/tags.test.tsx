@@ -18,12 +18,17 @@ vi.mock("next/navigation", () => ({
 describe("TagsPage", () => {
   it("renders all tags with counts", () => {
     render(<TagsPage />);
-    expect(screen.getByText("nextjs")).toBeTruthy();
-    expect(screen.getByText("react")).toBeTruthy();
-    expect(screen.getByText("typescript")).toBeTruthy();
-    expect(screen.getByText("javascript")).toBeTruthy();
+    expect(screen.getByText("[nextjs]")).toBeTruthy();
+    expect(screen.getByText("[react]")).toBeTruthy();
+    expect(screen.getByText("[typescript]")).toBeTruthy();
+    expect(screen.getByText("[javascript]")).toBeTruthy();
     expect(screen.getAllByText("(2)").length).toBe(2);
     expect(screen.getAllByText("(1)").length).toBe(2);
+  });
+
+  it("renders $ tags prompt", () => {
+    render(<TagsPage />);
+    expect(screen.getByText("tags")).toBeTruthy();
   });
 
   it("tag links to tag detail", () => {
@@ -38,10 +43,10 @@ describe("TagsPage", () => {
 });
 
 describe("TagDetailPage", () => {
-  it("tag detail shows filtered posts", async () => {
+  it("tag detail shows filtered posts with grep prompt", async () => {
     const page = await TagDetailPage({ params: Promise.resolve({ tag: "react" }) });
     render(page);
-    expect(screen.getByRole("heading", { name: /react/ })).toBeTruthy();
+    expect(screen.getByText(/grep -r "react" ~\/posts/)).toBeTruthy();
     expect(screen.getByText("Next.js 16으로 블로그 만들기")).toBeTruthy();
     expect(screen.getByText("React 19 Server Components 실전 가이드")).toBeTruthy();
   });

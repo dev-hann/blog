@@ -14,16 +14,22 @@ vi.mock("next/navigation", () => ({
 }));
 
 describe("ProjectsPage", () => {
-  it("renders project cards", () => {
+  it("renders project listing with ls prompt", () => {
     render(<ProjectsPage />);
-    expect(screen.getByRole("heading", { name: /projects/i })).toBeTruthy();
-    expect(screen.getByText("Blog")).toBeTruthy();
+    expect(screen.getByText(/ls -la ~\/projects/)).toBeTruthy();
+    expect(screen.getByText("Blog/")).toBeTruthy();
   });
 
-  it("project cards have links", () => {
+  it("project links work", () => {
     render(<ProjectsPage />);
     const links = screen.getAllByRole("link");
     const hrefs = links.map((l) => l.getAttribute("href"));
     expect(hrefs).toContain("https://github.com/hann");
+  });
+
+  it("renders project stack tags", () => {
+    render(<ProjectsPage />);
+    expect(screen.getByText("[nextjs]")).toBeTruthy();
+    expect(screen.getByText("[typescript]")).toBeTruthy();
   });
 });

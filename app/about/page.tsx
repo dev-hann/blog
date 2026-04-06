@@ -3,26 +3,40 @@ import { SITE_CONFIG } from "@/lib/constants";
 export default function AboutPage() {
   return (
     <div className="flex flex-col gap-8">
-      <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">About</h1>
-      <section className="flex flex-col gap-4">
+      <p className="font-mono text-[var(--color-prompt)]">
+        $ <span className="text-[var(--color-text-primary)]">cat ~/about.md</span>
+      </p>
+
+      <section className="font-mono text-sm">
+        <h1 className="text-xl font-bold text-[var(--color-text-primary)]">
+          {SITE_CONFIG.author}
+        </h1>
         <p className="text-[var(--color-text-secondary)]">
-          안녕하세요, {SITE_CONFIG.author}입니다. 웹 개발과 기술에 대해 글을 씁니다.
+          developer &amp; writer
         </p>
-        <p className="text-[var(--color-text-secondary)]">
-          이 블로그는 Next.js 16과 Tailwind CSS v4로 제작되었습니다.
-        </p>
+        <div className="mt-4 flex flex-col gap-1">
+          <p>
+            <span className="text-[var(--color-text-muted)]">github:</span>{" "}
+            <a
+              href={SITE_CONFIG.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[var(--color-text-accent)] hover:underline"
+            >
+              {SITE_CONFIG.github}
+            </a>
+          </p>
+        </div>
       </section>
-      <section className="flex flex-col gap-3">
-        <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">Links</h2>
-        <div className="flex gap-4">
-          <a
-            href={SITE_CONFIG.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm text-[var(--color-text-accent)] hover:underline"
-          >
-            GitHub
-          </a>
+
+      <section className="flex flex-col gap-2">
+        <p className="font-mono text-[var(--color-prompt)]">
+          $ <span className="text-[var(--color-text-primary)]">history</span>
+        </p>
+        <div className="font-mono text-sm text-[var(--color-text-secondary)]">
+          <p>2018&nbsp;&nbsp;첫 코딩</p>
+          <p>2020&nbsp;&nbsp;프론트엔드 개발자</p>
+          <p>2024&nbsp;&nbsp;블로그 시작</p>
         </div>
       </section>
     </div>

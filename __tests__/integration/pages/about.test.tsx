@@ -14,10 +14,10 @@ vi.mock("next/navigation", () => ({
 }));
 
 describe("AboutPage", () => {
-  it("renders about content", () => {
+  it("renders about content with terminal prompt", () => {
     render(<AboutPage />);
-    expect(screen.getByRole("heading", { name: /about/i })).toBeTruthy();
-    expect(screen.getByText(/hann/)).toBeTruthy();
+    expect(screen.getByText(/cat ~\/about\.md/)).toBeTruthy();
+    expect(screen.getByText("hann")).toBeTruthy();
   });
 
   it("renders social links", () => {
@@ -25,5 +25,11 @@ describe("AboutPage", () => {
     const links = screen.getAllByRole("link");
     const hrefs = links.map((l) => l.getAttribute("href"));
     expect(hrefs).toContain("https://github.com/hann");
+  });
+
+  it("renders history section", () => {
+    render(<AboutPage />);
+    expect(screen.getByText("history")).toBeTruthy();
+    expect(screen.getByText(/첫 코딩/)).toBeTruthy();
   });
 });
