@@ -3,15 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { SITE_CONFIG } from "@/lib/constants";
 
 const NAV_LINKS = [
-  { href: "/", label: "Home" },
-  { href: "/posts", label: "Posts" },
-  { href: "/tags", label: "Tags" },
-  { href: "/projects", label: "Projects" },
-  { href: "/about", label: "About" },
-  { href: "/search", label: "Search" },
+  { href: "/", label: "blog" },
+  { href: "/posts", label: "posts" },
+  { href: "/tags", label: "tags" },
+  { href: "/about", label: "about" },
+  { href: "/projects", label: "projects" },
+  { href: "/search", label: "search" },
 ];
 
 export default function Header() {
@@ -20,22 +19,24 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--color-border)] bg-[var(--color-bg-primary)]/80 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-3xl items-center justify-between px-6">
-        <Link href="/" className="text-lg font-bold text-[var(--color-text-primary)]">
-          {SITE_CONFIG.name}
-        </Link>
-        <nav className="hidden items-center gap-6 md:flex">
+      <div className="mx-auto flex h-12 max-w-3xl items-center justify-between px-6">
+        <nav className="hidden items-center gap-4 md:flex">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               className={`text-sm transition-colors ${
                 pathname === link.href
-                  ? "text-[var(--color-accent)]"
-                  : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
+                  ? "text-[var(--color-text-accent)]"
+                  : "text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
               }`}
             >
-              {link.label}
+              <span className="text-[var(--color-text-muted)]">~/</span>
+              <span className={
+                pathname === link.href
+                  ? "text-[var(--color-text-accent)]"
+                  : ""
+              }>{link.label}</span>
             </Link>
           ))}
         </nav>
@@ -46,8 +47,8 @@ export default function Header() {
           onClick={() => setMenuOpen(!menuOpen)}
         >
           <svg
-            width="24"
-            height="24"
+            width="20"
+            height="20"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -69,13 +70,18 @@ export default function Header() {
               key={link.href}
               href={link.href}
               onClick={() => setMenuOpen(false)}
-              className={`py-2 text-sm transition-colors ${
+              className={`py-1 text-sm transition-colors ${
                 pathname === link.href
-                  ? "text-[var(--color-accent)]"
-                  : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
+                  ? "text-[var(--color-text-accent)]"
+                  : "text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
               }`}
             >
-              {link.label}
+              <span className="text-[var(--color-text-muted)]">~/</span>
+              <span className={
+                pathname === link.href
+                  ? "text-[var(--color-text-accent)]"
+                  : ""
+              }>{link.label}</span>
             </Link>
           ))}
         </nav>

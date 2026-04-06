@@ -6,28 +6,39 @@ vi.mock("next/navigation", () => ({
   usePathname: () => "/",
 }));
 
+vi.mock("next/link", () => ({
+  default: ({ children, href }: any) => <a href={href}>{children}</a>,
+}));
+
 describe("Header", () => {
-  it("renders site name", () => {
+  it("renders ~/blog link for home", () => {
     render(<Header />);
-    expect(screen.getByText("Blog")).toBeTruthy();
+    expect(screen.getByText("blog")).toBeTruthy();
   });
 
-  it("renders all nav links", () => {
+  it("renders all nav links with ~/ prefix", () => {
     render(<Header />);
-    expect(screen.getByText("Home")).toBeTruthy();
-    expect(screen.getByText("Posts")).toBeTruthy();
-    expect(screen.getByText("Tags")).toBeTruthy();
-    expect(screen.getByText("Projects")).toBeTruthy();
-    expect(screen.getByText("About")).toBeTruthy();
+    const links = ["blog", "posts", "tags", "about", "projects", "search"];
+    links.forEach((label) => {
+      expect(screen.getByText(label)).toBeTruthy();
+    });
   });
 
-  it("renders search link", () => {
+  it("renders correct hrefs for nav links", () => {
     render(<Header />);
-    expect(screen.getByText("Search")).toBeTruthy();
+    expect(screen.getByText("posts").closest("a")?.getAttribute("href")).toBe("/posts");
+    expect(screen.getByText("tags").closest("a")?.getAttribute("href")).toBe("/tags");
+    expect(screen.getByText("about").closest("a")?.getAttribute("href")).toBe("/about");
   });
 
   it("renders mobile menu button", () => {
     render(<Header />);
     expect(screen.getByLabelText("Toggle menu")).toBeTruthy();
+  });
+
+  it("renders tilde prefix for each link", () => {
+    render(<Header />);
+    const tildeElements = screen.getAllByText("~/");
+    expect(tildeElements.length).toBeGreaterThanOrEqual(6);
   });
 });

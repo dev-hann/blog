@@ -3,22 +3,27 @@ import { render, screen } from "@testing-library/react";
 import Footer from "@/components/layout/Footer";
 
 describe("Footer", () => {
-  it("renders copyright text", () => {
+  it("renders copyright text with author name", () => {
     render(<Footer />);
-    expect(screen.getByText(/Blog/)).toBeTruthy();
+    expect(screen.getByText(/hann/)).toBeTruthy();
   });
 
-  it("renders GitHub link", () => {
+  it("renders github link", () => {
     render(<Footer />);
-    const githubLink = screen.getByText("GitHub");
+    const githubLink = screen.getByText("github");
     expect(githubLink).toBeTruthy();
     expect(githubLink.getAttribute("href")).toBe("https://github.com/hann");
   });
 
-  it("renders RSS link", () => {
+  it("renders rss link", () => {
     render(<Footer />);
-    const rssLink = screen.getByText("RSS");
+    const rssLink = screen.getByText("rss");
     expect(rssLink).toBeTruthy();
     expect(rssLink.getAttribute("href")).toBe("/feed.xml");
+  });
+
+  it("renders built with next.js text", () => {
+    render(<Footer />);
+    expect(screen.getByText(/built with next\.js/)).toBeTruthy();
   });
 });
