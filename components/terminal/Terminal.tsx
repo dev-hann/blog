@@ -21,6 +21,7 @@ export default function Terminal({ posts, tags }: TerminalProps) {
   const [lines, setLines] = useState<TerminalLine[]>([]);
   const [history, setHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
+  const [isProcessing, setIsProcessing] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -39,7 +40,7 @@ export default function Terminal({ posts, tags }: TerminalProps) {
   }, [lines]);
 
   const execute = useCallback(
-    (rawInput: string) => {
+    async (rawInput: string) => {
       const input = rawInput.trim();
       if (!input) return;
 
@@ -56,8 +57,12 @@ export default function Terminal({ posts, tags }: TerminalProps) {
         return;
       }
 
-      const result = executeCommand(input, { posts, tags }, history);
-      setLines((prev) => [...prev, inputLine, ...result.lines]);
+      setIsProcessing(true);
+      setLines((prev) => [...prev, inputLine]);
+      const result = await executeCommand(input, { posts, tags }, history);
+      setIsProcessing(false);
+
+      setLines((prev) => [...prev, ...result.lines]);
       setHistory((prev) => [...prev, input]);
       setHistoryIndex(-1);
     },
@@ -97,6 +102,7 @@ export default function Terminal({ posts, tags }: TerminalProps) {
           historyIndex={historyIndex}
           onHistoryUp={handleHistoryUp}
           onHistoryDown={handleHistoryDown}
+          disabled={isProcessing}
         />
       </div>
     </div>

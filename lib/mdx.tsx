@@ -7,6 +7,12 @@ const components = {
   pre: Pre,
 };
 
-export function renderMDX(source: string) {
-  return <MDXRemote source={source} components={components} />;
+export function renderMDX(
+  source: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  overrides?: Record<string, React.ComponentType<any>>
+) {
+  return (
+    <MDXRemote source={source} components={{ ...components, ...overrides }} />
+  );
 }

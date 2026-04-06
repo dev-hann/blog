@@ -8,6 +8,7 @@ interface CommandInputProps {
   historyIndex: number;
   onHistoryUp: () => void;
   onHistoryDown: () => void;
+  disabled?: boolean;
 }
 
 export default function CommandInput({
@@ -16,6 +17,7 @@ export default function CommandInput({
   historyIndex,
   onHistoryUp,
   onHistoryDown,
+  disabled,
 }: CommandInputProps) {
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -60,6 +62,7 @@ export default function CommandInput({
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={handleKeyDown}
+        disabled={disabled}
         autoFocus
       />
     </div>

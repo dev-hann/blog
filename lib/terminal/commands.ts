@@ -64,7 +64,10 @@ function handleLs(args: string[], context: CommandContext): CommandResult {
   return { lines };
 }
 
-function handleCat(args: string[], context: CommandContext): CommandResult {
+async function handleCat(
+  args: string[],
+  context: CommandContext
+): Promise<CommandResult> {
   const slug = args[0];
   if (!slug) {
     return { lines: [err("Usage: cat <slug>")] };
@@ -75,18 +78,43 @@ function handleCat(args: string[], context: CommandContext): CommandResult {
     return { lines: [err(`cat: ${slug}: No such post`)] };
   }
 
-  return {
-    lines: [
-      out(`---`),
-      out(`<span class="output-muted">title:</span> ${post.title}`),
-      out(`<span class="output-muted">date:</span> ${post.date}`),
-      out(`<span class="output-muted">tags:</span> [${post.tags.join(", ")}]`),
-      out(`<span class="output-muted">summary:</span> ${post.summary}`),
-      out(`---`),
-      out(""),
-      out(`<span class="output-muted">(Full MDX rendering coming in T3)</span>`),
-    ],
-  };
+  try {
+    const res = await fetch(`/api/posts/${slug}`);
+    if (!res.ok) throw new Error("fetch failed");
+    const data = await res.json();
+
+    const frontmatter = [
+      `<span class="output-muted">---</span>`,
+      `<span class="output-muted">title:</span> ${data.title}`,
+      `<span class="output-muted">date:</span> ${data.date}`,
+      `<span class="output-muted">tags:</span> [${data.tags.join(", ")}]`,
+      data.summary
+        ? `<span class="output-muted">summary:</span> ${data.summary}`
+        : null,
+      `<span class="output-muted">---</span>`,
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    return {
+      lines: [
+        { id: genId(), type: "html", content: frontmatter },
+        { id: genId(), type: "mdx", content: data.html },
+      ],
+    };
+  } catch {
+    return {
+      lines: [
+        out(`<span class="output-muted">---</span>`),
+        out(`<span class="output-muted">title:</span> ${post.title}`),
+        out(`<span class="output-muted">date:</span> ${post.date}`),
+        out(`<span class="output-muted">tags:</span> [${post.tags.join(", ")}]`),
+        out(`<span class="output-muted">summary:</span> ${post.summary}`),
+        out(`<span class="output-muted">---</span>`),
+        err("(MDX rendering unavailable)"),
+      ],
+    };
+  }
 }
 
 function handleTags(context: CommandContext): CommandResult {
@@ -207,16 +235,19 @@ function handleHistory(history: string[]): CommandResult {
   return { lines };
 }
 
-export function executeCommand(
+export async function executeCommand(
   input: string,
   context: CommandContext,
   history: string[]
-): CommandResult {
+): Promise<CommandResult> {
   const parts = input.trim().split(/\s+/);
   const cmd = parts[0]?.toLowerCase() ?? "";
   const args = parts.slice(1);
 
-  const commands: Record<string, () => CommandResult> = {
+  const commands: Record<
+    string,
+    () => CommandResult | Promise<CommandResult>
+  > = {
     help: () => handleHelp(),
     ls: () => handleLs(args, context),
     cat: () => handleCat(args, context),
@@ -243,5 +274,5 @@ export function executeCommand(
     };
   }
 
-  return handler();
+  return await handler();
 }
