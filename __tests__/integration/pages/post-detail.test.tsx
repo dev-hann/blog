@@ -24,6 +24,12 @@ vi.mock("@/components/comment/Giscus", () => ({
   default: () => <div data-testid="giscus-comment-section">Comments</div>,
 }));
 
+vi.mock("@/components/post/TableOfContents", () => ({
+  default: ({ headings }: { headings: Array<{ id: string; text: string; level: number }> }) => (
+    <nav data-testid="toc">{headings.map((h) => <span key={h.id}>{h.text}</span>)}</nav>
+  ),
+}));
+
 describe("PostDetailPage", () => {
   it("renders post title, date, tags", async () => {
     const page = await PostDetailPage({ params: Promise.resolve({ slug: "nextjs-blog-guide" }) });
