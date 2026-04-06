@@ -1,5 +1,3 @@
-import { SITE_CONFIG } from "@/lib/constants";
-
 const projects = [
   {
     name: "Blog",

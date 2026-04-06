@@ -25,7 +25,7 @@ test.describe("Navigation", () => {
   });
 
   test("header links navigate to correct pages (desktop)", async ({ page }) => {
-    test.skip(page.viewportSize()?.width! < 768, "Desktop only");
+    test.skip((page.viewportSize()?.width ?? 0) < 768, "Desktop only");
     await page.goto("/");
 
     await page.click('header nav.hidden a[href="/posts"]');
