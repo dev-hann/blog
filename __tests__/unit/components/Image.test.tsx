@@ -41,6 +41,13 @@ describe("MDXImage", () => {
     expect(screen.getByRole("img")).toHaveAttribute("height", "450");
   });
 
+  it("wraps image in figure element", async () => {
+    const { default: MDXImage } = await import("@/components/mdx/Image");
+    const { container } = render(<MDXImage src="/test.png" alt="Figure test" />);
+    expect(container.querySelector("figure")).toBeInTheDocument();
+    expect(container.querySelector("figure")?.querySelector("img")).toBeInTheDocument();
+  });
+
   it("passes sizes attribute for responsive optimization", async () => {
     const { default: MDXImage } = await import("@/components/mdx/Image");
     render(<MDXImage src="/test.png" alt="Sized" />);

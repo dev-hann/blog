@@ -9,6 +9,7 @@ export default function TagBadge({ tag, count }: TagBadgeProps) {
   return (
     <Link
       href={`/tags/${tag}`}
+      aria-label={count !== undefined ? `Tag: ${tag}, ${count} post${count !== 1 ? "s" : ""}` : `Tag: ${tag}`}
       className="inline-flex items-center gap-1 rounded bg-[var(--color-bg-tertiary)] px-2.5 py-1 text-sm text-[var(--color-text-accent)] transition-colors hover:bg-[var(--color-bg-hover)]"
     >
       {tag}
