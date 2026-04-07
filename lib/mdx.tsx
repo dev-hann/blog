@@ -1,10 +1,12 @@
 import { MDXRemote } from "next-mdx-remote/rsc";
 import CustomLink from "@/components/mdx/CustomLink";
 import Pre from "@/components/mdx/Pre";
+import Callout from "@/components/mdx/Callout";
 
 const components = {
   a: CustomLink,
   pre: Pre,
+  Callout,
 };
 
 export function renderMDX(
