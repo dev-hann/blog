@@ -1,5 +1,5 @@
 import type { CommandContext, CommandResult, TerminalLine } from "./types";
-import { genId } from "./utils";
+import { genId, escapeHtml } from "./utils";
 import { SITE_CONFIG } from "@/lib/constants";
 
 function line(type: TerminalLine["type"], content: string): TerminalLine {
@@ -73,7 +73,7 @@ async function handleCat(
 
   const post = context.posts.find((p) => p.slug === slug);
   if (!post) {
-    return { lines: [err(`cat: ${slug}: No such post`)] };
+    return { lines: [err(`cat: ${escapeHtml(slug)}: No such post`)] };
   }
 
   const html = context.postHtml?.[slug];
@@ -133,7 +133,7 @@ function handleTag(args: string[], context: CommandContext): CommandResult {
   );
 
   if (filtered.length === 0) {
-    return { lines: [err(`tag: no posts found with tag '${tagName}'`)] };
+    return { lines: [err(`tag: no posts found with tag '${escapeHtml(tagName)}'`)] };
   }
 
   return { lines: filtered.map((post) => out(formatPostEntry(post))) };
@@ -174,7 +174,7 @@ function handleGrep(args: string[], context: CommandContext): CommandResult {
   );
 
   if (matches.length === 0) {
-    return { lines: [out(`No results found for '${query}'`)] };
+    return { lines: [out(`No results found for '${escapeHtml(query)}'`)] };
   }
 
   const lines: TerminalLine[] = [out(`${matches.length} result${matches.length > 1 ? "s" : ""} found:`)];
