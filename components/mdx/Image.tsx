@@ -18,6 +18,7 @@ export default function MDXImage({ src, alt = "", width, height, caption }: Imag
         alt={alt}
         width={width ?? 800}
         height={height ?? 450}
+        sizes="100vw"
         className="w-full h-auto rounded-lg"
       />
       {caption && (

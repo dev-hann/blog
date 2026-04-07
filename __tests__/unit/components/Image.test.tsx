@@ -2,9 +2,9 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 vi.mock("next/image", () => ({
-  default: ({ src, alt, width, height }: { src: string; alt: string; width: number; height: number }) => (
+  default: ({ src, alt, width, height, sizes }: { src: string; alt: string; width: number; height: number; sizes?: string }) => (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={src} alt={alt} width={width} height={height} />
+    <img src={src} alt={alt} width={width} height={height} data-sizes={sizes} />
   ),
 }));
 
@@ -39,5 +39,11 @@ describe("MDXImage", () => {
     render(<MDXImage src="/test.png" alt="Defaults" />);
     expect(screen.getByRole("img")).toHaveAttribute("width", "800");
     expect(screen.getByRole("img")).toHaveAttribute("height", "450");
+  });
+
+  it("passes sizes attribute for responsive optimization", async () => {
+    const { default: MDXImage } = await import("@/components/mdx/Image");
+    render(<MDXImage src="/test.png" alt="Sized" />);
+    expect(screen.getByRole("img")).toHaveAttribute("data-sizes", "100vw");
   });
 });
