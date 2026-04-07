@@ -1,12 +1,12 @@
+import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAllPosts, getPostBySlug, getAdjacentPosts, extractHeadings } from "@/lib/posts";
+import { formatDate } from "@/lib/format";
+import { generateMetadata as genMeta } from "@/lib/metadata";
 import PostBody from "@/components/post/PostBody";
 import TableOfContents from "@/components/post/TableOfContents";
 import Giscus from "@/components/comment/Giscus";
-import Link from "next/link";
-import { generateMetadata as genMeta } from "@/lib/metadata";
-import { formatDate } from "@/lib/format";
-import type { Metadata } from "next";
 
 interface PageProps {
   params: Promise<{ slug: string }>;

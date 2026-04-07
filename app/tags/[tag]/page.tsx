@@ -1,8 +1,8 @@
-import { getAllTags, getAllPosts } from "@/lib/posts";
-import PostList from "@/components/post/PostList";
-import { notFound } from "next/navigation";
-import { generateMetadata as makeMetadata } from "@/lib/metadata";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { getAllTags, getAllPosts } from "@/lib/posts";
+import { generateMetadata as makeMetadata } from "@/lib/metadata";
+import PostList from "@/components/post/PostList";
 
 interface PageProps {
   params: Promise<{ tag: string }>;

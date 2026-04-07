@@ -1,6 +1,7 @@
 import { prerenderToNodeStream } from "react-dom/static";
 import { compileMDX } from "next-mdx-remote/rsc";
 import Callout from "@/components/mdx/Callout";
+import MDXImage from "@/components/mdx/Image";
 
 function ServerPre({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) {
   return (
@@ -19,6 +20,7 @@ const components = {
   a: ServerLink,
   pre: ServerPre,
   Callout,
+  Image: MDXImage,
 };
 
 export async function renderMDXToHTML(source: string): Promise<string> {

@@ -1,0 +1,25 @@
+---
+title: "React 19 Server Components 실전 가이드"
+date: "2026-04-05T12:00:00"
+tags: ["react", "nextjs"]
+summary: "React 19 Server Components를 실제 프로젝트에 적용하는 방법을 다룹니다."
+---
+
+## Server Components란
+
+React 19의 Server Components는 서버에서 렌더링되는 컴포넌트입니다.
+
+### 장점
+
+- 번들 사이즈 감소
+- 초기 로딩 속도 향상
+- 직접적인 데이터베이스 접근
+
+```tsx
+export default async function PostList() {
+  const posts = await getPosts();
+  return posts.map(post => <PostCard key={post.slug} {...post} />);
+}
+```
+
+Server Components는 React의 미래입니다.
