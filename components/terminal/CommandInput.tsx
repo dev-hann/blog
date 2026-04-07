@@ -9,7 +9,6 @@ interface CommandInputProps {
   onHistoryUp: () => void;
   onHistoryDown: () => void;
   onShowCompletions: (completions: string[]) => void;
-  completions: string[];
   slugs: string[];
   tagNames: string[];
   disabled?: boolean;
@@ -50,7 +49,6 @@ export default function CommandInput({
   onHistoryUp,
   onHistoryDown,
   onShowCompletions,
-  completions,
   slugs,
   tagNames,
   disabled,

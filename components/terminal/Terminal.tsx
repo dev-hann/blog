@@ -123,7 +123,6 @@ export default function Terminal({ posts, tags }: TerminalProps) {
           onHistoryUp={handleHistoryUp}
           onHistoryDown={handleHistoryDown}
           onShowCompletions={handleShowCompletions}
-          completions={completions}
           slugs={slugs}
           tagNames={tagNames}
           disabled={isProcessing}

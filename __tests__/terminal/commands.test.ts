@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { executeCommand, COMMAND_LIST, getCompletions } from "@/lib/terminal/commands";
 import type { CommandContext } from "@/lib/terminal/types";
 import type { Post } from "@/types/post";
