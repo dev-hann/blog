@@ -39,4 +39,16 @@ describe("Projects page", () => {
     expect(tagLinks.length).toBeGreaterThanOrEqual(1);
     expect(tagLinks[0]).toHaveAttribute("href", "/tags/nextjs");
   });
+
+  it("project articles have aria-labelledby", async () => {
+    const { default: ProjectsPage } = await import("@/app/projects/page");
+    render(<ProjectsPage />);
+    const articles = screen.getAllByRole("article");
+    for (const article of articles) {
+      expect(article).toHaveAttribute("aria-labelledby");
+      const labelledby = article.getAttribute("aria-labelledby");
+      const heading = article.querySelector(`#${CSS.escape(labelledby!)}`);
+      expect(heading).not.toBeNull();
+    }
+  });
 });

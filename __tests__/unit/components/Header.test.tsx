@@ -139,4 +139,17 @@ describe("Header", () => {
     await user.click(screen.getByLabelText("Toggle menu"));
     expect(document.body.style.overflow).toBe("");
   });
+
+  it("restores focus to toggle button when mobile menu closes via Escape", async () => {
+    mockState.pathname = "/";
+    const user = userEvent.setup();
+    const { default: Header } = await import("@/components/layout/Header");
+    render(<Header />);
+    const btn = screen.getByLabelText("Toggle menu");
+    await user.click(btn);
+    expect(btn).toHaveAttribute("aria-expanded", "true");
+    await user.keyboard("{Escape}");
+    expect(btn).toHaveAttribute("aria-expanded", "false");
+    expect(btn).toHaveFocus();
+  });
 });

@@ -35,7 +35,7 @@ export default function PostList({ posts, postsPerPage = 10 }: PostListProps) {
   return (
     <div>
       {posts.length === 0 ? (
-        <p className="text-[var(--color-text-muted)]">No posts found.</p>
+        <p role="status" className="text-[var(--color-text-muted)]">No posts found.</p>
       ) : (
         <div className="flex flex-col gap-4">
           {currentPosts.map((post) => (

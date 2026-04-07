@@ -61,4 +61,16 @@ describe("Pre", () => {
     const { container } = render(<Pre data-testid="code-block">test</Pre>);
     expect(container.querySelector("[data-testid='code-block']")).toBeInTheDocument();
   });
+
+  it("language label has sr-only text for screen readers", async () => {
+    const { default: Pre } = await import("@/components/mdx/Pre");
+    render(
+      <Pre>
+        <code className="language-python">{"print('hello')"}</code>
+      </Pre>
+    );
+    expect(screen.getByText("python")).toBeInTheDocument();
+    const srLabel = screen.getByText("python").closest("span");
+    expect(srLabel).toHaveAttribute("aria-label", "Language: python");
+  });
 });

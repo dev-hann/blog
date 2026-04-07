@@ -29,7 +29,7 @@ export default function Pre({ children, ...props }: PreProps) {
   return (
     <div className="group relative">
       {lang && (
-        <span className="absolute left-3 top-2 text-xs text-[var(--color-text-muted)] opacity-60">
+        <span className="absolute left-3 top-2 text-xs text-[var(--color-text-muted)] opacity-60" aria-label={`Language: ${lang}`}>
           {lang}
         </span>
       )}

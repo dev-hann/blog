@@ -49,6 +49,14 @@ describe("MDX custom components", () => {
       render(<CustomLink href="/about">Internal</CustomLink>);
       expect(screen.queryByText("(opens in new tab)")).not.toBeInTheDocument();
     });
+
+    it("hash links render as anchor without next/link", async () => {
+      const { default: CustomLink } = await import("@/components/mdx/CustomLink");
+      render(<CustomLink href="#section-1">Jump to section</CustomLink>);
+      const link = screen.getByText("Jump to section");
+      expect(link).toHaveAttribute("href", "#section-1");
+      expect(link).not.toHaveAttribute("target");
+    });
   });
 
   describe("Pre", () => {

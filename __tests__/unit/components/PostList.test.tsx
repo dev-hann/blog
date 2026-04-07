@@ -68,7 +68,9 @@ describe("PostList", () => {
   it("shows empty message when no posts", async () => {
     const { default: PostList } = await import("@/components/post/PostList");
     render(<PostList posts={[]} />);
-    expect(screen.getByText("No posts found.")).toBeInTheDocument();
+    const msg = screen.getByText("No posts found.");
+    expect(msg).toBeInTheDocument();
+    expect(msg).toHaveAttribute("role", "status");
   });
 
   it("has aria-label on pagination buttons", async () => {

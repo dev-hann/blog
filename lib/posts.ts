@@ -65,14 +65,18 @@ export function extractHeadings(content: string): Heading[] {
   const stripped = content.replace(/```[\s\S]*?```/g, "");
   const headingRegex = /^(#{2,3})\s+(.+)$/gm;
   const headings: Heading[] = [];
+  const usedIds: Record<string, number> = {};
   let match;
   while ((match = headingRegex.exec(stripped)) !== null) {
     const level = match[1].length;
     const text = match[2].trim();
-    const id = text
+    const baseId = text
       .toLowerCase()
       .replace(/[^\w\s가-힣-]/g, "")
       .replace(/\s+/g, "-");
+    const count = usedIds[baseId] ?? 0;
+    usedIds[baseId] = count + 1;
+    const id = count === 0 ? baseId : `${baseId}-${count + 1}`;
     headings.push({ id, text, level });
   }
   return headings;

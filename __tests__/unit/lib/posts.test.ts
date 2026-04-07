@@ -114,4 +114,16 @@ describe("extractHeadings", () => {
     expect(headings[0].text).toBe("Real Heading");
     expect(headings[1].text).toBe("Another Real");
   });
+
+  it("deduplicates identical heading ids with suffix", () => {
+    const content = "## Intro\n\nSome text\n## Intro\n\nMore text\n## Intro";
+    const headings = extractHeadings(content);
+    expect(headings).toHaveLength(3);
+    const ids = headings.map((h) => h.id);
+    const uniqueIds = new Set(ids);
+    expect(uniqueIds.size).toBe(3);
+    expect(ids[0]).toBe("intro");
+    expect(ids[1]).toBe("intro-2");
+    expect(ids[2]).toBe("intro-3");
+  });
 });

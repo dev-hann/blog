@@ -46,4 +46,13 @@ describe("PostCard", () => {
     const reactLink = screen.getByRole("link", { name: "react" });
     expect(reactLink).toHaveAttribute("href", "/tags/react");
   });
+
+  it("article has aria-labelledby pointing to heading id", () => {
+    render(<PostCard post={mockPost} />);
+    const article = screen.getByRole("article");
+    expect(article).toHaveAttribute("aria-labelledby");
+    const labelledby = article.getAttribute("aria-labelledby");
+    const heading = screen.getByText("테스트 포스트 제목");
+    expect(heading).toHaveAttribute("id", labelledby);
+  });
 });

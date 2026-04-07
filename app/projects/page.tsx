@@ -29,9 +29,10 @@ export default function ProjectsPage() {
           {projects.map((project) => (
             <article
               key={project.name}
+              aria-labelledby={`project-${project.name}`}
               className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-4"
             >
-              <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">
+              <h2 id={`project-${project.name}`} className="text-lg font-semibold text-[var(--color-text-primary)]">
                 {project.name}
               </h2>
               <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
