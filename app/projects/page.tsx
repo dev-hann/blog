@@ -22,6 +22,17 @@ const projects: Project[] = [
 export default function ProjectsPage() {
   return (
     <PageContainer>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            name: "Projects",
+            description: "Projects by " + SITE_CONFIG.author,
+          }),
+        }}
+      />
       <h1 id="projects-heading" className="mb-8 text-2xl font-bold text-[var(--color-text-primary)]">
         Projects
       </h1>
