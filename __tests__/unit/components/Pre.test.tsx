@@ -31,4 +31,21 @@ describe("Pre", () => {
     await user.click(screen.getByRole("button", { name: /copy/i }));
     expect(screen.getByText("Copied")).toBeInTheDocument();
   });
+
+  it("shows language label when code element has language class", async () => {
+    const { default: Pre } = await import("@/components/mdx/Pre");
+    render(
+      <Pre>
+        <code className="language-typescript">{"const x: number = 1"}</code>
+      </Pre>
+    );
+    expect(screen.getByText("typescript")).toBeInTheDocument();
+  });
+
+  it("hides language label when no language class", async () => {
+    const { default: Pre } = await import("@/components/mdx/Pre");
+    render(<Pre>{"plain code"}</Pre>);
+    expect(screen.queryByText("typescript")).not.toBeInTheDocument();
+    expect(screen.queryByText("javascript")).not.toBeInTheDocument();
+  });
 });

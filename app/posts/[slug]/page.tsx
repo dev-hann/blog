@@ -7,6 +7,7 @@ import { generateMetadata as genMeta } from "@/lib/metadata";
 import PostBody from "@/components/post/PostBody";
 import TableOfContents from "@/components/post/TableOfContents";
 import Giscus from "@/components/comment/Giscus";
+import TagBadge from "@/components/tag/TagBadge";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -51,13 +52,7 @@ export default async function PostDetailPage({ params }: PageProps) {
               <time>{formatDate(post.date)}</time>
               <div className="flex gap-2">
                 {post.tags.map((tag) => (
-                  <Link
-                    key={tag}
-                    href={`/tags/${tag}`}
-                    className="rounded bg-[var(--color-bg-tertiary)] px-2 py-0.5 text-xs text-[var(--color-text-accent)] transition-colors hover:bg-[var(--color-bg-secondary)]"
-                  >
-                    {tag}
-                  </Link>
+                  <TagBadge key={tag} tag={tag} />
                 ))}
               </div>
             </div>

@@ -60,6 +60,16 @@ describe("Post detail page", () => {
     expect(screen.getByTestId("mdx-content")).toBeInTheDocument();
   });
 
+  it("renders tags using TagBadge component", async () => {
+    const { default: PostDetailPage } = await import("@/app/posts/[slug]/page");
+    const params = Promise.resolve({ slug: "post-1" });
+    const result = await PostDetailPage({ params });
+    render(result);
+    const links = screen.getAllByText("nextjs").map((el) => el.closest("a")).filter(Boolean);
+    expect(links.length).toBeGreaterThanOrEqual(1);
+    expect(links[0]).toHaveAttribute("href", "/tags/nextjs");
+  });
+
   it("renders tags as links to tag pages", async () => {
     const { default: PostDetailPage } = await import("@/app/posts/[slug]/page");
     const params = Promise.resolve({ slug: "post-1" });
