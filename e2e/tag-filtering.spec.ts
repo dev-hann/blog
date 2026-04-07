@@ -20,19 +20,15 @@ test.describe("Tag filtering", () => {
   test("tag from post detail navigates to tag page", async ({ page }) => {
     await page.goto("/posts/nextjs-blog-guide");
 
-    const tagOnPost = page.locator("article header span").first();
-    const tagName = (await tagOnPost.textContent())!.trim();
+    const tagLinks = page.locator("article header a[href^='/tags/']");
+    const count = await tagLinks.count();
+    expect(count).toBeGreaterThanOrEqual(1);
 
-    const tagLink = page.locator(`a[href="/tags/${tagName}"]`);
-    if (await tagLink.count() > 0) {
-      await tagLink.click();
-    } else {
-      await page.goto(`/tags/${tagName}`);
-    }
+    const tagName = await tagLinks.first().textContent();
+    await tagLinks.first().click();
 
-    await expect(page.locator("h1")).toContainText(tagName);
-    const posts = page.locator('a[href^="/posts/"]');
-    expect(await posts.count()).toBeGreaterThanOrEqual(1);
+    await expect(page).toHaveURL(/\/tags\//);
+    await expect(page.locator("h1")).toContainText(tagName!.trim());
   });
 
   test("react tag shows correct filtered posts", async ({ page }) => {

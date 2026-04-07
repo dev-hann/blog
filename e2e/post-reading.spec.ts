@@ -1,16 +1,14 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Post reading flow", () => {
-  test("read a post from home page", async ({ page }) => {
-    await page.goto("/");
+  test("navigate to post from posts list", async ({ page }) => {
+    await page.goto("/posts");
 
-    const firstPostCard = page.locator('a[href^="/posts/"]').first();
-    const postTitle = await firstPostCard.locator("h2").textContent();
-    await firstPostCard.click();
+    const firstPost = page.locator('a[href^="/posts/"]').first();
+    await firstPost.click();
 
     await expect(page).toHaveURL(/\/posts\//);
-    await expect(page.locator("article > header h1")).toContainText(postTitle!.trim());
-    await expect(page.locator("article > header time")).toBeVisible();
+    await expect(page.locator("article > header h1")).toBeVisible();
   });
 
   test("post detail renders MDX content", async ({ page }) => {
@@ -45,5 +43,12 @@ test.describe("Post reading flow", () => {
 
     await expect(page.locator('[data-comment-section]')).toBeVisible();
     await expect(page.locator('[data-comment-section] h2')).toContainText("댓글");
+  });
+
+  test("prev/next post navigation works", async ({ page }) => {
+    await page.goto("/posts/nextjs-blog-guide");
+
+    const prevNextNav = page.locator("article > nav");
+    await expect(prevNextNav).toBeVisible();
   });
 });

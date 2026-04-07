@@ -24,16 +24,14 @@ test.describe("Search", () => {
 
     await page.waitForTimeout(500);
 
-    await expect(page.locator("text=검색 결과가 없습니다")).toBeVisible();
+    await expect(page.locator("text=No results found")).toBeVisible();
   });
 
-  test("empty query shows no results section", async ({ page }) => {
+  test("empty query shows all posts", async ({ page }) => {
     await page.goto("/search");
 
-    const input = page.locator('input[type="text"]');
-    await input.fill("");
-
-    await expect(page.locator('a[href^="/posts/"]')).toHaveCount(0);
+    const results = page.locator('a[href^="/posts/"]');
+    expect(await results.count()).toBeGreaterThanOrEqual(1);
   });
 
   test("search by tag", async ({ page }) => {
