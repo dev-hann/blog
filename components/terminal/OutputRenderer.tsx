@@ -34,5 +34,7 @@ export default function OutputRenderer({ line }: { line: TerminalLine }) {
           dangerouslySetInnerHTML={{ __html: line.content }}
         />
       );
+    default:
+      return null;
   }
 }

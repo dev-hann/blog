@@ -31,6 +31,12 @@ describe("MDX custom components", () => {
       expect(container.querySelector("a")).toBeNull();
       expect(screen.getByText("No link")).toBeInTheDocument();
     });
+
+    it("passes className to internal link", async () => {
+      const { default: CustomLink } = await import("@/components/mdx/CustomLink");
+      const { container } = render(<CustomLink href="/about" className="custom-class">Styled</CustomLink>);
+      expect(container.querySelector(".custom-class")).toBeInTheDocument();
+    });
   });
 
   describe("Pre", () => {

@@ -195,6 +195,35 @@ describe("Terminal", () => {
     });
   });
 
+  it("has accessible label on command input", async () => {
+    renderTerminal();
+    const input = screen.getByRole("textbox");
+    expect(input).toHaveAttribute("aria-label", "Terminal command input");
+  });
+
+  it("terminal body has log role and aria-label", () => {
+    renderTerminal();
+    const log = screen.getByRole("log");
+    expect(log).toHaveAttribute("aria-label", "Terminal output");
+  });
+
+  it("terminal body has aria-live polite", () => {
+    renderTerminal();
+    const log = screen.getByRole("log");
+    expect(log).toHaveAttribute("aria-live", "polite");
+  });
+
+  it("completions have aria-live polite", async () => {
+    const user = userEvent.setup();
+    renderTerminal();
+    const input = screen.getByRole("textbox");
+    await user.type(input, "cat {Tab}");
+    await waitFor(() => {
+      const completions = document.querySelector("[aria-live='polite'][data-completions]");
+      expect(completions).toBeInTheDocument();
+    });
+  });
+
   it("shows error for cat without slug", async () => {
     const user = userEvent.setup();
     renderTerminal();

@@ -115,6 +115,7 @@ export default function CommandInput({
       <input
         ref={inputRef}
         type="text"
+        aria-label="Terminal command input"
         className="command-input"
         value={displayValue}
         onChange={(e) => {

@@ -109,12 +109,12 @@ export default function Terminal({ posts, tags, postHtml }: TerminalProps) {
         <span className="terminal-dot terminal-dot-green" />
         <span className="terminal-title">hann@blog: ~</span>
       </div>
-      <div className="terminal-body" ref={scrollRef} onClick={handleBodyClick}>
+      <div className="terminal-body" role="log" aria-label="Terminal output" aria-live="polite" ref={scrollRef} onClick={handleBodyClick}>
         {lines.map((line) => (
           <OutputRenderer key={line.id} line={line} />
         ))}
         {completions.length > 0 && (
-          <div className="output-line output-muted">
+          <div className="output-line output-muted" aria-live="polite" data-completions="">
             {completions.join("  ")}
           </div>
         )}

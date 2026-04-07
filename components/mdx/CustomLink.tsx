@@ -1,9 +1,8 @@
 import Link from "next/link";
 
-interface CustomLinkProps {
+interface CustomLinkProps extends React.ComponentProps<"a"> {
   href?: string;
   children: React.ReactNode;
-  [key: string]: unknown;
 }
 
 export default function CustomLink({ href, children, ...props }: CustomLinkProps) {

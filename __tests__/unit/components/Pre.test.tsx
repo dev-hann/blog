@@ -55,4 +55,10 @@ describe("Pre", () => {
     const btn = screen.getByRole("button", { name: /copy/i });
     expect(btn.className).toContain("focus-visible:opacity-100");
   });
+
+  it("passes standard HTML attributes to pre element", async () => {
+    const { default: Pre } = await import("@/components/mdx/Pre");
+    const { container } = render(<Pre data-testid="code-block">test</Pre>);
+    expect(container.querySelector("[data-testid='code-block']")).toBeInTheDocument();
+  });
 });

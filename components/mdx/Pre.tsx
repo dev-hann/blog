@@ -2,10 +2,9 @@
 
 import { useState, useRef, Children, isValidElement } from "react";
 
-interface PreProps {
+type PreProps = React.ComponentProps<"pre"> & {
   children: React.ReactNode;
-  [key: string]: unknown;
-}
+};
 
 function getLanguage(children: React.ReactNode): string | null {
   const child = Children.toArray(children).find(isValidElement);
