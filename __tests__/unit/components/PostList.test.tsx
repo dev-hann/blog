@@ -83,4 +83,22 @@ describe("PostList", () => {
     expect(screen.queryByText("← Prev")).not.toBeInTheDocument();
     expect(screen.queryByText("Next →")).not.toBeInTheDocument();
   });
+
+  it("active page button has aria-current page", async () => {
+    const { default: PostList } = await import("@/components/post/PostList");
+    render(<PostList posts={mockPosts} postsPerPage={5} />);
+    const activeButton = screen.getByLabelText("Page 1");
+    expect(activeButton).toHaveAttribute("aria-current", "page");
+    const inactiveButton = screen.getByLabelText("Page 2");
+    expect(inactiveButton).not.toHaveAttribute("aria-current");
+  });
+
+  it("aria-current moves when page changes", async () => {
+    const user = userEvent.setup();
+    const { default: PostList } = await import("@/components/post/PostList");
+    render(<PostList posts={mockPosts} postsPerPage={5} />);
+    await user.click(screen.getByLabelText("Page 2"));
+    expect(screen.getByLabelText("Page 1")).not.toHaveAttribute("aria-current");
+    expect(screen.getByLabelText("Page 2")).toHaveAttribute("aria-current", "page");
+  });
 });

@@ -100,4 +100,23 @@ describe("SearchBar", () => {
 
     vi.useRealTimers();
   });
+
+  it("shows loading indicator during debounce", async () => {
+    vi.useFakeTimers();
+    const { default: SearchBar } = await import("@/components/search/SearchBar");
+    render(<SearchBar posts={mockPosts} />);
+    const input = screen.getByPlaceholderText(/search/i);
+
+    act(() => {
+      fireEvent.change(input, { target: { value: "Next" } });
+    });
+    expect(screen.getByTestId("search-loading")).toBeInTheDocument();
+
+    act(() => {
+      vi.advanceTimersByTime(300);
+    });
+    expect(screen.queryByTestId("search-loading")).not.toBeInTheDocument();
+
+    vi.useRealTimers();
+  });
 });

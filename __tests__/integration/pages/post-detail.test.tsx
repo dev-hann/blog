@@ -2,8 +2,8 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 vi.mock("next/link", () => ({
-  default: ({ children, href }: { children: React.ReactNode; href: string }) => (
-    <a href={href}>{children}</a>
+  default: ({ children, href, ...rest }: { children: React.ReactNode; href: string; [key: string]: unknown }) => (
+    <a href={href} {...rest}>{children}</a>
   ),
 }));
 
@@ -118,6 +118,15 @@ describe("Post detail page", () => {
     const result = await PostDetailPage({ params });
     render(result);
     expect(screen.getByLabelText("Post navigation")).toBeInTheDocument();
+  });
+
+  it("prev/next links have descriptive aria-label", async () => {
+    const { default: PostDetailPage } = await import("@/app/posts/[slug]/page");
+    const params = Promise.resolve({ slug: "post-1" });
+    const result = await PostDetailPage({ params });
+    render(result);
+    expect(screen.getByLabelText("Previous post: Previous Post")).toBeInTheDocument();
+    expect(screen.getByLabelText("Next post: Next Post")).toBeInTheDocument();
   });
 
   it("renders JSON-LD structured data for SEO", async () => {

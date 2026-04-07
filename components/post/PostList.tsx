@@ -43,6 +43,7 @@ export default function PostList({ posts, postsPerPage = 10 }: PostListProps) {
               key={p}
               type="button"
               aria-label={`Page ${p}`}
+              aria-current={p === page ? "page" : undefined}
               onClick={() => setPage(p)}
               className={`rounded px-3 py-1 text-sm ${
                 p === page

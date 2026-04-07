@@ -83,6 +83,7 @@ export default async function PostDetailPage({ params }: PageProps) {
             {prev ? (
               <Link
                 href={`/posts/${prev.slug}`}
+                aria-label={`Previous post: ${prev.title}`}
                 className="text-sm text-[var(--color-text-accent)] hover:underline"
               >
                 &larr; {prev.title}
@@ -93,6 +94,7 @@ export default async function PostDetailPage({ params }: PageProps) {
             {next ? (
               <Link
                 href={`/posts/${next.slug}`}
+                aria-label={`Next post: ${next.title}`}
                 className="text-sm text-[var(--color-text-accent)] hover:underline"
               >
                 {next.title} &rarr;

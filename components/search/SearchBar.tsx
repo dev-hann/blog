@@ -32,6 +32,8 @@ export default function SearchBar({ posts }: SearchBarProps) {
     );
   }, [debouncedQuery, posts]);
 
+  const isDebouncing = query.trim().length > 0 && query !== debouncedQuery;
+
   return (
     <div>
       <input
@@ -43,6 +45,11 @@ export default function SearchBar({ posts }: SearchBarProps) {
         onChange={(e) => setQuery(e.target.value)}
         className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-secondary)] px-4 py-3 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus:border-[var(--color-accent)] focus:outline-none"
       />
+      {isDebouncing && (
+        <p data-testid="search-loading" className="mt-2 text-sm text-[var(--color-text-muted)]" aria-live="polite">
+          Searching...
+        </p>
+      )}
       <div className="mt-4 flex flex-col gap-3">
         {results.length === 0 && debouncedQuery.trim() ? (
           <p className="text-[var(--color-text-muted)]">No results found for &ldquo;{debouncedQuery}&rdquo;</p>
