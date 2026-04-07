@@ -9,6 +9,7 @@ interface TableOfContentsProps {
 
 export default function TableOfContents({ headings }: TableOfContentsProps) {
   const [activeId, setActiveId] = useState<string>("");
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -32,29 +33,48 @@ export default function TableOfContents({ headings }: TableOfContentsProps) {
 
   if (headings.length === 0) return null;
 
+  const tocList = (
+    <ul className="space-y-1 border-l border-[var(--color-border)]">
+      {headings.map((heading) => (
+        <li key={heading.id}>
+          <a
+            href={`#${heading.id}`}
+            onClick={() => setMobileOpen(false)}
+            className={`block text-sm transition-colors ${
+              heading.level === 3 ? "pl-6" : "pl-4"
+            } ${
+              activeId === heading.id
+                ? "border-l-2 border-[var(--color-accent)] text-[var(--color-accent)]"
+                : "text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
+            }`}
+          >
+            {heading.text}
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
+
   return (
-    <nav className="hidden lg:block">
-      <h2 className="mb-3 text-sm font-semibold text-[var(--color-text-muted)]">
-        Table of Contents
-      </h2>
-      <ul className="space-y-1 border-l border-[var(--color-border)]">
-        {headings.map((heading) => (
-          <li key={heading.id}>
-            <a
-              href={`#${heading.id}`}
-              className={`block text-sm transition-colors ${
-                heading.level === 3 ? "pl-6" : "pl-4"
-              } ${
-                activeId === heading.id
-                  ? "border-l-2 border-[var(--color-accent)] text-[var(--color-accent)]"
-                  : "text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
-              }`}
-            >
-              {heading.text}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
+    <>
+      <nav className="hidden lg:block">
+        <h2 className="mb-3 text-sm font-semibold text-[var(--color-text-muted)]">
+          Table of Contents
+        </h2>
+        {tocList}
+      </nav>
+      <div className="lg:hidden">
+        <button
+          type="button"
+          aria-label="Toggle table of contents"
+          aria-expanded={mobileOpen}
+          onClick={() => setMobileOpen((prev) => !prev)}
+          className="mb-2 text-sm font-semibold text-[var(--color-text-muted)]"
+        >
+          Table of Contents ▾
+        </button>
+        {mobileOpen && tocList}
+      </div>
+    </>
   );
 }
