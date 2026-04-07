@@ -201,7 +201,7 @@ code {
 }
 
 .mdx-content pre [data-highlighted-line] {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--color-highlight-bg);
   border-left: 2px solid var(--color-accent);
   margin: 0 -12px;
   padding: 0 12px;
