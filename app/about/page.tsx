@@ -12,6 +12,19 @@ export const metadata = generateMetadata({
 export default function AboutPage() {
   return (
     <PageContainer>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Person",
+            name: SITE_CONFIG.author,
+            description: SITE_CONFIG.description,
+            url: SITE_CONFIG.url,
+            sameAs: [SITE_CONFIG.github],
+          }),
+        }}
+      />
       <h1 id="about-heading" className="mb-8 text-2xl font-bold text-[var(--color-text-primary)]">
         About
       </h1>
