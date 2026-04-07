@@ -38,17 +38,15 @@ export default async function TagDetailPage({ params }: PageProps) {
 
   return (
     <PageContainer>
-      <div className="mx-auto max-w-3xl">
-        <h1 className="mb-8 text-2xl font-bold text-[var(--color-text-primary)]">
-          <span className="text-[var(--color-text-accent)]">#{tag}</span>
-          <span className="ml-2 text-base font-normal text-[var(--color-text-muted)]">
-            {posts.length} post{posts.length !== 1 ? "s" : ""}
-          </span>
-        </h1>
-        <Suspense>
-          <PostList posts={posts} />
-        </Suspense>
-      </div>
+      <h1 className="mb-8 text-2xl font-bold text-[var(--color-text-primary)]">
+        <span className="text-[var(--color-text-accent)]">#{tag}</span>
+        <span className="ml-2 text-base font-normal text-[var(--color-text-muted)]">
+          {posts.length} post{posts.length !== 1 ? "s" : ""}
+        </span>
+      </h1>
+      <Suspense>
+        <PostList posts={posts} />
+      </Suspense>
     </PageContainer>
   );
 }

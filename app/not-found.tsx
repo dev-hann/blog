@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <div className="flex flex-col items-center justify-center bg-[var(--color-bg-primary)] px-4 py-24">
+    <div role="alert" className="flex flex-col items-center justify-center bg-[var(--color-bg-primary)] px-4 py-24">
       <h1 className="text-6xl font-bold text-[var(--color-text-primary)]">404</h1>
       <p className="mt-4 text-[var(--color-text-muted)]">
         Page not found.

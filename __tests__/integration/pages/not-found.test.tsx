@@ -22,6 +22,12 @@ describe("Not Found page", () => {
     expect(screen.getByText("404")).toBeInTheDocument();
   });
 
+  it("has role alert for screen readers", async () => {
+    const { default: NotFound } = await import("@/app/not-found");
+    const { container } = render(<NotFound />);
+    expect(container.querySelector("[role='alert']")).toBeInTheDocument();
+  });
+
   it("has link to home", async () => {
     const { default: NotFound } = await import("@/app/not-found");
     render(<NotFound />);

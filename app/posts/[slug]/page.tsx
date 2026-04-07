@@ -45,8 +45,8 @@ export default async function PostDetailPage({ params }: PageProps) {
   const readingTime = calculateReadingTime(post.content);
 
   return (
-    <PageContainer>
-      <div className="mx-auto flex max-w-5xl gap-8">
+    <PageContainer maxWidth="max-w-5xl">
+      <div className="flex gap-8">
           <article aria-labelledby="post-title" className="min-w-0 max-w-3xl flex-1">
             <header className="mb-8">
               <h1 id="post-title" className="text-3xl font-bold text-[var(--color-text-primary)]">

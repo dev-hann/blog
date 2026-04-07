@@ -15,15 +15,13 @@ export default function TagsPage() {
 
   return (
     <PageContainer>
-      <div className="mx-auto max-w-3xl">
-        <h1 className="mb-8 text-2xl font-bold text-[var(--color-text-primary)]">
-          Tags
-        </h1>
-        <div className="flex flex-wrap gap-3">
-          {entries.map(([tag, count]) => (
-            <TagBadge key={tag} tag={tag} count={count} />
-          ))}
-        </div>
+      <h1 className="mb-8 text-2xl font-bold text-[var(--color-text-primary)]">
+        Tags
+      </h1>
+      <div className="flex flex-wrap gap-3">
+        {entries.map(([tag, count]) => (
+          <TagBadge key={tag} tag={tag} count={count} />
+        ))}
       </div>
     </PageContainer>
   );

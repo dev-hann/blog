@@ -22,4 +22,16 @@ describe("PageContainer", () => {
     expect(div.className).toContain("extra-class");
     expect(div.className).toContain("py-8");
   });
+
+  it("uses custom maxWidth prop", () => {
+    const { container } = render(<PageContainer maxWidth="max-w-5xl">Test</PageContainer>);
+    const inner = container.querySelector(".max-w-5xl");
+    expect(inner).toBeInTheDocument();
+  });
+
+  it("defaults to max-w-3xl", () => {
+    const { container } = render(<PageContainer>Test</PageContainer>);
+    const inner = container.querySelector(".max-w-3xl");
+    expect(inner).toBeInTheDocument();
+  });
 });
