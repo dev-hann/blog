@@ -35,6 +35,7 @@ function handleHelp(): CommandResult {
       out("  neofetch    System info"),
       out("  date        Current date/time"),
       out("  echo &lt;msg&gt;  Echo a message"),
+      out("  links       Quick navigation links"),
       out("  clear       Clear terminal"),
       out("  history     Show command history"),
       out("  help        Show this help"),
@@ -217,6 +218,20 @@ function handleEcho(args: string[]): CommandResult {
   return { lines: [out(args.join(" "))] };
 }
 
+function handleLinks(): CommandResult {
+  return {
+    lines: [
+      out("Quick navigation:"),
+      out(`  <a href="/posts" class="output-accent">/posts</a>      Browse all posts`),
+      out(`  <a href="/tags" class="output-accent">/tags</a>       Browse tags`),
+      out(`  <a href="/projects" class="output-accent">/projects</a>  View projects`),
+      out(`  <a href="/about" class="output-accent">/about</a>      About the author`),
+      out(`  <a href="/search" class="output-accent">/search</a>     Search posts`),
+      out(""),
+    ],
+  };
+}
+
 function handleHistory(history: string[]): CommandResult {
   if (history.length === 0) {
     return { lines: [out("(no history)")] };
@@ -231,7 +246,7 @@ function handleHistory(history: string[]): CommandResult {
 
 export const COMMAND_LIST = [
   "help", "ls", "cat", "tags", "tag", "about", "projects",
-  "grep", "whoami", "neofetch", "date", "echo", "history", "clear",
+  "grep", "whoami", "neofetch", "date", "echo", "links", "history", "clear",
 ];
 
 export function getCompletions(
@@ -282,6 +297,7 @@ export async function executeCommand(
     neofetch: () => handleNeofetch(context),
     date: () => handleDate(),
     echo: () => handleEcho(args),
+    links: () => handleLinks(),
     history: () => handleHistory(history),
     clear: () => ({ lines: [] }),
   };

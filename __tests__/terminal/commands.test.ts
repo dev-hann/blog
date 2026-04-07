@@ -27,7 +27,7 @@ describe("COMMAND_LIST", () => {
   it("contains all expected commands", () => {
     const expected = [
       "help", "ls", "cat", "tags", "tag", "about", "projects",
-      "grep", "whoami", "neofetch", "date", "echo", "history", "clear",
+      "grep", "whoami", "neofetch", "date", "echo", "links", "history", "clear",
     ];
     expect(COMMAND_LIST).toEqual(expected);
   });
@@ -233,6 +233,16 @@ describe("executeCommand", () => {
       const result = await executeCommand("foobar", mockContext, []);
       expect(result.lines[0].type).toBe("error");
       expect(result.lines[0].content).toContain("command not found");
+    });
+  });
+
+  describe("links", () => {
+    it("returns quick navigation links", async () => {
+      const result = await executeCommand("links", mockContext, []);
+      const text = result.lines.map((l) => l.content).join(" ");
+      expect(text).toContain("/posts");
+      expect(text).toContain("/tags");
+      expect(text).toContain("/projects");
     });
   });
 });
