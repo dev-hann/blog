@@ -144,7 +144,7 @@ function handleAbout(): CommandResult {
     lines: [
       out(`<span class="output-accent">${SITE_CONFIG.author}</span> — developer &amp; writer`),
       out(""),
-      out(`github: <a href="${SITE_CONFIG.github}" target="_blank" rel="noopener">${SITE_CONFIG.github}</a>`),
+      out(`github: <a href="${SITE_CONFIG.github}" target="_blank" rel="noopener noreferrer">${SITE_CONFIG.github}</a>`),
       out(`blog:   ${SITE_CONFIG.description}`),
     ],
   };
@@ -215,7 +215,7 @@ function handleDate(): CommandResult {
 }
 
 function handleEcho(args: string[]): CommandResult {
-  return { lines: [out(args.join(" "))] };
+  return { lines: [out(escapeHtml(args.join(" ")))] };
 }
 
 function handleLinks(): CommandResult {

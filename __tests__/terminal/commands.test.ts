@@ -140,6 +140,12 @@ describe("executeCommand", () => {
       const text = result.lines.map((l) => l.content).join(" ");
       expect(text).toContain("hann");
     });
+
+    it("includes noreferrer on external link", async () => {
+      const result = await executeCommand("about", mockContext, []);
+      const linkLine = result.lines.find((l) => l.content.includes("github"));
+      expect(linkLine?.content).toContain('rel="noopener noreferrer"');
+    });
   });
 
   describe("projects", () => {
@@ -204,6 +210,12 @@ describe("executeCommand", () => {
     it("returns empty string with no args", async () => {
       const result = await executeCommand("echo", mockContext, []);
       expect(result.lines[0].content).toBe("");
+    });
+
+    it("escapes HTML in user input", async () => {
+      const result = await executeCommand("echo <script>alert(1)</script>", mockContext, []);
+      expect(result.lines[0].content).not.toContain("<script>");
+      expect(result.lines[0].content).toContain("&lt;script&gt;");
     });
   });
 
