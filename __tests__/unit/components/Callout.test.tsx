@@ -46,4 +46,10 @@ describe("Callout", () => {
     render(<Callout type="warning">Warning status</Callout>);
     expect(screen.getByRole("status")).toBeInTheDocument();
   });
+
+  it("has accessible label for each type", async () => {
+    const { default: Callout } = await import("@/components/mdx/Callout");
+    render(<Callout type="warning">Watch out</Callout>);
+    expect(screen.getByRole("status")).toHaveAttribute("aria-labelledby");
+  });
 });

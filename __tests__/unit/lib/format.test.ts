@@ -30,4 +30,13 @@ describe("formatDate", () => {
     expect(formatDate("2026-04-6")).toBe("2026년 04월 6일");
     expect(formatDate("2026-4-06")).toBe("2026년 4월 06일");
   });
+
+  it("handles ISO timestamp format", () => {
+    expect(formatDate("2026-04-05T12:00:00")).toBe("2026년 04월 05일");
+  });
+
+  it("handles ISO timestamp with timezone", () => {
+    expect(formatDate("2026-04-05T12:00:00Z")).toBe("2026년 04월 05일");
+    expect(formatDate("2026-04-05T12:00:00+09:00")).toBe("2026년 04월 05일");
+  });
 });
