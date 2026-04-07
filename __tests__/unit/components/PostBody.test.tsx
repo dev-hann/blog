@@ -8,7 +8,7 @@ vi.mock("@/lib/mdx", () => ({
 describe("PostBody", () => {
   it("renders MDX content", async () => {
     const { default: PostBody } = await import("@/components/post/PostBody");
-    const { container } = render(<PostBody content="# Hello World" />);
+    render(<PostBody content="# Hello World" />);
     expect(screen.getByTestId("mdx-output")).toHaveTextContent("Hello World");
   });
 
