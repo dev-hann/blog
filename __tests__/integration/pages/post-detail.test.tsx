@@ -30,10 +30,19 @@ vi.mock("@/lib/posts", () => ({
     throw new Error("Post not found");
   },
   getAdjacentPosts: () => ({ prev: null, next: null }),
+  extractHeadings: () => [],
 }));
 
 vi.mock("@/lib/mdx", () => ({
   renderMDX: (source: string) => <div data-testid="mdx-content">{source}</div>,
+}));
+
+vi.mock("@/components/comment/Giscus", () => ({
+  default: () => <div data-testid="giscus" />,
+}));
+
+vi.mock("@/components/post/TableOfContents", () => ({
+  default: () => <nav data-testid="toc" />,
 }));
 
 describe("Post detail page", () => {

@@ -9,8 +9,7 @@ const components = {
 
 export function renderMDX(
   source: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  overrides?: Record<string, React.ComponentType<any>>
+  overrides?: Record<string, React.ComponentType<Record<string, unknown>>>
 ) {
   return (
     <MDXRemote source={source} components={{ ...components, ...overrides }} />
