@@ -3,6 +3,7 @@ import Terminal from "@/components/terminal/Terminal";
 import NoScriptFallback from "@/components/ui/NoScriptFallback";
 import { renderMDXToHTML } from "@/lib/mdx-html";
 import { generateMetadata } from "@/lib/metadata";
+import { SITE_CONFIG } from "@/lib/constants";
 import type { PostHtmlMap } from "@/types/post";
 
 export const metadata = generateMetadata({
@@ -27,6 +28,19 @@ export default async function Home() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: SITE_CONFIG.name,
+            url: SITE_CONFIG.url,
+            description: SITE_CONFIG.description,
+            author: { "@type": "Person", name: SITE_CONFIG.author },
+          }),
+        }}
+      />
       <Terminal posts={posts} tags={tags} postHtml={postHtml} />
       <NoScriptFallback />
     </>
