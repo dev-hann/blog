@@ -19,14 +19,16 @@ describe("About page", () => {
   it("renders about content with author name", async () => {
     const { default: AboutPage } = await import("@/app/about/page");
     render(<AboutPage />);
-    expect(screen.getByText("About")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /^about$/i, level: 1 })).toBeInTheDocument();
     expect(screen.getByText(/hann/)).toBeInTheDocument();
   });
 
   it("renders GitHub link", async () => {
     const { default: AboutPage } = await import("@/app/about/page");
     render(<AboutPage />);
-    const githubLink = screen.getByRole("link", { name: /github/i });
-    expect(githubLink).toHaveAttribute("href", "https://github.com/hann");
+    const githubLinks = screen.getAllByRole("link", { name: /github/i }).filter(
+      (l) => l.getAttribute("href") === "https://github.com/hann"
+    );
+    expect(githubLinks.length).toBeGreaterThanOrEqual(1);
   });
 });

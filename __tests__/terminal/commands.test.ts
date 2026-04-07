@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { executeCommand, COMMAND_LIST, getCompletions } from "@/lib/terminal/commands";
 import type { CommandContext } from "@/lib/terminal/types";
 import type { Post } from "@/types/post";
@@ -14,11 +14,13 @@ const mockPosts: Post[] = Array.from({ length: 15 }, (_, i) => ({
 const mockContext: CommandContext = {
   posts: mockPosts,
   tags: { nextjs: 8, react: 8, typescript: 7 },
+  postHtml: { "post-01": "<p>rendered</p>" },
 };
 
 const emptyContext: CommandContext = {
   posts: [],
   tags: {},
+  postHtml: {},
 };
 
 describe("COMMAND_LIST", () => {
@@ -77,38 +79,19 @@ describe("executeCommand", () => {
       expect(result.lines[0].content).toContain("No such post");
     });
 
-    it("fetches and renders post with valid slug", async () => {
-      const mockJson = {
-        title: "Post 01",
-        date: "2026-04-01",
-        tags: ["nextjs", "react"],
-        summary: "Summary for post 1",
-        html: "<p>rendered</p>",
-      };
-      const mockFetch = vi.fn().mockResolvedValue({
-        ok: true,
-        json: () => Promise.resolve(mockJson),
-      });
-      vi.stubGlobal("fetch", mockFetch);
-
+    it("renders post with valid slug", async () => {
       const result = await executeCommand("cat post-01", mockContext, []);
-      expect(mockFetch).toHaveBeenCalledWith("/api/posts/post-01");
       expect(result.lines.length).toBeGreaterThanOrEqual(2);
       expect(result.lines[0].type).toBe("html");
       expect(result.lines[1].type).toBe("mdx");
-
-      vi.restoreAllMocks();
+      expect(result.lines[1].content).toBe("<p>rendered</p>");
     });
 
-    it("falls back to frontmatter on fetch failure", async () => {
-      vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("fail")));
-
-      const result = await executeCommand("cat post-01", mockContext, []);
+    it("falls back to frontmatter when html unavailable", async () => {
+      const result = await executeCommand("cat post-02", mockContext, []);
       const text = result.lines.map((l) => l.content).join(" ");
-      expect(text).toContain("Post 1");
+      expect(text).toContain("Post 2");
       expect(text).toContain("MDX rendering unavailable");
-
-      vi.restoreAllMocks();
     });
   });
 

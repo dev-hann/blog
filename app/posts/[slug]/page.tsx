@@ -39,7 +39,7 @@ export default async function PostDetailPage({ params }: PageProps) {
   const headings = extractHeadings(post.content);
 
   return (
-    <main className="min-h-screen bg-[var(--color-bg-primary)] px-4 py-8">
+    <div className="bg-[var(--color-bg-primary)] px-4 py-8">
       <div className="mx-auto flex max-w-5xl gap-8">
         <article className="min-w-0 max-w-3xl flex-1">
           <header className="mb-8">
@@ -87,10 +87,10 @@ export default async function PostDetailPage({ params }: PageProps) {
           </nav>
           <Giscus />
         </article>
-        <aside className="w-56 shrink-0 pt-24">
+        <aside className="hidden w-56 shrink-0 pt-24 lg:block">
           <TableOfContents headings={headings} />
         </aside>
       </div>
-    </main>
+    </div>
   );
 }

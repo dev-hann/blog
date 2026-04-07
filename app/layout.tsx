@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Geist } from "next/font/google";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 import { SITE_CONFIG } from "@/lib/constants";
 import "./globals.css";
 
@@ -15,7 +17,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
+        <Header />
+        <div className="min-h-screen">{children}</div>
+        <Footer />
       </body>
     </html>
   );

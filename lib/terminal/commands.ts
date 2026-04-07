@@ -78,31 +78,8 @@ async function handleCat(
     return { lines: [err(`cat: ${slug}: No such post`)] };
   }
 
-  try {
-    const res = await fetch(`/api/posts/${slug}`);
-    if (!res.ok) throw new Error("fetch failed");
-    const data = await res.json();
-
-    const frontmatter = [
-      `<span class="output-muted">---</span>`,
-      `<span class="output-muted">title:</span> ${data.title}`,
-      `<span class="output-muted">date:</span> ${data.date}`,
-      `<span class="output-muted">tags:</span> [${data.tags.join(", ")}]`,
-      data.summary
-        ? `<span class="output-muted">summary:</span> ${data.summary}`
-        : null,
-      `<span class="output-muted">---</span>`,
-    ]
-      .filter(Boolean)
-      .join("\n");
-
-    return {
-      lines: [
-        { id: genId(), type: "html", content: frontmatter },
-        { id: genId(), type: "mdx", content: data.html },
-      ],
-    };
-  } catch {
+  const html = context.postHtml[slug];
+  if (!html) {
     return {
       lines: [
         out(`<span class="output-muted">---</span>`),
@@ -115,6 +92,26 @@ async function handleCat(
       ],
     };
   }
+
+  const frontmatter = [
+    `<span class="output-muted">---</span>`,
+    `<span class="output-muted">title:</span> ${post.title}`,
+    `<span class="output-muted">date:</span> ${post.date}`,
+    `<span class="output-muted">tags:</span> [${post.tags.join(", ")}]`,
+    post.summary
+      ? `<span class="output-muted">summary:</span> ${post.summary}`
+      : null,
+    `<span class="output-muted">---</span>`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  return {
+    lines: [
+      { id: genId(), type: "html", content: frontmatter },
+      { id: genId(), type: "mdx", content: html },
+    ],
+  };
 }
 
 function handleTags(context: CommandContext): CommandResult {

@@ -25,7 +25,7 @@ describe("Not Found page", () => {
   it("has link to home", async () => {
     const { default: NotFound } = await import("@/app/not-found");
     render(<NotFound />);
-    const homeLink = screen.getByRole("link", { name: /home/i });
-    expect(homeLink).toHaveAttribute("href", "/");
+    const homeLinks = screen.getAllByRole("link", { name: /home/i }).filter((l) => l.getAttribute("href") === "/");
+    expect(homeLinks.length).toBeGreaterThanOrEqual(1);
   });
 });

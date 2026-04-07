@@ -12,7 +12,7 @@ export default function PostsPage() {
   const posts = getAllPosts();
 
   return (
-    <main className="min-h-screen bg-[var(--color-bg-primary)] px-4 py-8">
+    <div className="bg-[var(--color-bg-primary)] px-4 py-8">
       <div className="mx-auto max-w-3xl">
         <h1 className="mb-8 text-2xl font-bold text-[var(--color-text-primary)]">
           Posts
@@ -23,6 +23,6 @@ export default function PostsPage() {
           ))}
         </div>
       </div>
-    </main>
+    </div>
   );
 }

@@ -28,7 +28,7 @@ describe("Tags list page", () => {
   it("renders all tags with counts", async () => {
     const { default: TagsPage } = await import("@/app/tags/page");
     render(<TagsPage />);
-    expect(screen.getByText("Tags")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /tags/i, level: 1 })).toBeInTheDocument();
     expect(screen.getByText("nextjs")).toBeInTheDocument();
     expect(screen.getByText("react")).toBeInTheDocument();
     expect(screen.getByText("typescript")).toBeInTheDocument();
@@ -37,8 +37,8 @@ describe("Tags list page", () => {
   it("tags link to detail pages", async () => {
     const { default: TagsPage } = await import("@/app/tags/page");
     render(<TagsPage />);
-    const links = screen.getAllByRole("link");
-    const hrefs = links.map((l) => l.getAttribute("href"));
+    const tagLinks = screen.getAllByRole("link").filter((l) => l.getAttribute("href")?.startsWith("/tags/"));
+    const hrefs = tagLinks.map((l) => l.getAttribute("href"));
     expect(hrefs).toContain("/tags/nextjs");
     expect(hrefs).toContain("/tags/react");
   });

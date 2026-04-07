@@ -33,7 +33,7 @@ describe("Posts list page", () => {
   it("renders all posts sorted by date", async () => {
     const { default: PostsPage } = await import("@/app/posts/page");
     render(<PostsPage />);
-    expect(screen.getByText("Posts")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /posts/i, level: 1 })).toBeInTheDocument();
     expect(screen.getByText("First Post")).toBeInTheDocument();
     expect(screen.getByText("Second Post")).toBeInTheDocument();
   });
@@ -41,8 +41,8 @@ describe("Posts list page", () => {
   it("links each post to its detail page", async () => {
     const { default: PostsPage } = await import("@/app/posts/page");
     render(<PostsPage />);
-    const links = screen.getAllByRole("link");
-    expect(links[0]).toHaveAttribute("href", "/posts/post-1");
-    expect(links[1]).toHaveAttribute("href", "/posts/post-2");
+    const postLinks = screen.getAllByRole("link").filter((l) => l.getAttribute("href")?.startsWith("/posts/post-"));
+    expect(postLinks[0]).toHaveAttribute("href", "/posts/post-1");
+    expect(postLinks[1]).toHaveAttribute("href", "/posts/post-2");
   });
 });

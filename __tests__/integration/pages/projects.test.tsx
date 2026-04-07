@@ -19,8 +19,8 @@ describe("Projects page", () => {
   it("renders project cards", async () => {
     const { default: ProjectsPage } = await import("@/app/projects/page");
     render(<ProjectsPage />);
-    expect(screen.getByText("Projects")).toBeInTheDocument();
-    expect(screen.getByText("Blog")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /projects/i, level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /blog/i, level: 2 })).toBeInTheDocument();
   });
 
   it("project cards have external links", async () => {

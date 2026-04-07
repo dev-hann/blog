@@ -25,8 +25,8 @@ const mockPosts: Post[] = Array.from({ length: 15 }, (_, i) => ({
 
 const mockTags: Record<string, number> = { nextjs: 8, react: 8, typescript: 7 };
 
-function renderTerminal(posts = mockPosts, tags = mockTags) {
-  return render(<Terminal posts={posts} tags={tags} />);
+function renderTerminal(posts = mockPosts, tags = mockTags, postHtml: Record<string, string> = {}) {
+  return render(<Terminal posts={posts} tags={tags} postHtml={postHtml} />);
 }
 
 describe("Terminal", () => {

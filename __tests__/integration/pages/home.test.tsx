@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, act } from "@testing-library/react";
 
 vi.mock("next/link", () => ({
   default: ({ children, href }: { children: React.ReactNode; href: string }) => (
@@ -20,6 +20,11 @@ vi.mock("@/lib/posts", () => ({
     { slug: "post-1", title: "First Post", date: "2026-04-06", tags: ["nextjs"], summary: "First summary" },
   ],
   getAllTags: () => ({ nextjs: 1 }),
+  getPostBySlug: () => ({ slug: "post-1", title: "First Post", date: "2026-04-06", tags: ["nextjs"], summary: "First summary", content: "# Hello" }),
+}));
+
+vi.mock("@/lib/mdx-html", () => ({
+  renderMDXToHTML: async () => "<p>Hello</p>",
 }));
 
 vi.mock("@/components/terminal/CommandInput", () => ({
@@ -32,16 +37,24 @@ vi.mock("@/components/terminal/OutputRenderer", () => ({
   ),
 }));
 
+vi.mock("@/lib/terminal/commands", () => ({
+  executeCommand: async () => ({ lines: [] }),
+}));
+
 describe("Home page", () => {
   it("renders terminal component with welcome message", async () => {
     const { default: HomePage } = await import("@/app/page");
-    render(<HomePage />);
+    await act(async () => {
+      render(await HomePage());
+    });
     expect(screen.getByText(/Welcome to hann/i)).toBeInTheDocument();
   });
 
   it("renders command input", async () => {
     const { default: HomePage } = await import("@/app/page");
-    render(<HomePage />);
+    await act(async () => {
+      render(await HomePage());
+    });
     expect(screen.getByTestId("command-input")).toBeInTheDocument();
   });
 });

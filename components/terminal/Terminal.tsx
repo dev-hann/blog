@@ -15,6 +15,7 @@ function genId(): string {
 interface TerminalProps {
   posts: Post[];
   tags: Record<string, number>;
+  postHtml: Record<string, string>;
 }
 
 function createWelcomeLines(): TerminalLine[] {
@@ -26,7 +27,7 @@ function createWelcomeLines(): TerminalLine[] {
   ];
 }
 
-export default function Terminal({ posts, tags }: TerminalProps) {
+export default function Terminal({ posts, tags, postHtml }: TerminalProps) {
   const [lines, setLines] = useState<TerminalLine[]>(createWelcomeLines);
   const [history, setHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
@@ -65,14 +66,14 @@ export default function Terminal({ posts, tags }: TerminalProps) {
 
       setIsProcessing(true);
       setLines((prev) => [...prev, inputLine]);
-      const result = await executeCommand(input, { posts, tags }, history);
+      const result = await executeCommand(input, { posts, tags, postHtml }, history);
       setIsProcessing(false);
 
       setLines((prev) => [...prev, ...result.lines]);
       setHistory((prev) => [...prev, input]);
       setHistoryIndex(-1);
     },
-    [posts, tags, history]
+    [posts, tags, postHtml, history]
   );
 
   const handleHistoryUp = useCallback(() => {
@@ -100,7 +101,7 @@ export default function Terminal({ posts, tags }: TerminalProps) {
   };
 
   return (
-    <div className="flex h-[100dvh] flex-col bg-[var(--color-bg-primary)]">
+    <div className="fixed inset-0 z-50 flex flex-col bg-[var(--color-bg-primary)]">
       <div className="terminal-titlebar">
         <span className="terminal-dot terminal-dot-red" />
         <span className="terminal-dot terminal-dot-yellow" />
