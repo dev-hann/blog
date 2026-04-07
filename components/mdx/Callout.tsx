@@ -15,11 +15,17 @@ const typeIcons: Record<string, string> = {
   danger: "✕",
 };
 
+const typeRoles: Record<string, string> = {
+  info: "note",
+  warning: "status",
+  danger: "alert",
+};
+
 export default function Callout({ children, type = "info" }: CalloutProps) {
   return (
     <div
       className={`my-4 rounded-lg border-l-4 p-4 ${typeStyles[type] ?? typeStyles.info}`}
-      role="alert"
+      role={typeRoles[type] ?? "note"}
     >
       <div className="flex items-start gap-2">
         <span aria-hidden="true">{typeIcons[type]}</span>

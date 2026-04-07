@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent, act } from "@testing-library/react";
 
 vi.mock("next/link", () => ({
   default: ({ children, href }: { children: React.ReactNode; href: string }) => (
@@ -41,5 +41,39 @@ describe("Search page", () => {
     render(<SearchPage />);
     expect(screen.getByText("Next.js Guide")).toBeInTheDocument();
     expect(screen.getByText("React Hooks")).toBeInTheDocument();
+  });
+
+  it("filters posts after debounce", async () => {
+    vi.useFakeTimers();
+    const { default: SearchPage } = await import("@/app/search/page");
+    render(<SearchPage />);
+    const input = screen.getByPlaceholderText(/search/i);
+    fireEvent.change(input, { target: { value: "React" } });
+    await act(async () => {
+      vi.advanceTimersByTime(400);
+    });
+    expect(screen.getByText("React Hooks")).toBeInTheDocument();
+    expect(screen.queryByText("Next.js Guide")).not.toBeInTheDocument();
+    vi.useRealTimers();
+  });
+
+  it("shows no results message for unmatched query", async () => {
+    vi.useFakeTimers();
+    const { default: SearchPage } = await import("@/app/search/page");
+    render(<SearchPage />);
+    const input = screen.getByPlaceholderText(/search/i);
+    fireEvent.change(input, { target: { value: "nonexistent" } });
+    await act(async () => {
+      vi.advanceTimersByTime(400);
+    });
+    expect(screen.getByText(/no results found/i)).toBeInTheDocument();
+    vi.useRealTimers();
+  });
+
+  it("post results link to detail pages", async () => {
+    const { default: SearchPage } = await import("@/app/search/page");
+    render(<SearchPage />);
+    const link = screen.getByText("Next.js Guide").closest("a");
+    expect(link).toHaveAttribute("href", "/posts/post-1");
   });
 });

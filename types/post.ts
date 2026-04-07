@@ -10,3 +10,9 @@ export interface Post {
 export interface PostDetail extends Post {
   content: string;
 }
+
+export interface Heading {
+  id: string;
+  text: string;
+  level: number;
+}

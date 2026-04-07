@@ -34,9 +34,21 @@ describe("Callout", () => {
     expect(div.className).toContain("color-error");
   });
 
-  it("has alert role", async () => {
+  it("danger type has alert role", async () => {
     const { default: Callout } = await import("@/components/mdx/Callout");
-    render(<Callout>Alert</Callout>);
+    render(<Callout type="danger">Danger alert</Callout>);
     expect(screen.getByRole("alert")).toBeInTheDocument();
+  });
+
+  it("info type has note role", async () => {
+    const { default: Callout } = await import("@/components/mdx/Callout");
+    render(<Callout>Info note</Callout>);
+    expect(screen.getByRole("note")).toBeInTheDocument();
+  });
+
+  it("warning type has status role", async () => {
+    const { default: Callout } = await import("@/components/mdx/Callout");
+    render(<Callout type="warning">Warning status</Callout>);
+    expect(screen.getByRole("status")).toBeInTheDocument();
   });
 });

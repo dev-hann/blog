@@ -1,19 +1,12 @@
 import { SITE_CONFIG } from "@/lib/constants";
 import { generateMetadata } from "@/lib/metadata";
+import type { Project } from "@/types/project";
 
 export const metadata = generateMetadata({
   title: "Projects",
   description: "Projects by " + SITE_CONFIG.author,
   path: "/projects",
 });
-
-interface Project {
-  name: string;
-  description: string;
-  tags: string[];
-  github?: string;
-  demo?: string;
-}
 
 const projects: Project[] = [
   {

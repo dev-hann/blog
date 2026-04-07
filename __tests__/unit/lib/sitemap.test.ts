@@ -2,33 +2,36 @@ import { describe, it, expect } from "vitest";
 
 describe("Sitemap", () => {
   it("includes all static pages", async () => {
-    const { GET } = await import("@/app/sitemap.xml/route");
-    const res = await GET();
-    const xml = await res.text();
-    expect(xml).toContain("/posts");
-    expect(xml).toContain("/about");
-    expect(xml).toContain("/projects");
-    expect(xml).toContain("/search");
-    expect(xml).toContain("/tags");
+    const { default: sitemap } = await import("@/app/sitemap");
+    const entries = await sitemap();
+    const urls = entries.map((e: { url: string }) => e.url);
+    expect(urls).toContain("https://blog.dev/posts");
+    expect(urls).toContain("https://blog.dev/about");
+    expect(urls).toContain("https://blog.dev/projects");
+    expect(urls).toContain("https://blog.dev/search");
+    expect(urls).toContain("https://blog.dev/tags");
   });
 
   it("includes dynamic post pages", async () => {
-    const { GET } = await import("@/app/sitemap.xml/route");
-    const res = await GET();
-    const xml = await res.text();
-    expect(xml).toContain("/posts/");
+    const { default: sitemap } = await import("@/app/sitemap");
+    const entries = await sitemap();
+    const urls = entries.map((e: { url: string }) => e.url);
+    expect(urls.some((u: string) => u.includes("/posts/"))).toBe(true);
   });
 
   it("includes tag detail pages", async () => {
-    const { GET } = await import("@/app/sitemap.xml/route");
-    const res = await GET();
-    const xml = await res.text();
-    expect(xml).toMatch(/\/tags\/[a-z]/);
+    const { default: sitemap } = await import("@/app/sitemap");
+    const entries = await sitemap();
+    const urls = entries.map((e: { url: string }) => e.url);
+    expect(urls.some((u: string) => /\/tags\/[a-z]/.test(u))).toBe(true);
   });
 
-  it("returns XML content type", async () => {
-    const { GET } = await import("@/app/sitemap.xml/route");
-    const res = await GET();
-    expect(res.headers.get("Content-Type")).toContain("application/xml");
+  it("returns valid sitemap entries with required fields", async () => {
+    const { default: sitemap } = await import("@/app/sitemap");
+    const entries = await sitemap();
+    for (const entry of entries) {
+      expect(entry).toHaveProperty("url");
+      expect(entry).toHaveProperty("lastModified");
+    }
   });
 });

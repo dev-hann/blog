@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
-import type { Post, PostDetail } from "@/types/post";
+import type { Post, PostDetail, Heading } from "@/types/post";
 
 const POSTS_DIR = path.join(process.cwd(), "content/posts");
 
@@ -59,12 +59,6 @@ export function getAllTags(): Record<string, number> {
     }
   }
   return tagCounts;
-}
-
-export interface Heading {
-  id: string;
-  text: string;
-  level: number;
 }
 
 export function extractHeadings(content: string): Heading[] {

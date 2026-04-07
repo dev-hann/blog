@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { getAllPosts, getPostBySlug, getAllTags, getAdjacentPosts } from "@/lib/posts";
+import { getAllPosts, getPostBySlug, getAllTags, getAdjacentPosts, extractHeadings } from "@/lib/posts";
 
 describe("getAllPosts", () => {
   it("returns array of Post", () => {
@@ -80,5 +80,30 @@ describe("getAdjacentPosts", () => {
     const posts = getAllPosts();
     const { next } = getAdjacentPosts(posts[posts.length - 1].slug);
     expect(next).toBeNull();
+  });
+});
+
+describe("extractHeadings", () => {
+  it("extracts h2 and h3 headings", () => {
+    const content = "## Intro\n\nSome text\n### Details\n\nMore text\n## Conclusion";
+    const headings = extractHeadings(content);
+    expect(headings).toHaveLength(3);
+    expect(headings[0]).toEqual({ id: "intro", text: "Intro", level: 2 });
+    expect(headings[1]).toEqual({ id: "details", text: "Details", level: 3 });
+    expect(headings[2]).toEqual({ id: "conclusion", text: "Conclusion", level: 2 });
+  });
+
+  it("returns empty array for content without headings", () => {
+    const content = "Just a paragraph\n\nAnother paragraph";
+    const headings = extractHeadings(content);
+    expect(headings).toEqual([]);
+  });
+
+  it("generates correct ids from Korean and special chars", () => {
+    const content = "## 한글 제목\n## Hello World\n## React & Next.js";
+    const headings = extractHeadings(content);
+    expect(headings[0].id).toBe("한글-제목");
+    expect(headings[1].id).toBe("hello-world");
+    expect(headings[2].id).toBe("react-nextjs");
   });
 });
