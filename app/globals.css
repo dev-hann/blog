@@ -170,6 +170,7 @@ code {
   font-family: var(--font-sans), system-ui, sans-serif;
   color: var(--color-text-primary);
   font-weight: 600;
+  scroll-margin-top: 5rem;
 }
 
 .mdx-content h1 { font-size: 1.5rem; margin: 1.5rem 0 0.75rem; }
@@ -275,5 +276,15 @@ code {
   .terminal-dot {
     width: 10px;
     height: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-blink {
+    animation: none;
+  }
+
+  [class*="animate-pulse"] {
+    animation: none;
   }
 }

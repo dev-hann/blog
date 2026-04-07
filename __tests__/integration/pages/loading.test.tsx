@@ -15,6 +15,10 @@ async function loadComponent(name: string) {
       const mod = await import("@/app/search/loading");
       return mod.default;
     }
+    case "tags": {
+      const mod = await import("@/app/tags/loading");
+      return mod.default;
+    }
     default:
       throw new Error(`Unknown loading: ${name}`);
   }
@@ -53,6 +57,18 @@ describe("Loading pages", () => {
 
   it("search loading has accessible status", async () => {
     const Loading = await loadComponent("search");
+    render(<Loading />);
+    expect(screen.getByRole("status")).toBeInTheDocument();
+  });
+
+  it("tags loading renders skeleton", async () => {
+    const Loading = await loadComponent("tags");
+    const { container } = render(<Loading />);
+    expect(container.querySelectorAll("[data-testid]").length).toBeGreaterThan(0);
+  });
+
+  it("tags loading has accessible status", async () => {
+    const Loading = await loadComponent("tags");
     render(<Loading />);
     expect(screen.getByRole("status")).toBeInTheDocument();
   });

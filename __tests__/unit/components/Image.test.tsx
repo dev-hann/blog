@@ -1,10 +1,10 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 
 vi.mock("next/image", () => ({
-  default: ({ src, alt, width, height, sizes, priority }: { src: string; alt: string; width: number; height: number; sizes?: string; priority?: boolean }) => (
+  default: ({ src, alt, width, height, sizes, priority, onError }: { src: string; alt: string; width: number; height: number; sizes?: string; priority?: boolean; onError?: () => void }) => (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={src} alt={alt} width={width} height={height} data-sizes={sizes} data-priority={priority ? "true" : undefined} />
+    <img src={src} alt={alt} width={width} height={height} data-sizes={sizes} data-priority={priority ? "true" : undefined} onError={onError} />
   ),
 }));
 
@@ -64,5 +64,15 @@ describe("MDXImage", () => {
     const { default: MDXImage } = await import("@/components/mdx/Image");
     render(<MDXImage src="/test.png" alt="Normal" />);
     expect(screen.getByRole("img")).not.toHaveAttribute("data-priority");
+  });
+
+  it("shows alt text fallback when image fails to load", async () => {
+    const { default: MDXImage } = await import("@/components/mdx/Image");
+    const { container } = render(<MDXImage src="/broken.png" alt="Broken image" />);
+    const img = screen.getByRole("img");
+    await fireEvent.error(img);
+    expect(screen.queryByRole("img")).not.toBeInTheDocument();
+    expect(container.querySelector("[data-img-error]")).toBeInTheDocument();
+    expect(container.textContent).toContain("Broken image");
   });
 });

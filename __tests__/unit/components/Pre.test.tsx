@@ -73,4 +73,35 @@ describe("Pre", () => {
     const srLabel = screen.getByText("python").closest("span");
     expect(srLabel).toHaveAttribute("aria-label", "Language: python");
   });
+
+  it("shows error state when clipboard fails", async () => {
+    vi.resetModules();
+    vi.doMock("@/lib/clipboard", () => ({
+      copyToClipboard: vi.fn().mockRejectedValue(new Error("denied")),
+    }));
+    const { default: Pre } = await import("@/components/mdx/Pre");
+    const user = userEvent.setup();
+    render(<Pre>test code block</Pre>);
+    await user.click(screen.getByRole("button", { name: /copy/i }));
+    expect(await screen.findByText("Failed")).toBeInTheDocument();
+    vi.doUnmock("@/lib/clipboard");
+  });
+
+  it("recovers from error state on next click", async () => {
+    vi.resetModules();
+    const mockCopy = vi.fn()
+      .mockRejectedValueOnce(new Error("denied"))
+      .mockResolvedValueOnce(undefined);
+    vi.doMock("@/lib/clipboard", () => ({
+      copyToClipboard: mockCopy,
+    }));
+    const { default: Pre } = await import("@/components/mdx/Pre");
+    const user = userEvent.setup();
+    render(<Pre>test code block</Pre>);
+    await user.click(screen.getByRole("button", { name: /copy/i }));
+    expect(await screen.findByText("Failed")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: /copy/i }));
+    expect(await screen.findByText("Copied")).toBeInTheDocument();
+    vi.doUnmock("@/lib/clipboard");
+  });
 });

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, Children, isValidElement } from "react";
+import { copyToClipboard } from "@/lib/clipboard";
 
 type PreProps = React.ComponentProps<"pre"> & {
   children: React.ReactNode;
@@ -16,14 +17,22 @@ function getLanguage(children: React.ReactNode): string | null {
 
 export default function Pre({ children, ...props }: PreProps) {
   const [copied, setCopied] = useState(false);
+  const [failed, setFailed] = useState(false);
   const preRef = useRef<HTMLPreElement>(null);
   const lang = getLanguage(children);
 
   const handleCopy = async () => {
     const text = preRef.current?.textContent ?? "";
-    await navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      await copyToClipboard(text);
+      setFailed(false);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setCopied(false);
+      setFailed(true);
+      setTimeout(() => setFailed(false), 2000);
+    }
   };
 
   return (
@@ -46,7 +55,7 @@ export default function Pre({ children, ...props }: PreProps) {
         className="absolute right-2 top-2 rounded bg-[var(--color-bg-secondary)] px-2 py-1 text-xs text-[var(--color-text-muted)] opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
         aria-label="Copy code"
       >
-        {copied ? "Copied" : "Copy"}
+        {copied ? "Copied" : failed ? "Failed" : "Copy"}
       </button>
     </div>
   );
