@@ -1,6 +1,15 @@
 import { SITE_CONFIG } from "@/lib/constants";
 import type { Post } from "@/types/post";
 
+function escapeXml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+}
+
 export function generateRSS(posts: Post[]): string {
   const items = posts.slice(0, 20)
     .map(
@@ -11,7 +20,7 @@ export function generateRSS(posts: Post[]): string {
       <guid isPermaLink="true">${SITE_CONFIG.url}/posts/${post.slug}</guid>
       <description><![CDATA[${post.summary}]]></description>
       <pubDate>${new Date(post.date).toUTCString()}</pubDate>
-      ${post.tags.map((tag) => `<category>${tag}</category>`).join("\n      ")}
+      ${post.tags.map((tag) => `<category>${escapeXml(tag)}</category>`).join("\n      ")}
     </item>`
     )
     .join("");

@@ -33,4 +33,20 @@ describe("generateRSS", () => {
     const count = (xml.match(/<item>/g) || []).length;
     expect(count).toBeLessThanOrEqual(20);
   });
+
+  it("escapes XML special characters in tags", () => {
+    const posts = getAllPosts();
+    const post = {
+      ...posts[0],
+      slug: "test-post",
+      title: "Test & <Post>",
+      summary: "A & B < C > D",
+      tags: ["react&next", "ui/ux<design>", "c++"],
+    };
+    const xml = generateRSS([post]);
+    expect(xml).toContain("<category>react&amp;next</category>");
+    expect(xml).toContain("<category>ui/ux&lt;design&gt;</category>");
+    expect(xml).not.toContain("<category>react&next</category>");
+    expect(xml).not.toContain("<category>ui/ux<design></category>");
+  });
 });
