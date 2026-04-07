@@ -1,9 +1,20 @@
 import { getAllTags, getAllPosts } from "@/lib/posts";
 import PostCard from "@/components/post/PostCard";
 import { notFound } from "next/navigation";
+import { generateMetadata as makeMetadata } from "@/lib/metadata";
+import type { Metadata } from "next";
 
 interface PageProps {
   params: Promise<{ tag: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { tag } = await params;
+  return makeMetadata({
+    title: `#${tag}`,
+    description: `Posts tagged with ${tag}`,
+    path: `/tags/${tag}`,
+  });
 }
 
 export async function generateStaticParams() {
