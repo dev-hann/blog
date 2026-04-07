@@ -29,7 +29,10 @@ vi.mock("@/lib/posts", () => ({
     }
     throw new Error("Post not found");
   },
-  getAdjacentPosts: () => ({ prev: null, next: null }),
+  getAdjacentPosts: () => ({
+    prev: { slug: "prev-post", title: "Previous Post" },
+    next: { slug: "next-post", title: "Next Post" },
+  }),
   extractHeadings: () => [],
 }));
 
@@ -61,5 +64,30 @@ describe("Post detail page", () => {
     const { default: PostDetailPage } = await import("@/app/posts/[slug]/page");
     const params = Promise.resolve({ slug: "non-existent" });
     await expect(PostDetailPage({ params })).rejects.toThrow("NOT_FOUND");
+  });
+
+  it("renders comment section", async () => {
+    const { default: PostDetailPage } = await import("@/app/posts/[slug]/page");
+    const params = Promise.resolve({ slug: "post-1" });
+    const result = await PostDetailPage({ params });
+    render(result);
+    expect(screen.getByTestId("giscus")).toBeInTheDocument();
+  });
+
+  it("renders table of contents", async () => {
+    const { default: PostDetailPage } = await import("@/app/posts/[slug]/page");
+    const params = Promise.resolve({ slug: "post-1" });
+    const result = await PostDetailPage({ params });
+    render(result);
+    expect(screen.getByTestId("toc")).toBeInTheDocument();
+  });
+
+  it("renders prev/next navigation", async () => {
+    const { default: PostDetailPage } = await import("@/app/posts/[slug]/page");
+    const params = Promise.resolve({ slug: "post-1" });
+    const result = await PostDetailPage({ params });
+    render(result);
+    expect(screen.getByText(/Previous Post/)).toBeInTheDocument();
+    expect(screen.getByText(/Next Post/)).toBeInTheDocument();
   });
 });
