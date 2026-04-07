@@ -22,7 +22,7 @@ const projects: Project[] = [
 export default function ProjectsPage() {
   return (
     <PageContainer>
-      <h1 className="mb-8 text-2xl font-bold text-[var(--color-text-primary)]">
+      <h1 id="projects-heading" className="mb-8 text-2xl font-bold text-[var(--color-text-primary)]">
         Projects
       </h1>
       <div className="grid gap-4 sm:grid-cols-2">

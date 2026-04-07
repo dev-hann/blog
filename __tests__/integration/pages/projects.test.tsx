@@ -51,4 +51,11 @@ describe("Projects page", () => {
       expect(heading).not.toBeNull();
     }
   });
+
+  it("page heading has id for aria-labelledby reference", async () => {
+    const { default: ProjectsPage } = await import("@/app/projects/page");
+    const { container } = render(<ProjectsPage />);
+    const h1 = container.querySelector("h1");
+    expect(h1).toHaveAttribute("id");
+  });
 });

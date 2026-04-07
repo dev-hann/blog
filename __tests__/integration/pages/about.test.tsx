@@ -42,4 +42,15 @@ describe("About page", () => {
     const srOnly = githubLink!.querySelector(".sr-only");
     expect(srOnly).toHaveTextContent("opens in new tab");
   });
+
+  it("section has aria-labelledby pointing to heading", async () => {
+    const { default: AboutPage } = await import("@/app/about/page");
+    const { container } = render(<AboutPage />);
+    const section = container.querySelector("section");
+    expect(section).toBeInTheDocument();
+    const labelledby = section?.getAttribute("aria-labelledby");
+    expect(labelledby).toBeTruthy();
+    const heading = container.querySelector(`#${labelledby}`);
+    expect(heading).toHaveTextContent("About");
+  });
 });

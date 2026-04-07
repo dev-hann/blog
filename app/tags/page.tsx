@@ -15,7 +15,7 @@ export default function TagsPage() {
 
   return (
     <PageContainer>
-      <h1 className="mb-8 text-2xl font-bold text-[var(--color-text-primary)]">
+      <h1 id="tags-heading" className="mb-8 text-2xl font-bold text-[var(--color-text-primary)]">
         Tags
       </h1>
       <div className="flex flex-wrap gap-3">

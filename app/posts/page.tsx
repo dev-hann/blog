@@ -15,7 +15,7 @@ export default function PostsPage() {
 
   return (
     <PageContainer>
-      <h1 className="mb-8 text-2xl font-bold text-[var(--color-text-primary)]">
+      <h1 id="posts-heading" className="mb-8 text-2xl font-bold text-[var(--color-text-primary)]">
         Posts
       </h1>
       <Suspense>
