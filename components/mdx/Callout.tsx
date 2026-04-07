@@ -30,15 +30,13 @@ const typeLabels: Record<CalloutType, string> = {
 };
 
 export default function Callout({ children, type = "info" }: CalloutProps) {
-  const labelId = `callout-label-${type}`;
   return (
     <div
       className={`my-4 rounded-lg border-l-4 p-4 ${typeStyles[type]}`}
       role={typeRoles[type]}
-      aria-labelledby={labelId}
+      aria-label={typeLabels[type]}
     >
       <div className="flex items-start gap-2">
-        <span id={labelId} className="sr-only">{typeLabels[type]}</span>
         <span aria-hidden="true">{typeIcons[type]}</span>
         <div className="flex-1">{children}</div>
       </div>

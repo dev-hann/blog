@@ -71,4 +71,17 @@ describe("TableOfContents", () => {
     await user.click(toggle);
     expect(toggle).toHaveAttribute("aria-expanded", "true");
   });
+
+  it("mobile TOC has region role when expanded", async () => {
+    const user = userEvent.setup();
+    const { default: TableOfContents } = await import("@/components/post/TableOfContents");
+    const headings = [
+      { id: "intro", text: "Introduction", level: 2 },
+    ];
+    const { container } = render(<TableOfContents headings={headings} />);
+    const toggle = screen.getByLabelText("Toggle table of contents");
+    await user.click(toggle);
+    const mobileNav = container.querySelectorAll("nav")[1];
+    expect(mobileNav).toHaveAttribute("aria-label", "Table of contents");
+  });
 });

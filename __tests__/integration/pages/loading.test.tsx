@@ -72,4 +72,11 @@ describe("Loading pages", () => {
     render(<Loading />);
     expect(screen.getByRole("status")).toBeInTheDocument();
   });
+
+  it("post-detail loading does not use inline styles", async () => {
+    const Loading = await loadComponent("post-detail");
+    const { container } = render(<Loading />);
+    const elementsWithStyle = container.querySelectorAll("[style]");
+    expect(elementsWithStyle.length).toBe(0);
+  });
 });

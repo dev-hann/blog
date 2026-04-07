@@ -48,11 +48,11 @@ export default async function PostDetailPage({ params }: PageProps) {
   return (
     <PageContainer maxWidth="max-w-5xl">
       <div className="flex gap-8">
-          <article aria-labelledby="post-title" className="min-w-0 max-w-3xl flex-1">
-            <header className="mb-8">
-              <h1 id="post-title" className="text-3xl font-bold text-[var(--color-text-primary)]">
-                {post.title}
-              </h1>
+        <article aria-labelledby="post-title" className="min-w-0 max-w-3xl flex-1">
+          <header className="mb-8">
+            <h1 id="post-title" className="text-3xl font-bold text-[var(--color-text-primary)]">
+              {post.title}
+            </h1>
             <div className="mt-2 flex items-center gap-4 text-sm text-[var(--color-text-muted)]">
               <time dateTime={post.date}>{formatDate(post.date)}</time>
               <span>{readingTimeText}</span>

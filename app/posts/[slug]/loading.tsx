@@ -18,9 +18,14 @@ export default function PostDetailLoading() {
             </div>
           </header>
           <div data-testid="skeleton-body" className="flex flex-col gap-3">
-            {[75, 90, 60, 85, 70, 95, 65, 80].map((w, i) => (
-              <div key={i} className="h-4 animate-pulse rounded bg-[var(--color-bg-tertiary)]" style={{ width: `${w}%` }} />
-            ))}
+            <div className="h-4 animate-pulse rounded bg-[var(--color-bg-tertiary)] w-3/4" />
+            <div className="h-4 animate-pulse rounded bg-[var(--color-bg-tertiary)] w-[90%]" />
+            <div className="h-4 animate-pulse rounded bg-[var(--color-bg-tertiary)] w-3/5" />
+            <div className="h-4 animate-pulse rounded bg-[var(--color-bg-tertiary)] w-[85%]" />
+            <div className="h-4 animate-pulse rounded bg-[var(--color-bg-tertiary)] w-7/10" />
+            <div className="h-4 animate-pulse rounded bg-[var(--color-bg-tertiary)] w-[95%]" />
+            <div className="h-4 animate-pulse rounded bg-[var(--color-bg-tertiary)] w-[65%]" />
+            <div className="h-4 animate-pulse rounded bg-[var(--color-bg-tertiary)] w-4/5" />
           </div>
         </div>
         <aside className="hidden w-56 shrink-0 lg:block">

@@ -50,6 +50,25 @@ describe("Callout", () => {
   it("has accessible label for each type", async () => {
     const { default: Callout } = await import("@/components/mdx/Callout");
     render(<Callout type="warning">Watch out</Callout>);
-    expect(screen.getByRole("status")).toHaveAttribute("aria-labelledby");
+    expect(screen.getByRole("status")).toHaveAttribute("aria-label", "Warning");
+  });
+
+  it("does not produce duplicate IDs across multiple instances", async () => {
+    const { default: Callout } = await import("@/components/mdx/Callout");
+    const { container } = render(
+      <>
+        <Callout type="info">First</Callout>
+        <Callout type="info">Second</Callout>
+      </>
+    );
+    const ids = Array.from(container.querySelectorAll("[id]")).map((el) => el.id);
+    const uniqueIds = new Set(ids);
+    expect(uniqueIds.size).toBe(ids.length);
+  });
+
+  it("does not use aria-labelledby (avoids duplicate ID issue)", async () => {
+    const { default: Callout } = await import("@/components/mdx/Callout");
+    render(<Callout>Check</Callout>);
+    expect(screen.getByRole("note")).not.toHaveAttribute("aria-labelledby");
   });
 });
