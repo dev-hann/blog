@@ -73,6 +73,13 @@ describe("PostList", () => {
     expect(msg).toHaveAttribute("role", "status");
   });
 
+  it("post list content area has aria-live for page changes", async () => {
+    const { default: PostList } = await import("@/components/post/PostList");
+    const { container } = render(<PostList posts={mockPosts} postsPerPage={5} />);
+    const liveRegion = container.querySelector("[aria-live='polite']");
+    expect(liveRegion).toBeInTheDocument();
+  });
+
   it("has aria-label on pagination buttons", async () => {
     const { default: PostList } = await import("@/components/post/PostList");
     render(<PostList posts={mockPosts} postsPerPage={5} />);

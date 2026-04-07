@@ -1,11 +1,11 @@
 import { prerenderToNodeStream } from "react-dom/static";
 import { compileMDX } from "next-mdx-remote/rsc";
-import rehypeSlug from "rehype-slug";
-import rehypePrettyCode from "rehype-pretty-code";
+import type { MdxComponentProps, MdxLinkProps } from "@/types/mdx";
 import Callout from "@/components/mdx/Callout";
 import MDXImage from "@/components/mdx/Image";
+import { rehypePlugins } from "@/lib/mdx-plugins";
 
-function ServerPre({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) {
+function ServerPre({ children, ...props }: MdxComponentProps) {
   return (
     <pre className="overflow-x-auto rounded-lg bg-[var(--color-bg-tertiary)] p-4 text-sm" {...props}>
       {children}
@@ -13,7 +13,7 @@ function ServerPre({ children, ...props }: { children: React.ReactNode; [key: st
   );
 }
 
-function ServerLink({ href, children, ...props }: { href?: string; children: React.ReactNode; [key: string]: unknown }) {
+function ServerLink({ href, children, ...props }: MdxLinkProps) {
   if (!href) return <span {...props}>{children}</span>;
   return <a href={href} target="_blank" rel="noopener noreferrer" {...props}>{children}</a>;
 }
@@ -31,10 +31,7 @@ export async function renderMDXToHTML(source: string): Promise<string> {
     components,
     options: {
       mdxOptions: {
-        rehypePlugins: [
-          rehypeSlug,
-          [rehypePrettyCode, { theme: "github-dark" }],
-        ],
+        rehypePlugins,
       },
     },
   });

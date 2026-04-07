@@ -37,7 +37,7 @@ export default function PostList({ posts, postsPerPage = 10 }: PostListProps) {
       {posts.length === 0 ? (
         <p role="status" className="text-[var(--color-text-muted)]">No posts found.</p>
       ) : (
-        <div className="flex flex-col gap-4">
+        <div aria-live="polite" className="flex flex-col gap-4">
           {currentPosts.map((post) => (
             <PostCard key={post.slug} post={post} />
           ))}

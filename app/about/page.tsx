@@ -17,7 +17,7 @@ export default function AboutPage() {
         </h1>
         <section className="space-y-4">
           <p className="text-[var(--color-text-secondary)]">
-            <span className="text-[var(--color-text-accent)]">{SITE_CONFIG.author}</span> — developer &amp; writer
+            <span className="text-[var(--color-text-accent)]">{SITE_CONFIG.author}</span> — developer & writer
           </p>
           <p className="text-[var(--color-text-secondary)]">
             {SITE_CONFIG.description}. Next.js 16 + Tailwind CSS v4 + MDX 기반으로 제작되었습니다.

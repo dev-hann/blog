@@ -3,7 +3,11 @@ import type { Post } from "@/types/post";
 import { formatDate } from "@/lib/format";
 import TagBadge from "@/components/tag/TagBadge";
 
-export default function PostCard({ post }: { post: Post }) {
+interface PostCardProps {
+  post: Post;
+}
+
+export default function PostCard({ post }: PostCardProps) {
   const headingId = `post-title-${post.slug}`;
   return (
     <article aria-labelledby={headingId} className="group">

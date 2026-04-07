@@ -1,5 +1,9 @@
 import { renderMDX } from "@/lib/mdx";
 
-export default function PostBody({ content }: { content: string }) {
+interface PostBodyProps {
+  content: string;
+}
+
+export default function PostBody({ content }: PostBodyProps) {
   return <div className="mdx-content">{renderMDX(content)}</div>;
 }
