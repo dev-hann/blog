@@ -53,10 +53,13 @@ export default function Pre({ children, ...props }: PreProps) {
         type="button"
         onClick={handleCopy}
         className="absolute right-2 top-2 rounded bg-[var(--color-bg-secondary)] px-2 py-1 text-xs text-[var(--color-text-muted)] opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
-        aria-label="Copy code"
+        aria-label={copied ? "Code copied" : failed ? "Copy failed" : "Copy code"}
       >
         {copied ? "Copied" : failed ? "Failed" : "Copy"}
       </button>
+      <span role="status" aria-live="polite" className="sr-only">
+        {copied ? "Copied" : failed ? "Copy failed" : ""}
+      </span>
     </div>
   );
 }

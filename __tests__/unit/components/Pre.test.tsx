@@ -29,7 +29,8 @@ describe("Pre", () => {
     const { default: Pre } = await import("@/components/mdx/Pre");
     render(<Pre>test code block</Pre>);
     await user.click(screen.getByRole("button", { name: /copy/i }));
-    expect(screen.getByText("Copied")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /code copied/i })).toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent("Copied");
   });
 
   it("shows language label when code element has language class", async () => {
@@ -83,7 +84,7 @@ describe("Pre", () => {
     const user = userEvent.setup();
     render(<Pre>test code block</Pre>);
     await user.click(screen.getByRole("button", { name: /copy/i }));
-    expect(await screen.findByText("Failed")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /copy failed/i })).toBeInTheDocument();
     vi.doUnmock("@/lib/clipboard");
   });
 
@@ -99,9 +100,18 @@ describe("Pre", () => {
     const user = userEvent.setup();
     render(<Pre>test code block</Pre>);
     await user.click(screen.getByRole("button", { name: /copy/i }));
-    expect(await screen.findByText("Failed")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /copy failed/i })).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: /copy/i }));
-    expect(await screen.findByText("Copied")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /code copied/i })).toBeInTheDocument();
     vi.doUnmock("@/lib/clipboard");
+  });
+
+  it("announces copy status to screen readers via aria-live", async () => {
+    const user = userEvent.setup();
+    const { default: Pre } = await import("@/components/mdx/Pre");
+    render(<Pre>screen reader test</Pre>);
+    await user.click(screen.getByRole("button", { name: /copy/i }));
+    const live = screen.getByRole("status");
+    expect(live).toHaveTextContent("Copied");
   });
 });
