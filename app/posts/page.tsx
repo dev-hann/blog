@@ -15,6 +15,17 @@ export default function PostsPage() {
 
   return (
     <PageContainer>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            name: "Posts",
+            description: "All blog posts",
+          }),
+        }}
+      />
       <h1 id="posts-heading" className="mb-8 text-2xl font-bold text-[var(--color-text-primary)]">
         Posts
       </h1>
