@@ -81,6 +81,15 @@ Next.js 16 + Tailwind CSS v4 + MDX 기반 개인 기술 블로그 (미니멀 다
 | Task 0: 문서 + 테스트 인프라 | `e33bda5` | ✅ |
 | Task 1: 기반 인프라 | `30adf7a` | ✅ |
 | Task 2: 레이아웃 & UI 파운데이션 | `5cc99ce` | ✅ |
+| Task 3: 포스트 핵심 기능 | `bb9ccbd` | ✅ |
+| Task 4: 태그 & 카테고리 | `bb9ccbd` | ✅ |
+| Task 5: 홈 페이지 | `bb9ccbd` | ✅ |
+| Task 6: 정적 페이지 (About, Projects) | `bb9ccbd` | ✅ |
+| Task 7: 검색 기능 | `bb9ccbd` | ✅ |
+| Task 8: 댓글 (Giscus) | `bb9ccbd` | ✅ |
+| Task 9: SEO & RSS & Sitemap | `9a54a19` | ✅ |
+| Task 10: E2E 테스트 | `bb9ccbd` | ✅ |
+| Task 11: 통합 & 최적화 & 마무리 | `9a54a19` | ✅ |
 
 ## 상세 문서 참조
 

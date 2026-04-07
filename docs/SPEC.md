@@ -169,12 +169,13 @@ draft: false          # true면 빌드에서 제외
 - lazy loading (화면 진입 시 로드)
 - 다크 테마 설정
 
-### 4.9 Meta (`components/seo/Meta.tsx`)
+### 4.9 Metadata (`lib/metadata.ts`)
 
-- Props: `{ title, description, path, image? }`
+- Function: `generateMetadata({ title, description, path, image? })`
 - Open Graph 태그
 - Twitter Card 태그
 - canonical URL
+- robots meta (index, follow)
 
 ### 4.10 MDX 커스텀 컴포넌트
 
