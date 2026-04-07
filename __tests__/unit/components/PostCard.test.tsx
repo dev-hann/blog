@@ -55,4 +55,12 @@ describe("PostCard", () => {
     const heading = screen.getByText("테스트 포스트 제목");
     expect(heading).toHaveAttribute("id", labelledby);
   });
+
+  it("wraps title and date in a header element", () => {
+    const { container } = render(<PostCard post={mockPost} />);
+    const header = container.querySelector("header");
+    expect(header).toBeInTheDocument();
+    expect(header).toContainHTML("테스트 포스트 제목");
+    expect(header).toContainHTML("2026년 04월 06일");
+  });
 });

@@ -15,12 +15,14 @@ export default function PostCard({ post }: PostCardProps) {
         href={`/posts/${post.slug}`}
         className="block rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-4 transition-colors hover:border-[var(--color-accent)]"
       >
-        <h3 id={headingId} className="text-lg font-semibold text-[var(--color-text-primary)] group-hover:text-[var(--color-accent)]">
-          {post.title}
-        </h3>
-        <time dateTime={post.date} className="text-sm text-[var(--color-text-muted)]">
-          {formatDate(post.date)}
-        </time>
+        <header>
+          <h3 id={headingId} className="text-lg font-semibold text-[var(--color-text-primary)] group-hover:text-[var(--color-accent)]">
+            {post.title}
+          </h3>
+          <time dateTime={post.date} className="text-sm text-[var(--color-text-muted)]">
+            {formatDate(post.date)}
+          </time>
+        </header>
         {post.summary && (
           <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
             {post.summary}
