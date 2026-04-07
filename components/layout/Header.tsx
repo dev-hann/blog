@@ -58,13 +58,13 @@ export default function Header() {
       </div>
 
       {mobileOpen && (
-        <nav className="border-t border-[var(--color-border)] bg-[var(--color-bg-primary)] px-4 py-4 md:hidden">
+        <nav className="flex flex-col border-t border-[var(--color-border)] bg-[var(--color-bg-primary)] px-4 py-4 md:hidden">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setMobileOpen(false)}
-              className={`block py-2 text-sm ${
+              className={`py-2 text-sm ${
                 pathname === link.href
                   ? "text-[var(--color-accent)]"
                   : "text-[var(--color-text-muted)]"

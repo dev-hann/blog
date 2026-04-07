@@ -78,7 +78,7 @@ async function handleCat(
     return { lines: [err(`cat: ${slug}: No such post`)] };
   }
 
-  const html = context.postHtml[slug];
+  const html = context.postHtml?.[slug];
   if (!html) {
     return {
       lines: [

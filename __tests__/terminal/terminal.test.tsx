@@ -39,6 +39,11 @@ describe("Terminal", () => {
     expect(await screen.findByText(/Welcome to hann's blog terminal/)).toBeInTheDocument();
   });
 
+  it("renders h1 with site name", () => {
+    renderTerminal();
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Blog");
+  });
+
   it("executes ls command and shows posts", async () => {
     const user = userEvent.setup();
     renderTerminal();

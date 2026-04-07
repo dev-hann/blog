@@ -9,7 +9,7 @@ export interface TerminalLine {
 export interface CommandContext {
   posts: Post[];
   tags: Record<string, number>;
-  postHtml: Record<string, string>;
+  postHtml?: Record<string, string>;
 }
 
 export interface CommandResult {

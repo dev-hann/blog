@@ -55,7 +55,7 @@ describe("Post detail page", () => {
     const result = await PostDetailPage({ params });
     render(result);
     expect(screen.getByText("First Post")).toBeInTheDocument();
-    expect(screen.getByText("2026-04-06")).toBeInTheDocument();
+    expect(screen.getByText("2026년 04월 06일")).toBeInTheDocument();
     expect(screen.getByText("nextjs")).toBeInTheDocument();
     expect(screen.getByTestId("mdx-content")).toBeInTheDocument();
   });

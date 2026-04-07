@@ -5,6 +5,7 @@ import TableOfContents from "@/components/post/TableOfContents";
 import Giscus from "@/components/comment/Giscus";
 import Link from "next/link";
 import { generateMetadata as genMeta } from "@/lib/metadata";
+import { formatDate } from "@/lib/format";
 import type { Metadata } from "next";
 
 interface PageProps {
@@ -47,7 +48,7 @@ export default async function PostDetailPage({ params }: PageProps) {
               {post.title}
             </h1>
             <div className="mt-2 flex items-center gap-4 text-sm text-[var(--color-text-muted)]">
-              <time>{post.date}</time>
+              <time>{formatDate(post.date)}</time>
               <div className="flex gap-2">
                 {post.tags.map((tag) => (
                   <Link

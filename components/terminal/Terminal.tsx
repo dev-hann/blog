@@ -15,7 +15,7 @@ function genId(): string {
 interface TerminalProps {
   posts: Post[];
   tags: Record<string, number>;
-  postHtml: Record<string, string>;
+  postHtml?: Record<string, string>;
 }
 
 function createWelcomeLines(): TerminalLine[] {
@@ -66,7 +66,7 @@ export default function Terminal({ posts, tags, postHtml }: TerminalProps) {
 
       setIsProcessing(true);
       setLines((prev) => [...prev, inputLine]);
-      const result = await executeCommand(input, { posts, tags, postHtml }, history);
+      const result = await executeCommand(input, { posts, tags, postHtml: postHtml ?? {} }, history);
       setIsProcessing(false);
 
       setLines((prev) => [...prev, ...result.lines]);

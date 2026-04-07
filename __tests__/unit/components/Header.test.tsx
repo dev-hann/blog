@@ -44,6 +44,9 @@ describe("Header", () => {
     render(<Header />);
     const button = screen.getByLabelText("Toggle menu");
     expect(button).toBeInTheDocument();
+
     await user.click(button);
+    const mobileLinks = screen.getAllByText("Home");
+    expect(mobileLinks.length).toBeGreaterThanOrEqual(2);
   });
 });
