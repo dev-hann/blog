@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getAllTags, getAllPosts } from "@/lib/posts";
 import { generateMetadata as makeMetadata } from "@/lib/metadata";
 import PostList from "@/components/post/PostList";
+import PageContainer from "@/components/ui/PageContainer";
 
 interface PageProps {
   params: Promise<{ tag: string }>;
@@ -36,7 +37,7 @@ export default async function TagDetailPage({ params }: PageProps) {
   );
 
   return (
-    <div className="bg-[var(--color-bg-primary)] px-4 py-8">
+    <PageContainer>
       <div className="mx-auto max-w-3xl">
         <h1 className="mb-8 text-2xl font-bold text-[var(--color-text-primary)]">
           <span className="text-[var(--color-text-accent)]">#{tag}</span>
@@ -48,6 +49,6 @@ export default async function TagDetailPage({ params }: PageProps) {
           <PostList posts={posts} />
         </Suspense>
       </div>
-    </div>
+    </PageContainer>
   );
 }

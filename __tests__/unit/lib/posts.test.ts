@@ -126,4 +126,13 @@ describe("extractHeadings", () => {
     expect(ids[1]).toBe("intro-2");
     expect(ids[2]).toBe("intro-3");
   });
+
+  it("strips trailing hashes from heading text", () => {
+    const content = "## Heading ##\n### Sub heading ###";
+    const headings = extractHeadings(content);
+    expect(headings[0].text).toBe("Heading");
+    expect(headings[1].text).toBe("Sub heading");
+    expect(headings[0].id).toBe("heading");
+    expect(headings[1].id).toBe("sub-heading");
+  });
 });

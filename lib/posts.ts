@@ -69,7 +69,7 @@ export function extractHeadings(content: string): Heading[] {
   let match;
   while ((match = headingRegex.exec(stripped)) !== null) {
     const level = match[1].length;
-    const text = match[2].trim();
+    const text = match[2].trim().replace(/\s+#+\s*$/, "");
     const baseId = text
       .toLowerCase()
       .replace(/[^\w\s가-힣-]/g, "")

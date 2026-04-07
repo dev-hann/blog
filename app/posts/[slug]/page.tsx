@@ -10,6 +10,7 @@ import PostBody from "@/components/post/PostBody";
 import TableOfContents from "@/components/post/TableOfContents";
 import Giscus from "@/components/comment/Giscus";
 import TagBadge from "@/components/tag/TagBadge";
+import PageContainer from "@/components/ui/PageContainer";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -44,7 +45,7 @@ export default async function PostDetailPage({ params }: PageProps) {
   const readingTime = calculateReadingTime(post.content);
 
   return (
-    <div className="bg-[var(--color-bg-primary)] px-4 py-8">
+    <PageContainer>
       <div className="mx-auto flex max-w-5xl gap-8">
           <article aria-labelledby="post-title" className="min-w-0 max-w-3xl flex-1">
             <header className="mb-8">
@@ -109,6 +110,6 @@ export default async function PostDetailPage({ params }: PageProps) {
           <TableOfContents headings={headings} />
         </aside>
       </div>
-    </div>
+    </PageContainer>
   );
 }
