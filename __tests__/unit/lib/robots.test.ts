@@ -1,18 +1,17 @@
 import { describe, it, expect } from "vitest";
+import { readFileSync } from "fs";
+import { resolve } from "path";
 
-describe("robots.ts", () => {
-  it("allows all crawlers", async () => {
-    const { default: robots } = await import("@/app/robots");
-    const result = await robots();
-    expect(result.rules).toBeDefined();
-    const rule = Array.isArray(result.rules) ? result.rules[0] : result.rules;
-    expect(rule).toHaveProperty("userAgent", "*");
-    expect(rule).toHaveProperty("allow", "/");
+describe("robots.txt", () => {
+  const robots = readFileSync(resolve(process.cwd(), "public/robots.txt"), "utf-8");
+
+  it("allows all crawlers", () => {
+    expect(robots).toContain("User-agent: *");
+    expect(robots).toContain("Allow:");
   });
 
-  it("includes sitemap reference", async () => {
-    const { default: robots } = await import("@/app/robots");
-    const result = await robots();
-    expect(result.sitemap).toContain("/sitemap.xml");
+  it("includes sitemap reference", () => {
+    expect(robots).toContain("Sitemap:");
+    expect(robots).toContain("/sitemap.xml");
   });
 });
