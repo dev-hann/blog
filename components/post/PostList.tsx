@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import type { Post } from "@/types/post";
 import PostCard from "@/components/post/PostCard";
 
@@ -10,11 +11,26 @@ interface PostListProps {
 }
 
 export default function PostList({ posts, postsPerPage = 10 }: PostListProps) {
-  const [page, setPage] = useState(1);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pageFromUrl = Number(searchParams.get("page")) || 1;
+  const [page, setPage] = useState(pageFromUrl);
   const totalPages = Math.ceil(posts.length / postsPerPage);
 
   const start = (page - 1) * postsPerPage;
   const currentPosts = posts.slice(start, start + postsPerPage);
+
+  function goToPage(p: number) {
+    setPage(p);
+    const params = new URLSearchParams(searchParams.toString());
+    if (p > 1) {
+      params.set("page", String(p));
+    } else {
+      params.delete("page");
+    }
+    const qs = params.toString();
+    router.replace(qs ? `?${qs}` : window.location.pathname, { scroll: false });
+  }
 
   return (
     <div>
@@ -32,7 +48,7 @@ export default function PostList({ posts, postsPerPage = 10 }: PostListProps) {
           <button
             type="button"
             aria-label="Previous page"
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            onClick={() => goToPage(Math.max(1, page - 1))}
             disabled={page === 1}
             className="rounded border border-[var(--color-border)] px-3 py-1 text-sm text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] disabled:opacity-50 disabled:hover:border-[var(--color-border)] disabled:hover:text-[var(--color-text-secondary)]"
           >
@@ -44,7 +60,7 @@ export default function PostList({ posts, postsPerPage = 10 }: PostListProps) {
               type="button"
               aria-label={`Page ${p}`}
               aria-current={p === page ? "page" : undefined}
-              onClick={() => setPage(p)}
+              onClick={() => goToPage(p)}
               className={`rounded px-3 py-1 text-sm ${
                 p === page
                   ? "bg-[var(--color-accent)] text-[var(--color-bg-primary)]"
@@ -57,7 +73,7 @@ export default function PostList({ posts, postsPerPage = 10 }: PostListProps) {
           <button
             type="button"
             aria-label="Next page"
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            onClick={() => goToPage(Math.min(totalPages, page + 1))}
             disabled={page === totalPages}
             className="rounded border border-[var(--color-border)] px-3 py-1 text-sm text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] disabled:opacity-50 disabled:hover:border-[var(--color-border)] disabled:hover:text-[var(--color-text-secondary)]"
           >

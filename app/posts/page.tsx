@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getAllPosts } from "@/lib/posts";
 import PostList from "@/components/post/PostList";
 import { generateMetadata } from "@/lib/metadata";
@@ -17,7 +18,9 @@ export default function PostsPage() {
         <h1 className="mb-8 text-2xl font-bold text-[var(--color-text-primary)]">
           Posts
         </h1>
-        <PostList posts={posts} />
+        <Suspense>
+          <PostList posts={posts} />
+        </Suspense>
       </div>
     </div>
   );

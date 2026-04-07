@@ -128,4 +128,15 @@ describe("Header", () => {
     const aboutLink = screen.getByText("About").closest("a");
     expect(aboutLink).toHaveAttribute("aria-current", "page");
   });
+
+  it("locks body scroll when mobile menu is open", async () => {
+    mockState.pathname = "/";
+    const user = userEvent.setup();
+    const { default: Header } = await import("@/components/layout/Header");
+    render(<Header />);
+    await user.click(screen.getByLabelText("Toggle menu"));
+    expect(document.body.style.overflow).toBe("hidden");
+    await user.click(screen.getByLabelText("Toggle menu"));
+    expect(document.body.style.overflow).toBe("");
+  });
 });

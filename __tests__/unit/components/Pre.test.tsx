@@ -48,4 +48,11 @@ describe("Pre", () => {
     expect(screen.queryByText("typescript")).not.toBeInTheDocument();
     expect(screen.queryByText("javascript")).not.toBeInTheDocument();
   });
+
+  it("copy button is visible on keyboard focus via focus-visible class", async () => {
+    const { default: Pre } = await import("@/components/mdx/Pre");
+    render(<Pre>focusable code</Pre>);
+    const btn = screen.getByRole("button", { name: /copy/i });
+    expect(btn.className).toContain("focus-visible:opacity-100");
+  });
 });

@@ -50,6 +50,11 @@ export default function SearchBar({ posts }: SearchBarProps) {
           Searching...
         </p>
       )}
+      {debouncedQuery.trim() && !isDebouncing && (
+        <p className="mt-3 text-sm text-[var(--color-text-muted)]" aria-live="polite">
+          {results.length} {results.length === 1 ? "result" : "results"} for &ldquo;{debouncedQuery}&rdquo;
+        </p>
+      )}
       <div className="mt-4 flex flex-col gap-3">
         {results.length === 0 && debouncedQuery.trim() ? (
           <p className="text-[var(--color-text-muted)]">No results found for &ldquo;{debouncedQuery}&rdquo;</p>

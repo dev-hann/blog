@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { getAllTags, getAllPosts } from "@/lib/posts";
 import { generateMetadata as makeMetadata } from "@/lib/metadata";
@@ -43,7 +44,9 @@ export default async function TagDetailPage({ params }: PageProps) {
             {posts.length} post{posts.length !== 1 ? "s" : ""}
           </span>
         </h1>
-        <PostList posts={posts} />
+        <Suspense>
+          <PostList posts={posts} />
+        </Suspense>
       </div>
     </div>
   );

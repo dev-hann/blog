@@ -13,6 +13,7 @@ vi.mock("next/navigation", () => ({
   },
   usePathname: () => "/",
   useRouter: () => ({ push: vi.fn() }),
+  useSearchParams: () => ({ get: () => null }),
 }));
 
 vi.mock("@/lib/posts", () => ({
