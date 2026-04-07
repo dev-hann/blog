@@ -36,17 +36,21 @@ export default async function TagDetailPage({ params }: PageProps) {
     p.tags.some((t) => t.toLowerCase() === tag.toLowerCase())
   );
 
+  const headingId = `tag-heading-${tag}`;
+
   return (
     <PageContainer>
-      <h1 className="mb-8 text-2xl font-bold text-[var(--color-text-primary)]">
-        <span className="text-[var(--color-text-accent)]">#{tag}</span>
-        <span className="ml-2 text-base font-normal text-[var(--color-text-muted)]">
-          {posts.length} post{posts.length !== 1 ? "s" : ""}
-        </span>
-      </h1>
+      <section aria-labelledby={headingId}>
+        <h1 id={headingId} className="mb-8 text-2xl font-bold text-[var(--color-text-primary)]">
+          <span className="text-[var(--color-text-accent)]">#{tag}</span>
+          <span className="ml-2 text-base font-normal text-[var(--color-text-muted)]">
+            {posts.length} post{posts.length !== 1 ? "s" : ""}
+          </span>
+        </h1>
       <Suspense>
         <PostList posts={posts} />
       </Suspense>
+      </section>
     </PageContainer>
   );
 }

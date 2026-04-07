@@ -7,12 +7,12 @@ import type { TerminalLine } from "@/lib/terminal/types";
 import { genId } from "@/lib/terminal/utils";
 import { executeCommand } from "@/lib/terminal/commands";
 import { SITE_CONFIG } from "@/lib/constants";
-import type { Post } from "@/types/post";
+import type { Post, PostHtmlMap } from "@/types/post";
 
 interface TerminalProps {
   posts: Post[];
   tags: Record<string, number>;
-  postHtml?: Record<string, string>;
+  postHtml?: PostHtmlMap;
 }
 
 function createWelcomeLines(): TerminalLine[] {

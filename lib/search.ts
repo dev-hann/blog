@@ -3,7 +3,7 @@ import type { Post } from "@/types/post";
 
 export type SearchIndexEntry = Pick<Post, "slug" | "title" | "summary" | "tags">;
 
-export async function getSearchIndex(): Promise<SearchIndexEntry[]> {
+export function getSearchIndex(): SearchIndexEntry[] {
   const posts = getAllPosts();
   return posts.map(({ slug, title, summary, tags }) => ({
     slug,

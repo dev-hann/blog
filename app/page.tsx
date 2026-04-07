@@ -2,6 +2,7 @@ import { getAllPosts, getAllTags, getPostBySlug } from "@/lib/posts";
 import Terminal from "@/components/terminal/Terminal";
 import { renderMDXToHTML } from "@/lib/mdx-html";
 import { generateMetadata } from "@/lib/metadata";
+import type { PostHtmlMap } from "@/types/post";
 
 export const metadata = generateMetadata({
   title: "Blog",
@@ -13,7 +14,7 @@ export default async function Home() {
   const posts = getAllPosts();
   const tags = getAllTags();
 
-  const postHtml: Record<string, string> = {};
+  const postHtml: PostHtmlMap = {};
   for (const post of posts) {
     try {
       const detail = getPostBySlug(post.slug);

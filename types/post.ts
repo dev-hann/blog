@@ -16,3 +16,5 @@ export interface Heading {
   text: string;
   level: number;
 }
+
+export type PostHtmlMap = Record<string, string>;

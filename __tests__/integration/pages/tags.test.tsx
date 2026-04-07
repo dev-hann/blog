@@ -56,6 +56,18 @@ describe("Tag detail page", () => {
     expect(screen.getByText("React Post")).toBeInTheDocument();
   });
 
+  it("has aria-labelledby on section matching heading id", async () => {
+    const { default: TagDetailPage } = await import("@/app/tags/[tag]/page");
+    const params = Promise.resolve({ tag: "nextjs" });
+    const result = await TagDetailPage({ params });
+    const { container } = render(result);
+    const heading = screen.getByRole("heading", { level: 1 });
+    const headingId = heading.getAttribute("id");
+    expect(headingId).toBeTruthy();
+    const section = container.querySelector(`section[aria-labelledby="${headingId}"]`);
+    expect(section).toBeInTheDocument();
+  });
+
   it("calls notFound for non-existent tag", async () => {
     const { default: TagDetailPage } = await import("@/app/tags/[tag]/page");
     const params = Promise.resolve({ tag: "nonexistent" });
