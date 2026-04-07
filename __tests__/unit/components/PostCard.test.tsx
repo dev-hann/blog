@@ -32,4 +32,10 @@ describe("PostCard", () => {
     const link = screen.getByRole("link");
     expect(link).toHaveAttribute("href", "/posts/test-post");
   });
+
+  it("time element has dateTime attribute", () => {
+    render(<PostCard post={mockPost} />);
+    const time = screen.getByText("2026년 04월 06일");
+    expect(time).toHaveAttribute("datetime", "2026-04-06");
+  });
 });

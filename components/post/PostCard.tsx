@@ -12,7 +12,7 @@ export default function PostCard({ post }: { post: Post }) {
         <h3 className="text-lg font-semibold text-[var(--color-text-primary)] group-hover:text-[var(--color-accent)]">
           {post.title}
         </h3>
-        <time className="text-sm text-[var(--color-text-muted)]">
+        <time dateTime={post.date} className="text-sm text-[var(--color-text-muted)]">
           {formatDate(post.date)}
         </time>
         {post.summary && (
