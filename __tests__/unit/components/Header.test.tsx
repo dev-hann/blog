@@ -70,4 +70,14 @@ describe("Header", () => {
     await user.click(screen.getByLabelText("Toggle menu"));
     expect(screen.getByLabelText("Mobile navigation")).toBeInTheDocument();
   });
+
+  it("closes mobile menu on Escape key", async () => {
+    const user = userEvent.setup();
+    const { default: Header } = await import("@/components/layout/Header");
+    render(<Header />);
+    await user.click(screen.getByLabelText("Toggle menu"));
+    expect(screen.getByLabelText("Toggle menu")).toHaveAttribute("aria-expanded", "true");
+    await user.keyboard("{Escape}");
+    expect(screen.getByLabelText("Toggle menu")).toHaveAttribute("aria-expanded", "false");
+  });
 });
