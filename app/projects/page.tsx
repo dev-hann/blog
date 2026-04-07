@@ -1,4 +1,11 @@
 import { SITE_CONFIG } from "@/lib/constants";
+import { generateMetadata } from "@/lib/metadata";
+
+export const metadata = generateMetadata({
+  title: "Projects",
+  description: "Projects by " + SITE_CONFIG.author,
+  path: "/projects",
+});
 
 interface Project {
   name: string;

@@ -1,5 +1,12 @@
 import Link from "next/link";
 import { SITE_CONFIG } from "@/lib/constants";
+import { generateMetadata } from "@/lib/metadata";
+
+export const metadata = generateMetadata({
+  title: "About",
+  description: `${SITE_CONFIG.author} — developer & writer`,
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (

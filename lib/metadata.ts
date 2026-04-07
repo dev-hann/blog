@@ -1,0 +1,36 @@
+import type { Metadata } from "next";
+import { SITE_CONFIG } from "@/lib/constants";
+
+interface MetaOptions {
+  title: string;
+  description: string;
+  path: string;
+  image?: string;
+}
+
+export function generateMetadata({ title, description, path, image }: MetaOptions): Metadata {
+  const url = `${SITE_CONFIG.url}${path}`;
+  const ogImage = image ?? `${SITE_CONFIG.url}/og-default.png`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      type: "website",
+      url,
+      title,
+      description,
+      images: ogImage,
+      siteName: SITE_CONFIG.name,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ogImage,
+    },
+  };
+}

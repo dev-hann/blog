@@ -3,11 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import type { Post } from "@/types/post";
-
-function formatDate(dateStr: string): string {
-  const [y, m, d] = dateStr.split("-");
-  return `${y}년 ${m}월 ${d}일`;
-}
+import { formatDate } from "@/lib/format";
 
 interface SearchBarProps {
   posts: Post[];

@@ -4,6 +4,7 @@ import PostBody from "@/components/post/PostBody";
 import TableOfContents from "@/components/post/TableOfContents";
 import Giscus from "@/components/comment/Giscus";
 import Link from "next/link";
+import { generateMetadata as genMeta } from "@/lib/metadata";
 import type { Metadata } from "next";
 
 interface PageProps {
@@ -19,7 +20,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   try {
     const post = getPostBySlug(slug);
-    return { title: post.title, description: post.summary };
+    return genMeta({ title: post.title, description: post.summary, path: `/posts/${slug}` });
   } catch {
     return { title: "Post Not Found" };
   }

@@ -1,5 +1,12 @@
 import { getAllPosts } from "@/lib/posts";
 import PostCard from "@/components/post/PostCard";
+import { generateMetadata } from "@/lib/metadata";
+
+export const metadata = generateMetadata({
+  title: "Posts",
+  description: "All blog posts",
+  path: "/posts",
+});
 
 export default function PostsPage() {
   const posts = getAllPosts();

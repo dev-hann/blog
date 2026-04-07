@@ -1,5 +1,12 @@
 import { getAllTags } from "@/lib/posts";
 import TagBadge from "@/components/tag/TagBadge";
+import { generateMetadata } from "@/lib/metadata";
+
+export const metadata = generateMetadata({
+  title: "Tags",
+  description: "Browse posts by tag",
+  path: "/tags",
+});
 
 export default function TagsPage() {
   const tags = getAllTags();

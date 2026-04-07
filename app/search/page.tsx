@@ -1,5 +1,12 @@
 import { getAllPosts } from "@/lib/posts";
 import SearchBar from "@/components/search/SearchBar";
+import { generateMetadata } from "@/lib/metadata";
+
+export const metadata = generateMetadata({
+  title: "Search",
+  description: "Search blog posts",
+  path: "/search",
+});
 
 export default function SearchPage() {
   const posts = getAllPosts();
