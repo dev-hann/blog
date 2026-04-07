@@ -35,7 +35,7 @@ export default function SearchBar({ posts }: SearchBarProps) {
   const isDebouncing = query.trim().length > 0 && query !== debouncedQuery;
 
   return (
-    <div>
+    <div role="search">
       <input
         type="text"
         role="searchbox"

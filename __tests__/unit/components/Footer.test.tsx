@@ -35,4 +35,13 @@ describe("Footer", () => {
     render(<Footer />);
     expect(screen.getByLabelText("Footer navigation")).toBeInTheDocument();
   });
+
+  it("GitHub external link has screen reader new-tab indication", async () => {
+    const { default: Footer } = await import("@/components/layout/Footer");
+    render(<Footer />);
+    const githubLink = screen.getByText("GitHub").closest("a");
+    expect(githubLink).toBeInTheDocument();
+    const srOnly = githubLink!.querySelector(".sr-only");
+    expect(srOnly).toHaveTextContent("opens in new tab");
+  });
 });

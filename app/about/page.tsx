@@ -29,7 +29,7 @@ export default function AboutPage() {
               rel="noopener noreferrer"
               className="rounded bg-[var(--color-bg-tertiary)] px-4 py-2 text-sm text-[var(--color-text-accent)] transition-colors hover:bg-[var(--color-bg-hover)]"
             >
-              GitHub
+              GitHub<span className="sr-only"> (opens in new tab)</span>
             </Link>
           </div>
         </section>

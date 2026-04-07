@@ -44,7 +44,7 @@ export default function Pre({ children, ...props }: PreProps) {
       <button
         type="button"
         onClick={handleCopy}
-        className="absolute right-2 top-2 rounded bg-[var(--color-bg-secondary)] px-2 py-1 text-xs text-[var(--color-text-muted)] opacity-0 transition-opacity group-hover:opacity-100"
+        className="absolute right-2 top-2 rounded bg-[var(--color-bg-secondary)] px-2 py-1 text-xs text-[var(--color-text-muted)] opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
         aria-label="Copy code"
       >
         {copied ? "Copied" : "Copy"}

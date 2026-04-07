@@ -77,6 +77,12 @@ describe("SearchBar", () => {
     expect(screen.getByRole("searchbox")).toBeInTheDocument();
   });
 
+  it("wraps content in search landmark", async () => {
+    const { default: SearchBar } = await import("@/components/search/SearchBar");
+    render(<SearchBar posts={mockPosts} />);
+    expect(screen.getByRole("search")).toBeInTheDocument();
+  });
+
   it("debounces input by 300ms", async () => {
     vi.useFakeTimers();
     const { default: SearchBar } = await import("@/components/search/SearchBar");

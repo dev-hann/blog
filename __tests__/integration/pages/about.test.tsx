@@ -31,4 +31,15 @@ describe("About page", () => {
     );
     expect(githubLinks.length).toBeGreaterThanOrEqual(1);
   });
+
+  it("external GitHub link has screen reader new-tab indication", async () => {
+    const { default: AboutPage } = await import("@/app/about/page");
+    render(<AboutPage />);
+    const githubLink = screen.getAllByRole("link").find(
+      (l) => l.getAttribute("href") === "https://github.com/hann"
+    );
+    expect(githubLink).toBeTruthy();
+    const srOnly = githubLink!.querySelector(".sr-only");
+    expect(srOnly).toHaveTextContent("opens in new tab");
+  });
 });

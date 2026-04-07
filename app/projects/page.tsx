@@ -1,6 +1,7 @@
 import { SITE_CONFIG } from "@/lib/constants";
 import { generateMetadata } from "@/lib/metadata";
 import type { Project } from "@/types/project";
+import TagBadge from "@/components/tag/TagBadge";
 
 export const metadata = generateMetadata({
   title: "Projects",
@@ -38,12 +39,7 @@ export default function ProjectsPage() {
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
                 {project.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded bg-[var(--color-bg-tertiary)] px-2 py-0.5 text-xs text-[var(--color-text-accent)]"
-                  >
-                    {tag}
-                  </span>
+                  <TagBadge key={tag} tag={tag} />
                 ))}
               </div>
               <div className="mt-3 flex gap-3">
@@ -54,7 +50,7 @@ export default function ProjectsPage() {
                     rel="noopener noreferrer"
                     className="text-sm text-[var(--color-text-accent)] hover:underline"
                   >
-                    GitHub
+                    GitHub<span className="sr-only"> (opens in new tab)</span>
                   </a>
                 )}
                 {project.demo && (
@@ -64,7 +60,7 @@ export default function ProjectsPage() {
                     rel="noopener noreferrer"
                     className="text-sm text-[var(--color-text-accent)] hover:underline"
                   >
-                    Demo
+                    Demo<span className="sr-only"> (opens in new tab)</span>
                   </a>
                 )}
               </div>

@@ -29,4 +29,14 @@ describe("Projects page", () => {
     const links = screen.getAllByRole("link");
     expect(links.length).toBeGreaterThanOrEqual(1);
   });
+
+  it("project tags use TagBadge links", async () => {
+    const { default: ProjectsPage } = await import("@/app/projects/page");
+    render(<ProjectsPage />);
+    const tagLinks = screen.getAllByRole("link").filter(
+      (l) => l.getAttribute("href")?.startsWith("/tags/")
+    );
+    expect(tagLinks.length).toBeGreaterThanOrEqual(1);
+    expect(tagLinks[0]).toHaveAttribute("href", "/tags/nextjs");
+  });
 });

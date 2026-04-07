@@ -14,7 +14,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="transition-colors hover:text-[var(--color-text-primary)]"
             >
-              GitHub
+              GitHub<span className="sr-only"> opens in new tab</span>
             </Link>
             <Link
               href="/feed.xml"
