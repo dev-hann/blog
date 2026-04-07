@@ -28,7 +28,7 @@ export default function PostList({ posts, postsPerPage = 10 }: PostListProps) {
         </div>
       )}
       {totalPages > 1 && (
-        <nav className="mt-8 flex items-center justify-center gap-2">
+        <nav aria-label="Post list pagination" className="mt-8 flex items-center justify-center gap-2">
           <button
             type="button"
             aria-label="Previous page"

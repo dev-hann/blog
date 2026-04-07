@@ -3,8 +3,8 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 vi.mock("next/link", () => ({
-  default: ({ children, href }: { children: React.ReactNode; href: string }) => (
-    <a href={href}>{children}</a>
+  default: ({ children, href, ...rest }: { children: React.ReactNode; href: string; [key: string]: unknown }) => (
+    <a href={href} {...rest}>{children}</a>
   ),
 }));
 
@@ -79,5 +79,14 @@ describe("Header", () => {
     expect(screen.getByLabelText("Toggle menu")).toHaveAttribute("aria-expanded", "true");
     await user.keyboard("{Escape}");
     expect(screen.getByLabelText("Toggle menu")).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("active link has aria-current page", async () => {
+    const { default: Header } = await import("@/components/layout/Header");
+    render(<Header />);
+    const homeLink = screen.getByText("Home").closest("a");
+    expect(homeLink).toHaveAttribute("aria-current", "page");
+    const postsLink = screen.getByText("Posts").closest("a");
+    expect(postsLink).not.toHaveAttribute("aria-current");
   });
 });

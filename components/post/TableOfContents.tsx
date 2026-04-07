@@ -57,7 +57,7 @@ export default function TableOfContents({ headings }: TableOfContentsProps) {
 
   return (
     <>
-      <nav className="hidden lg:block">
+      <nav aria-label="Table of contents" className="hidden lg:block">
         <h2 className="mb-3 text-sm font-semibold text-[var(--color-text-muted)]">
           Table of Contents
         </h2>

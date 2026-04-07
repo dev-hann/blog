@@ -48,6 +48,15 @@ describe("TableOfContents", () => {
     expect(screen.getByLabelText("Toggle table of contents")).toBeInTheDocument();
   });
 
+  it("nav has aria-label", async () => {
+    const { default: TableOfContents } = await import("@/components/post/TableOfContents");
+    const headings = [
+      { id: "intro", text: "Introduction", level: 2 },
+    ];
+    render(<TableOfContents headings={headings} />);
+    expect(screen.getByLabelText("Table of contents")).toBeInTheDocument();
+  });
+
   it("toggles mobile TOC visibility", async () => {
     const user = userEvent.setup();
     const { default: TableOfContents } = await import("@/components/post/TableOfContents");
