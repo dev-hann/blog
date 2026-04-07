@@ -17,8 +17,17 @@ interface TerminalProps {
   tags: Record<string, number>;
 }
 
+function createWelcomeLines(): TerminalLine[] {
+  return [
+    { id: genId(), type: "output", content: `Welcome to ${SITE_CONFIG.author}'s blog terminal v1.0` },
+    { id: genId(), type: "output", content: "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" },
+    { id: genId(), type: "output", content: `Type 'help' for available commands.` },
+    { id: genId(), type: "output", content: "" },
+  ];
+}
+
 export default function Terminal({ posts, tags }: TerminalProps) {
-  const [lines, setLines] = useState<TerminalLine[]>([]);
+  const [lines, setLines] = useState<TerminalLine[]>(createWelcomeLines);
   const [history, setHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -27,16 +36,6 @@ export default function Terminal({ posts, tags }: TerminalProps) {
 
   const slugs = posts.map((p) => p.slug);
   const tagNames = Object.keys(tags);
-
-  useEffect(() => {
-    const welcomeLines: TerminalLine[] = [
-      { id: genId(), type: "output", content: `Welcome to ${SITE_CONFIG.author}'s blog terminal v1.0` },
-      { id: genId(), type: "output", content: "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" },
-      { id: genId(), type: "output", content: `Type 'help' for available commands.` },
-      { id: genId(), type: "output", content: "" },
-    ];
-    setLines(welcomeLines);
-  }, []);
 
   useEffect(() => {
     if (scrollRef.current) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 
 interface CommandInputProps {
   onSubmit: (command: string) => void;
@@ -55,43 +55,46 @@ export default function CommandInput({
   tagNames,
   disabled,
 }: CommandInputProps) {
-  const [input, setInput] = useState("");
+  const [typedInput, setTypedInput] = useState("");
+  const savedInputRef = useRef("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
 
-  useEffect(() => {
-    if (historyIndex === -1) {
-      setInput("");
-    } else if (historyIndex >= 0 && historyIndex < history.length) {
-      setInput(history[history.length - 1 - historyIndex]);
-    }
-  }, [historyIndex, history]);
+  const displayValue =
+    historyIndex >= 0 && historyIndex < history.length
+      ? history[history.length - 1 - historyIndex]
+      : typedInput;
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      const value = input;
-      setInput("");
+      const el = e.target as HTMLInputElement;
+      const value = el.value;
+      setTypedInput("");
+      savedInputRef.current = "";
       onSubmit(value);
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
+      if (historyIndex === -1) {
+        savedInputRef.current = (e.target as HTMLInputElement).value;
+      }
       onHistoryUp();
     } else if (e.key === "ArrowDown") {
       e.preventDefault();
       onHistoryDown();
     } else if (e.key === "Tab") {
       e.preventDefault();
-      const available = getCompletions(input, COMMAND_LIST, slugs, tagNames);
-      const parts = input.split(/\s+/);
+      const currentInput = (e.target as HTMLInputElement).value;
+      const available = getCompletions(currentInput, COMMAND_LIST, slugs, tagNames);
+      const parts = currentInput.split(/\s+/);
       if (available.length === 1) {
-        if (parts.length === 1) {
-          setInput(available[0] + " ");
-        } else {
-          const prefix = input.slice(0, input.lastIndexOf(" ") + 1);
-          setInput(prefix + available[0] + " ");
-        }
+        const completed = parts.length === 1
+          ? available[0] + " "
+          : currentInput.slice(0, currentInput.lastIndexOf(" ") + 1) + available[0] + " ";
+        setTypedInput(completed);
+        savedInputRef.current = completed;
       } else if (available.length > 1) {
         const commonPrefix = available.reduce((a, b) => {
           let i = 0;
@@ -99,13 +102,14 @@ export default function CommandInput({
           return a.slice(0, i);
         });
         if (commonPrefix && commonPrefix !== parts[parts.length - 1]) {
-          const prefix = input.slice(0, input.lastIndexOf(" ") + 1);
-          setInput(prefix + commonPrefix);
+          const completed = currentInput.slice(0, currentInput.lastIndexOf(" ") + 1) + commonPrefix;
+          setTypedInput(completed);
+          savedInputRef.current = completed;
         }
         onShowCompletions(available);
       }
     }
-  };
+  }, [historyIndex, slugs, tagNames, onSubmit, onHistoryUp, onHistoryDown, onShowCompletions]);
 
   return (
     <div className="command-input-line">
@@ -114,8 +118,11 @@ export default function CommandInput({
         ref={inputRef}
         type="text"
         className="command-input"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
+        value={displayValue}
+        onChange={(e) => {
+          setTypedInput(e.target.value);
+          savedInputRef.current = e.target.value;
+        }}
         onKeyDown={handleKeyDown}
         disabled={disabled}
         autoFocus
