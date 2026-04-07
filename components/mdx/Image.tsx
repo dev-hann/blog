@@ -18,8 +18,7 @@ export default function MDXImage({ src, alt = "", width, height, caption }: Imag
         alt={alt}
         width={width ?? 800}
         height={height ?? 450}
-        className="rounded-lg"
-        style={{ width: "100%", height: "auto" }}
+        className="w-full h-auto rounded-lg"
       />
       {caption && (
         <figcaption className="mt-2 text-center text-sm text-[var(--color-text-muted)]">

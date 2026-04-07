@@ -2,9 +2,9 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 vi.mock("next/image", () => ({
-  default: ({ src, alt, width, height, style }: { src: string; alt: string; width: number; height: number; style: Record<string, string> }) => (
+  default: ({ src, alt, width, height }: { src: string; alt: string; width: number; height: number }) => (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={src} alt={alt} width={width} height={height} style={style} />
+    <img src={src} alt={alt} width={width} height={height} />
   ),
 }));
 
