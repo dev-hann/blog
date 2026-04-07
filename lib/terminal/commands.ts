@@ -1,9 +1,6 @@
 import type { CommandContext, CommandResult, TerminalLine } from "./types";
+import { genId } from "./utils";
 import { SITE_CONFIG } from "@/lib/constants";
-
-function genId(): string {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2, 9);
-}
 
 function line(type: TerminalLine["type"], content: string): TerminalLine {
   return { id: genId(), type, content };

@@ -14,6 +14,7 @@ export default function CustomLink({ href, children, ...props }: CustomLinkProps
     return (
       <a href={href} target="_blank" rel="noopener noreferrer" {...props}>
         {children}
+        <span className="sr-only"> (opens in new tab)</span>
       </a>
     );
   }
