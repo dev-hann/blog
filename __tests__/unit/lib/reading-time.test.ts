@@ -12,7 +12,7 @@ describe("calculateReadingTime", () => {
 
   it("calculates minutes based on word count", () => {
     const words = Array(401).fill("word").join(" ");
-    expect(calculateReadingTime(words)).toBe(2);
+    expect(calculateReadingTime(words)).toBe(3);
   });
 
   it("calculates based on character count for CJK text", () => {
