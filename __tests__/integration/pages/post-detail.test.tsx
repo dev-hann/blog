@@ -60,6 +60,17 @@ describe("Post detail page", () => {
     expect(screen.getByTestId("mdx-content")).toBeInTheDocument();
   });
 
+  it("renders tags as links to tag pages", async () => {
+    const { default: PostDetailPage } = await import("@/app/posts/[slug]/page");
+    const params = Promise.resolve({ slug: "post-1" });
+    const result = await PostDetailPage({ params });
+    render(result);
+    const nextjsTag = screen.getByText("nextjs").closest("a");
+    expect(nextjsTag).toHaveAttribute("href", "/tags/nextjs");
+    const reactTag = screen.getByText("react").closest("a");
+    expect(reactTag).toHaveAttribute("href", "/tags/react");
+  });
+
   it("calls notFound for non-existent slug", async () => {
     const { default: PostDetailPage } = await import("@/app/posts/[slug]/page");
     const params = Promise.resolve({ slug: "non-existent" });

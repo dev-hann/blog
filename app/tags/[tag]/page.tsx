@@ -1,5 +1,5 @@
 import { getAllTags, getAllPosts } from "@/lib/posts";
-import PostCard from "@/components/post/PostCard";
+import PostList from "@/components/post/PostList";
 import { notFound } from "next/navigation";
 import { generateMetadata as makeMetadata } from "@/lib/metadata";
 import type { Metadata } from "next";
@@ -43,11 +43,7 @@ export default async function TagDetailPage({ params }: PageProps) {
             {posts.length} post{posts.length !== 1 ? "s" : ""}
           </span>
         </h1>
-        <div className="flex flex-col gap-4">
-          {posts.map((post) => (
-            <PostCard key={post.slug} post={post} />
-          ))}
-        </div>
+        <PostList posts={posts} />
       </div>
     </div>
   );

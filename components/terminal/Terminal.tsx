@@ -102,6 +102,7 @@ export default function Terminal({ posts, tags, postHtml }: TerminalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-[var(--color-bg-primary)]">
+      <h1 className="sr-only">{SITE_CONFIG.name}</h1>
       <div className="terminal-titlebar">
         <span className="terminal-dot terminal-dot-red" />
         <span className="terminal-dot terminal-dot-yellow" />

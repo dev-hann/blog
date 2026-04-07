@@ -31,4 +31,13 @@ describe("Giscus", () => {
     expect(el).toHaveAttribute("data-mapping", "pathname");
     expect(el).toHaveAttribute("data-theme", "dark");
   });
+
+  it("renders comment section with heading", async () => {
+    const { default: Giscus } = await import("@/components/comment/Giscus");
+    render(<Giscus />);
+    const section = screen.getByTestId("comment-section");
+    expect(section).toBeInTheDocument();
+    expect(section).toHaveAttribute("data-comment-section");
+    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent("댓글");
+  });
 });

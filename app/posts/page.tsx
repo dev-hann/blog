@@ -1,5 +1,5 @@
 import { getAllPosts } from "@/lib/posts";
-import PostCard from "@/components/post/PostCard";
+import PostList from "@/components/post/PostList";
 import { generateMetadata } from "@/lib/metadata";
 
 export const metadata = generateMetadata({
@@ -17,11 +17,7 @@ export default function PostsPage() {
         <h1 className="mb-8 text-2xl font-bold text-[var(--color-text-primary)]">
           Posts
         </h1>
-        <div className="flex flex-col gap-4">
-          {posts.map((post) => (
-            <PostCard key={post.slug} post={post} />
-          ))}
-        </div>
+        <PostList posts={posts} />
       </div>
     </div>
   );

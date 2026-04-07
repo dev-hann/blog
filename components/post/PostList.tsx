@@ -1,0 +1,66 @@
+"use client";
+
+import { useState } from "react";
+import type { Post } from "@/types/post";
+import PostCard from "@/components/post/PostCard";
+
+interface PostListProps {
+  posts: Post[];
+  postsPerPage?: number;
+}
+
+export default function PostList({ posts, postsPerPage = 10 }: PostListProps) {
+  const [page, setPage] = useState(1);
+  const totalPages = Math.ceil(posts.length / postsPerPage);
+
+  const start = (page - 1) * postsPerPage;
+  const currentPosts = posts.slice(start, start + postsPerPage);
+
+  return (
+    <div>
+      {posts.length === 0 ? (
+        <p className="text-[var(--color-text-muted)]">No posts found.</p>
+      ) : (
+        <div className="flex flex-col gap-4">
+          {currentPosts.map((post) => (
+            <PostCard key={post.slug} post={post} />
+          ))}
+        </div>
+      )}
+      {totalPages > 1 && (
+        <nav className="mt-8 flex items-center justify-center gap-2">
+          <button
+            type="button"
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className="rounded border border-[var(--color-border)] px-3 py-1 text-sm text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] disabled:opacity-50 disabled:hover:border-[var(--color-border)] disabled:hover:text-[var(--color-text-secondary)]"
+          >
+            &larr; Prev
+          </button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+            <button
+              key={p}
+              type="button"
+              onClick={() => setPage(p)}
+              className={`rounded px-3 py-1 text-sm ${
+                p === page
+                  ? "bg-[var(--color-accent)] text-[var(--color-bg-primary)]"
+                  : "border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-accent)]"
+              }`}
+            >
+              {p}
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+            className="rounded border border-[var(--color-border)] px-3 py-1 text-sm text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] disabled:opacity-50 disabled:hover:border-[var(--color-border)] disabled:hover:text-[var(--color-text-secondary)]"
+          >
+            Next &rarr;
+          </button>
+        </nav>
+      )}
+    </div>
+  );
+}

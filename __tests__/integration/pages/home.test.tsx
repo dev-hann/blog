@@ -57,4 +57,12 @@ describe("Home page", () => {
     });
     expect(screen.getByTestId("command-input")).toBeInTheDocument();
   });
+
+  it("renders h1 with site name", async () => {
+    const { default: HomePage } = await import("@/app/page");
+    await act(async () => {
+      render(await HomePage());
+    });
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Blog");
+  });
 });

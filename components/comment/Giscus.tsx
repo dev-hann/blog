@@ -4,7 +4,8 @@ import GiscusComponent from "@giscus/react";
 
 export default function Giscus() {
   return (
-    <div className="mt-12 border-t border-[var(--color-border)] pt-8">
+    <div data-comment-section="" data-testid="comment-section" className="mt-12 border-t border-[var(--color-border)] pt-8">
+      <h2 className="mb-4 text-lg font-semibold text-[var(--color-text-primary)]">댓글</h2>
       <GiscusComponent
         repo="hann/blog"
         repoId=""

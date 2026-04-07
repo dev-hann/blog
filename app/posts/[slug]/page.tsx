@@ -50,12 +50,13 @@ export default async function PostDetailPage({ params }: PageProps) {
               <time>{post.date}</time>
               <div className="flex gap-2">
                 {post.tags.map((tag) => (
-                  <span
+                  <Link
                     key={tag}
-                    className="rounded bg-[var(--color-bg-tertiary)] px-2 py-0.5 text-xs text-[var(--color-text-accent)]"
+                    href={`/tags/${tag}`}
+                    className="rounded bg-[var(--color-bg-tertiary)] px-2 py-0.5 text-xs text-[var(--color-text-accent)] transition-colors hover:bg-[var(--color-bg-secondary)]"
                   >
                     {tag}
-                  </span>
+                  </Link>
                 ))}
               </div>
             </div>
