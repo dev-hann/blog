@@ -25,7 +25,7 @@ export default function Header() {
           {SITE_CONFIG.name}
         </Link>
 
-        <nav className="hidden items-center gap-6 md:flex">
+        <nav aria-label="Main navigation" className="hidden items-center gap-6 md:flex">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
@@ -59,7 +59,7 @@ export default function Header() {
       </div>
 
       {mobileOpen && (
-        <nav className="flex flex-col border-t border-[var(--color-border)] bg-[var(--color-bg-primary)] px-4 py-4 md:hidden">
+        <nav aria-label="Mobile navigation" className="flex flex-col border-t border-[var(--color-border)] bg-[var(--color-bg-primary)] px-4 py-4 md:hidden">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}

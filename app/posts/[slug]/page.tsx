@@ -60,7 +60,7 @@ export default async function PostDetailPage({ params }: PageProps) {
 
           <PostBody content={post.content} />
 
-          <nav className="mt-12 flex justify-between border-t border-[var(--color-border)] pt-6">
+          <nav aria-label="Post navigation" className="mt-12 flex justify-between border-t border-[var(--color-border)] pt-6">
             {prev ? (
               <Link
                 href={`/posts/${prev.slug}`}

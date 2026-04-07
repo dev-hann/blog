@@ -111,4 +111,12 @@ describe("Post detail page", () => {
     expect(screen.getByText(/Previous Post/)).toBeInTheDocument();
     expect(screen.getByText(/Next Post/)).toBeInTheDocument();
   });
+
+  it("prev/next nav has aria-label", async () => {
+    const { default: PostDetailPage } = await import("@/app/posts/[slug]/page");
+    const params = Promise.resolve({ slug: "post-1" });
+    const result = await PostDetailPage({ params });
+    render(result);
+    expect(screen.getByLabelText("Post navigation")).toBeInTheDocument();
+  });
 });

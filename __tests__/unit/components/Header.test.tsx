@@ -56,4 +56,18 @@ describe("Header", () => {
     const button = screen.getByLabelText("Toggle menu");
     expect(button).toHaveAttribute("aria-expanded", "false");
   });
+
+  it("desktop nav has aria-label", async () => {
+    const { default: Header } = await import("@/components/layout/Header");
+    render(<Header />);
+    expect(screen.getByLabelText("Main navigation")).toBeInTheDocument();
+  });
+
+  it("mobile nav has aria-label when open", async () => {
+    const user = userEvent.setup();
+    const { default: Header } = await import("@/components/layout/Header");
+    render(<Header />);
+    await user.click(screen.getByLabelText("Toggle menu"));
+    expect(screen.getByLabelText("Mobile navigation")).toBeInTheDocument();
+  });
 });

@@ -29,4 +29,10 @@ describe("Footer", () => {
     render(<Footer />);
     expect(screen.getByText(/©/)).toBeInTheDocument();
   });
+
+  it("footer links have nav with aria-label", async () => {
+    const { default: Footer } = await import("@/components/layout/Footer");
+    render(<Footer />);
+    expect(screen.getByLabelText("Footer navigation")).toBeInTheDocument();
+  });
 });
