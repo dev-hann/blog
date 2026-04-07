@@ -9,4 +9,16 @@ describe("formatDate", () => {
   it("formats single-digit month and day", () => {
     expect(formatDate("2026-01-05")).toBe("2026년 01월 05일");
   });
+
+  it("returns original string for empty input", () => {
+    expect(formatDate("")).toBe("");
+  });
+
+  it("returns original string for malformed input without dashes", () => {
+    expect(formatDate("20260406")).toBe("20260406");
+  });
+
+  it("returns original string for partial date", () => {
+    expect(formatDate("2026-04")).toBe("2026-04");
+  });
 });

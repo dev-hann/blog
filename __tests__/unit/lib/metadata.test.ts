@@ -27,4 +27,11 @@ describe("generateMetadata", () => {
     const openGraph = meta.openGraph as Record<string, string>;
     expect(openGraph?.images).toBe("/og.png");
   });
+
+  it("includes robots metadata for indexing", () => {
+    const meta = generateMetadata({ title: "Test", description: "Desc", path: "/test" });
+    const robots = meta.robots as Record<string, unknown>;
+    expect(robots?.index).toBe(true);
+    expect(robots?.follow).toBe(true);
+  });
 });

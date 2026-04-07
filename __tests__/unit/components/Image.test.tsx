@@ -2,9 +2,9 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 vi.mock("next/image", () => ({
-  default: ({ src, alt, width, height, sizes }: { src: string; alt: string; width: number; height: number; sizes?: string }) => (
+  default: ({ src, alt, width, height, sizes, priority }: { src: string; alt: string; width: number; height: number; sizes?: string; priority?: boolean }) => (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={src} alt={alt} width={width} height={height} data-sizes={sizes} />
+    <img src={src} alt={alt} width={width} height={height} data-sizes={sizes} data-priority={priority ? "true" : undefined} />
   ),
 }));
 
@@ -52,5 +52,17 @@ describe("MDXImage", () => {
     const { default: MDXImage } = await import("@/components/mdx/Image");
     render(<MDXImage src="/test.png" alt="Sized" />);
     expect(screen.getByRole("img")).toHaveAttribute("data-sizes", "100vw");
+  });
+
+  it("passes priority prop to next/image when provided", async () => {
+    const { default: MDXImage } = await import("@/components/mdx/Image");
+    render(<MDXImage src="/hero.png" alt="Hero" priority />);
+    expect(screen.getByRole("img")).toHaveAttribute("data-priority", "true");
+  });
+
+  it("does not set priority by default", async () => {
+    const { default: MDXImage } = await import("@/components/mdx/Image");
+    render(<MDXImage src="/test.png" alt="Normal" />);
+    expect(screen.getByRole("img")).not.toHaveAttribute("data-priority");
   });
 });

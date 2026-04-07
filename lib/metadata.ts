@@ -15,6 +15,10 @@ export function generateMetadata({ title, description, path, image }: MetaOption
   return {
     title,
     description,
+    robots: {
+      index: true,
+      follow: true,
+    },
     alternates: {
       canonical: url,
     },

@@ -6,9 +6,10 @@ interface ImageProps {
   width?: number;
   height?: number;
   caption?: string;
+  priority?: boolean;
 }
 
-export default function MDXImage({ src, alt = "", width, height, caption }: ImageProps) {
+export default function MDXImage({ src, alt = "", width, height, caption, priority }: ImageProps) {
   if (!src) return null;
 
   return (
@@ -19,6 +20,7 @@ export default function MDXImage({ src, alt = "", width, height, caption }: Imag
         width={width ?? 800}
         height={height ?? 450}
         sizes="100vw"
+        priority={priority}
         className="w-full h-auto rounded-lg"
       />
       {caption && (
