@@ -17,9 +17,9 @@ describe("TableOfContents", () => {
       { id: "setup", text: "Setup", level: 3 },
     ];
     render(<TableOfContents headings={headings} />);
-    expect(screen.getByText("Introduction")).toBeInTheDocument();
-    expect(screen.getByText("Getting Started")).toBeInTheDocument();
-    expect(screen.getByText("Setup")).toBeInTheDocument();
+    expect(screen.getAllByText("Introduction").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Getting Started").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Setup").length).toBeGreaterThan(0);
   });
 
   it("links to correct heading ids", async () => {
@@ -29,8 +29,14 @@ describe("TableOfContents", () => {
       { id: "details", text: "Details", level: 3 },
     ];
     render(<TableOfContents headings={headings} />);
-    expect(screen.getByText("Introduction")).toHaveAttribute("href", "#intro");
-    expect(screen.getByText("Details")).toHaveAttribute("href", "#details");
+    const introLinks = screen.getAllByText("Introduction");
+    const detailsLinks = screen.getAllByText("Details");
+    for (const link of introLinks) {
+      expect(link).toHaveAttribute("href", "#intro");
+    }
+    for (const link of detailsLinks) {
+      expect(link).toHaveAttribute("href", "#details");
+    }
   });
 
   it("renders nothing when headings is empty", async () => {
@@ -83,5 +89,43 @@ describe("TableOfContents", () => {
     await user.click(toggle);
     const mobileNav = container.querySelectorAll("nav")[1];
     expect(mobileNav).toHaveAttribute("aria-label", "Table of contents");
+  });
+
+  it("mobile toggle has aria-controls pointing to collapsible content", async () => {
+    const { default: TableOfContents } = await import("@/components/post/TableOfContents");
+    const headings = [
+      { id: "intro", text: "Introduction", level: 2 },
+    ];
+    render(<TableOfContents headings={headings} />);
+    const toggle = screen.getByLabelText("Toggle table of contents");
+    const controlsId = toggle.getAttribute("aria-controls");
+    expect(controlsId).toBeTruthy();
+    expect(document.getElementById(controlsId!)).toBeInTheDocument();
+  });
+
+  it("collapsible content has aria-hidden when collapsed", async () => {
+    const { default: TableOfContents } = await import("@/components/post/TableOfContents");
+    const headings = [
+      { id: "intro", text: "Introduction", level: 2 },
+    ];
+    render(<TableOfContents headings={headings} />);
+    const toggle = screen.getByLabelText("Toggle table of contents");
+    const controlsId = toggle.getAttribute("aria-controls");
+    const content = document.getElementById(controlsId!);
+    expect(content).toHaveAttribute("aria-hidden", "true");
+  });
+
+  it("collapsible content removes aria-hidden when expanded", async () => {
+    const user = userEvent.setup();
+    const { default: TableOfContents } = await import("@/components/post/TableOfContents");
+    const headings = [
+      { id: "intro", text: "Introduction", level: 2 },
+    ];
+    render(<TableOfContents headings={headings} />);
+    const toggle = screen.getByLabelText("Toggle table of contents");
+    const controlsId = toggle.getAttribute("aria-controls");
+    await user.click(toggle);
+    const content = document.getElementById(controlsId!);
+    expect(content).not.toHaveAttribute("aria-hidden");
   });
 });

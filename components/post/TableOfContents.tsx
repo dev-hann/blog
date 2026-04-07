@@ -55,6 +55,8 @@ export default function TableOfContents({ headings }: TableOfContentsProps) {
     </ul>
   );
 
+  const mobileContentId = "toc-mobile-content";
+
   return (
     <>
       <nav aria-label="Table of contents" className="hidden lg:block">
@@ -68,12 +70,19 @@ export default function TableOfContents({ headings }: TableOfContentsProps) {
           type="button"
           aria-label="Toggle table of contents"
           aria-expanded={mobileOpen}
+          aria-controls={mobileContentId}
           onClick={() => setMobileOpen((prev) => !prev)}
           className="mb-2 text-sm font-semibold text-[var(--color-text-muted)]"
         >
           Table of Contents ▾
         </button>
-        {mobileOpen && tocList}
+        <div
+          id={mobileContentId}
+          {...(mobileOpen ? {} : { "aria-hidden": "true" })}
+          className={mobileOpen ? "" : "hidden"}
+        >
+          {tocList}
+        </div>
       </nav>
     </>
   );
