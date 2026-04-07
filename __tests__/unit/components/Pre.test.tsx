@@ -132,4 +132,12 @@ describe("Pre", () => {
     const preEl = container.querySelector("pre");
     expect(preEl).toHaveAttribute("data-line-numbers", "");
   });
+
+  it("copy button has minimum touch target size", async () => {
+    const { default: Pre } = await import("@/components/mdx/Pre");
+    render(<Pre>touch target test</Pre>);
+    const btn = screen.getByRole("button", { name: /copy/i });
+    expect(btn.className).toContain("min-h-[44px]");
+    expect(btn.className).toContain("min-w-[44px]");
+  });
 });

@@ -52,7 +52,7 @@ export default function Pre({ children, ...props }: PreProps) {
       <button
         type="button"
         onClick={handleCopy}
-        className="absolute right-2 top-2 rounded bg-[var(--color-bg-secondary)] px-2 py-1 text-xs text-[var(--color-text-muted)] sm:opacity-0 transition-opacity sm:group-hover:opacity-100 focus-visible:opacity-100"
+        className="absolute right-2 top-2 flex min-h-[44px] min-w-[44px] items-center justify-center rounded bg-[var(--color-bg-secondary)] px-2 py-1 text-xs text-[var(--color-text-muted)] sm:opacity-0 transition-opacity sm:group-hover:opacity-100 focus-visible:opacity-100"
         aria-label={copied ? "Code copied" : failed ? "Copy failed" : "Copy code"}
       >
         {copied ? "Copied" : failed ? "Failed" : "Copy"}
