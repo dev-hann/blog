@@ -33,3 +33,7 @@ export function calculateReadingTime(content: string): number {
 
   return Math.max(1, minutes);
 }
+
+export function formatReadingTime(minutes: number): string {
+  return `${minutes}분 읽기`;
+}

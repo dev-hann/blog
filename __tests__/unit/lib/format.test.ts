@@ -21,4 +21,13 @@ describe("formatDate", () => {
   it("returns original string for partial date", () => {
     expect(formatDate("2026-04")).toBe("2026-04");
   });
+
+  it("handles non-zero-padded month and day", () => {
+    expect(formatDate("2026-4-6")).toBe("2026년 4월 6일");
+  });
+
+  it("handles mixed zero-padded and non-zero-padded", () => {
+    expect(formatDate("2026-04-6")).toBe("2026년 04월 6일");
+    expect(formatDate("2026-4-06")).toBe("2026년 4월 06일");
+  });
 });

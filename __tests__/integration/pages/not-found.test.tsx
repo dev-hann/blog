@@ -34,4 +34,14 @@ describe("Not Found page", () => {
     const homeLinks = screen.getAllByRole("link", { name: /home/i }).filter((l) => l.getAttribute("href") === "/");
     expect(homeLinks.length).toBeGreaterThanOrEqual(1);
   });
+
+  it("section has aria-labelledby pointing to heading", async () => {
+    const { default: NotFound } = await import("@/app/not-found");
+    const { container } = render(<NotFound />);
+    const section = container.querySelector("[aria-labelledby]");
+    expect(section).toBeInTheDocument();
+    const labelledby = section!.getAttribute("aria-labelledby");
+    const heading = container.querySelector(`#${labelledby}`);
+    expect(heading).toBeInTheDocument();
+  });
 });

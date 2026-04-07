@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAllPosts, getPostBySlug, getAdjacentPosts, extractHeadings } from "@/lib/posts";
 import { formatDate } from "@/lib/format";
-import { calculateReadingTime } from "@/lib/reading-time";
+import { calculateReadingTime, formatReadingTime } from "@/lib/reading-time";
 import { generateMetadata as genMeta } from "@/lib/metadata";
 import { SITE_CONFIG } from "@/lib/constants";
 import PostBody from "@/components/post/PostBody";
@@ -43,6 +43,7 @@ export default async function PostDetailPage({ params }: PageProps) {
   const { prev, next } = getAdjacentPosts(slug);
   const headings = extractHeadings(post.content);
   const readingTime = calculateReadingTime(post.content);
+  const readingTimeText = formatReadingTime(readingTime);
 
   return (
     <PageContainer maxWidth="max-w-5xl">
@@ -54,7 +55,7 @@ export default async function PostDetailPage({ params }: PageProps) {
               </h1>
             <div className="mt-2 flex items-center gap-4 text-sm text-[var(--color-text-muted)]">
               <time dateTime={post.date}>{formatDate(post.date)}</time>
-              <span>{readingTime} min read</span>
+              <span>{readingTimeText}</span>
               <div className="flex gap-2">
                 {post.tags.map((tag) => (
                   <TagBadge key={tag} tag={tag} />
