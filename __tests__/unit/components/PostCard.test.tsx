@@ -29,13 +29,21 @@ describe("PostCard", () => {
 
   it("links to /posts/[slug]", () => {
     render(<PostCard post={mockPost} />);
-    const link = screen.getByRole("link");
-    expect(link).toHaveAttribute("href", "/posts/test-post");
+    const cardLink = screen.getByRole("link", { name: /테스트 포스트 제목/ });
+    expect(cardLink).toHaveAttribute("href", "/posts/test-post");
   });
 
   it("time element has dateTime attribute", () => {
     render(<PostCard post={mockPost} />);
     const time = screen.getByText("2026년 04월 06일");
     expect(time).toHaveAttribute("datetime", "2026-04-06");
+  });
+
+  it("tags link to tag detail pages", () => {
+    render(<PostCard post={mockPost} />);
+    const nextjsLink = screen.getByRole("link", { name: "nextjs" });
+    expect(nextjsLink).toHaveAttribute("href", "/tags/nextjs");
+    const reactLink = screen.getByRole("link", { name: "react" });
+    expect(reactLink).toHaveAttribute("href", "/tags/react");
   });
 });

@@ -14,6 +14,11 @@ const NAV_LINKS = [
   { href: "/search", label: "Search" },
 ];
 
+function isActive(pathname: string, href: string) {
+  if (href === "/") return pathname === "/";
+  return pathname === href || pathname.startsWith(href + "/");
+}
+
 export default function Header() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -38,9 +43,9 @@ export default function Header() {
             <Link
               key={link.href}
               href={link.href}
-              aria-current={pathname === link.href ? "page" : undefined}
+              aria-current={isActive(pathname, link.href) ? "page" : undefined}
               className={`text-sm transition-colors ${
-                pathname === link.href
+                isActive(pathname, link.href)
                   ? "text-[var(--color-accent)]"
                   : "text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
               }`}
@@ -74,9 +79,9 @@ export default function Header() {
               key={link.href}
               href={link.href}
               onClick={() => setMobileOpen(false)}
-              aria-current={pathname === link.href ? "page" : undefined}
+              aria-current={isActive(pathname, link.href) ? "page" : undefined}
               className={`py-2 text-sm ${
-                pathname === link.href
+                isActive(pathname, link.href)
                   ? "text-[var(--color-accent)]"
                   : "text-[var(--color-text-muted)]"
               }`}

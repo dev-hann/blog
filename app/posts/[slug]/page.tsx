@@ -5,6 +5,7 @@ import { getAllPosts, getPostBySlug, getAdjacentPosts, extractHeadings } from "@
 import { formatDate } from "@/lib/format";
 import { calculateReadingTime } from "@/lib/reading-time";
 import { generateMetadata as genMeta } from "@/lib/metadata";
+import { SITE_CONFIG } from "@/lib/constants";
 import PostBody from "@/components/post/PostBody";
 import TableOfContents from "@/components/post/TableOfContents";
 import Giscus from "@/components/comment/Giscus";
@@ -62,6 +63,21 @@ export default async function PostDetailPage({ params }: PageProps) {
           </header>
 
           <PostBody content={post.content} />
+
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "BlogPosting",
+                headline: post.title,
+                datePublished: post.date,
+                description: post.summary,
+                keywords: post.tags.join(", "),
+                author: { "@type": "Person", name: SITE_CONFIG.author },
+              }),
+            }}
+          />
 
           <nav aria-label="Post navigation" className="mt-12 flex justify-between border-t border-[var(--color-border)] pt-6">
             {prev ? (

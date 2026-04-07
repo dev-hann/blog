@@ -2,6 +2,8 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
+const mockState = vi.hoisted(() => ({ pathname: "/" }));
+
 vi.mock("next/link", () => ({
   default: ({ children, href, ...rest }: { children: React.ReactNode; href: string; [key: string]: unknown }) => (
     <a href={href} {...rest}>{children}</a>
@@ -9,18 +11,20 @@ vi.mock("next/link", () => ({
 }));
 
 vi.mock("next/navigation", () => ({
-  usePathname: () => "/",
+  usePathname: () => mockState.pathname,
   useRouter: () => ({ push: vi.fn() }),
 }));
 
 describe("Header", () => {
   it("renders site name", async () => {
+    mockState.pathname = "/";
     const { default: Header } = await import("@/components/layout/Header");
     render(<Header />);
     expect(screen.getByText("Blog")).toBeInTheDocument();
   });
 
   it("renders all nav links", async () => {
+    mockState.pathname = "/";
     const { default: Header } = await import("@/components/layout/Header");
     render(<Header />);
     expect(screen.getByText("Home")).toBeInTheDocument();
@@ -32,6 +36,7 @@ describe("Header", () => {
   });
 
   it("highlights active link based on current path", async () => {
+    mockState.pathname = "/";
     const { default: Header } = await import("@/components/layout/Header");
     render(<Header />);
     const homeLink = screen.getByText("Home").closest("a");
@@ -39,6 +44,7 @@ describe("Header", () => {
   });
 
   it("toggles mobile menu on hamburger click", async () => {
+    mockState.pathname = "/";
     const user = userEvent.setup();
     const { default: Header } = await import("@/components/layout/Header");
     render(<Header />);
@@ -51,6 +57,7 @@ describe("Header", () => {
   });
 
   it("has aria-expanded on mobile toggle button", async () => {
+    mockState.pathname = "/";
     const { default: Header } = await import("@/components/layout/Header");
     render(<Header />);
     const button = screen.getByLabelText("Toggle menu");
@@ -58,12 +65,14 @@ describe("Header", () => {
   });
 
   it("desktop nav has aria-label", async () => {
+    mockState.pathname = "/";
     const { default: Header } = await import("@/components/layout/Header");
     render(<Header />);
     expect(screen.getByLabelText("Main navigation")).toBeInTheDocument();
   });
 
   it("mobile nav has aria-label when open", async () => {
+    mockState.pathname = "/";
     const user = userEvent.setup();
     const { default: Header } = await import("@/components/layout/Header");
     render(<Header />);
@@ -72,6 +81,7 @@ describe("Header", () => {
   });
 
   it("closes mobile menu on Escape key", async () => {
+    mockState.pathname = "/";
     const user = userEvent.setup();
     const { default: Header } = await import("@/components/layout/Header");
     render(<Header />);
@@ -82,11 +92,40 @@ describe("Header", () => {
   });
 
   it("active link has aria-current page", async () => {
+    mockState.pathname = "/";
     const { default: Header } = await import("@/components/layout/Header");
     render(<Header />);
     const homeLink = screen.getByText("Home").closest("a");
     expect(homeLink).toHaveAttribute("aria-current", "page");
     const postsLink = screen.getByText("Posts").closest("a");
     expect(postsLink).not.toHaveAttribute("aria-current");
+  });
+
+  it("highlights Posts link on sub-path /posts/[slug]", async () => {
+    mockState.pathname = "/posts/test-post";
+    const { default: Header } = await import("@/components/layout/Header");
+    render(<Header />);
+    const postsLink = screen.getByText("Posts").closest("a");
+    expect(postsLink).toHaveAttribute("aria-current", "page");
+    const homeLink = screen.getByText("Home").closest("a");
+    expect(homeLink).not.toHaveAttribute("aria-current");
+  });
+
+  it("highlights Tags link on sub-path /tags/[tag]", async () => {
+    mockState.pathname = "/tags/react";
+    const { default: Header } = await import("@/components/layout/Header");
+    render(<Header />);
+    const tagsLink = screen.getByText("Tags").closest("a");
+    expect(tagsLink).toHaveAttribute("aria-current", "page");
+  });
+
+  it("does not highlight Home on non-root paths", async () => {
+    mockState.pathname = "/about";
+    const { default: Header } = await import("@/components/layout/Header");
+    render(<Header />);
+    const homeLink = screen.getByText("Home").closest("a");
+    expect(homeLink).not.toHaveAttribute("aria-current");
+    const aboutLink = screen.getByText("About").closest("a");
+    expect(aboutLink).toHaveAttribute("aria-current", "page");
   });
 });

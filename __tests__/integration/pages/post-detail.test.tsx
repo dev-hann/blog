@@ -119,4 +119,19 @@ describe("Post detail page", () => {
     render(result);
     expect(screen.getByLabelText("Post navigation")).toBeInTheDocument();
   });
+
+  it("renders JSON-LD structured data for SEO", async () => {
+    const { default: PostDetailPage } = await import("@/app/posts/[slug]/page");
+    const params = Promise.resolve({ slug: "post-1" });
+    const result = await PostDetailPage({ params });
+    render(result);
+    const script = document.querySelector('script[type="application/ld+json"]');
+    expect(script).toBeInTheDocument();
+    const jsonLd = JSON.parse(script!.textContent ?? "");
+    expect(jsonLd["@type"]).toBe("BlogPosting");
+    expect(jsonLd.headline).toBe("First Post");
+    expect(jsonLd.datePublished).toBe("2026-04-06");
+    expect(jsonLd.description).toBe("First summary");
+    expect(jsonLd.keywords).toContain("nextjs");
+  });
 });

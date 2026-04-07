@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Post } from "@/types/post";
 import { formatDate } from "@/lib/format";
+import TagBadge from "@/components/tag/TagBadge";
 
 export default function PostCard({ post }: { post: Post }) {
   return (
@@ -22,12 +23,7 @@ export default function PostCard({ post }: { post: Post }) {
         )}
         <div className="mt-2 flex flex-wrap gap-2">
           {post.tags.map((tag) => (
-            <span
-              key={tag}
-              className="rounded bg-[var(--color-bg-tertiary)] px-2 py-0.5 text-xs text-[var(--color-text-accent)]"
-            >
-              {tag}
-            </span>
+            <TagBadge key={tag} tag={tag} />
           ))}
         </div>
       </Link>
