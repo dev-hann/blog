@@ -79,9 +79,9 @@ code {
   border-radius: 50%;
 }
 
-.terminal-dot-red { background: #ef4444; }
-.terminal-dot-yellow { background: #fbbf24; }
-.terminal-dot-green { background: #22c55e; }
+.terminal-dot-red { background: var(--color-error); }
+.terminal-dot-yellow { background: var(--color-warning); }
+.terminal-dot-green { background: var(--color-accent); }
 
 .terminal-title {
   flex: 1;
