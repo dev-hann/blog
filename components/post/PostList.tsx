@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import type { Post } from "@/types/post";
 import PostCard from "@/components/post/PostCard";
@@ -15,6 +15,10 @@ export default function PostList({ posts, postsPerPage = 10 }: PostListProps) {
   const router = useRouter();
   const pageFromUrl = Number(searchParams.get("page")) || 1;
   const [page, setPage] = useState(pageFromUrl);
+
+  useEffect(() => {
+    setPage(pageFromUrl);
+  }, [pageFromUrl]);
   const totalPages = Math.ceil(posts.length / postsPerPage);
 
   const start = (page - 1) * postsPerPage;

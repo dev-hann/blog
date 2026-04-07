@@ -207,6 +207,23 @@ code {
   overflow-x: auto;
 }
 
+.mdx-content pre [data-line-numbers] {
+  counter-reset: line;
+}
+
+.mdx-content pre [data-line]::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 1.5rem;
+  margin-right: 1rem;
+  text-align: right;
+  color: var(--color-text-muted);
+  opacity: 0.4;
+  font-size: 12px;
+  user-select: none;
+}
+
 .mdx-content pre [data-highlighted-line] {
   background: var(--color-highlight-bg);
   border-left: 2px solid var(--color-accent);

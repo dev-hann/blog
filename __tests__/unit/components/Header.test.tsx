@@ -152,4 +152,21 @@ describe("Header", () => {
     expect(btn).toHaveAttribute("aria-expanded", "false");
     expect(btn).toHaveFocus();
   });
+
+  it("traps Tab focus within mobile menu when open", async () => {
+    mockState.pathname = "/";
+    const user = userEvent.setup();
+    const { default: Header } = await import("@/components/layout/Header");
+    render(<Header />);
+    const btn = screen.getByLabelText("Toggle menu");
+    await user.click(btn);
+    const mobileNav = screen.getByLabelText("Mobile navigation");
+    const links = mobileNav.querySelectorAll("a");
+    const lastLink = links[links.length - 1];
+    lastLink.focus();
+    await user.tab();
+    expect(document.activeElement).not.toBe(document.body);
+    const focusInMenu = mobileNav.contains(document.activeElement) || document.activeElement === btn;
+    expect(focusInMenu).toBe(true);
+  });
 });

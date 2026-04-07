@@ -126,4 +126,15 @@ describe("PostList", () => {
     expect(screen.queryByText("Post 1")).not.toBeInTheDocument();
     mockSearchParams.get = (key: string) => (key === "page" ? null : null);
   });
+
+  it("syncs page state when searchParams change via re-render", async () => {
+    mockSearchParams.get = (key: string) => (key === "page" ? "3" : null);
+    const { default: PostList } = await import("@/components/post/PostList");
+    const { rerender } = render(<PostList posts={mockPosts} postsPerPage={5} />);
+    expect(screen.getByText("Post 11")).toBeInTheDocument();
+    mockSearchParams.get = (key: string) => (key === "page" ? null : null);
+    rerender(<PostList posts={mockPosts} postsPerPage={5} />);
+    expect(screen.getByText("Post 1")).toBeInTheDocument();
+    expect(screen.queryByText("Post 11")).not.toBeInTheDocument();
+  });
 });

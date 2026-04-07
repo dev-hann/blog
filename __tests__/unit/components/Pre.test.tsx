@@ -114,4 +114,22 @@ describe("Pre", () => {
     const live = screen.getByRole("status");
     expect(live).toHaveTextContent("Copied");
   });
+
+  it("copy button is visible on mobile without hover via responsive class", async () => {
+    const { default: Pre } = await import("@/components/mdx/Pre");
+    render(<Pre>mobile test</Pre>);
+    const btn = screen.getByRole("button", { name: /copy/i });
+    expect(btn.className).toContain("sm:opacity-0");
+  });
+
+  it("passes data-line-numbers attribute to pre element", async () => {
+    const { default: Pre } = await import("@/components/mdx/Pre");
+    const { container } = render(
+      <Pre data-line-numbers="">
+        <code className="language-typescript">{"const x = 1"}</code>
+      </Pre>
+    );
+    const preEl = container.querySelector("pre");
+    expect(preEl).toHaveAttribute("data-line-numbers", "");
+  });
 });

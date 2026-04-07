@@ -65,4 +65,16 @@ describe("Home page", () => {
     });
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Blog");
   });
+
+  it("renders noscript fallback with quick navigation links", async () => {
+    const { default: HomePage } = await import("@/app/page");
+    let container: HTMLElement;
+    await act(async () => {
+      const result = render(await HomePage());
+      container = result.container;
+    });
+    const noscript = container!.querySelector("noscript");
+    expect(noscript).toBeInTheDocument();
+    expect(noscript?.getAttribute("data-noscript")).toBe("true");
+  });
 });

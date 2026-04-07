@@ -4,5 +4,5 @@ import rehypePrettyCode from "rehype-pretty-code";
 
 export const rehypePlugins: Pluggable[] = [
   rehypeSlug,
-  [rehypePrettyCode, { theme: "github-dark" }],
+  [rehypePrettyCode, { theme: "github-dark", showLineNumbers: true }],
 ];

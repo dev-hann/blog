@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SITE_CONFIG } from "@/lib/constants";
@@ -22,6 +22,7 @@ function isActive(pathname: string, href: string) {
 export default function Header() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const mobileNavRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -37,6 +38,23 @@ export default function Header() {
       document.body.style.overflow = "";
     };
   }, [mobileOpen]);
+
+  const handleMobileNavKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key !== "Tab") return;
+    const nav = mobileNavRef.current;
+    if (!nav) return;
+    const focusable = nav.querySelectorAll<HTMLElement>("a[href], button");
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--color-border)] bg-[var(--color-bg-primary)]/80 backdrop-blur-sm">
@@ -80,7 +98,7 @@ export default function Header() {
       </div>
 
       {mobileOpen && (
-        <nav aria-label="Mobile navigation" className="flex flex-col border-t border-[var(--color-border)] bg-[var(--color-bg-primary)] px-4 py-4 md:hidden">
+        <nav ref={mobileNavRef} aria-label="Mobile navigation" onKeyDown={handleMobileNavKeyDown} className="flex flex-col border-t border-[var(--color-border)] bg-[var(--color-bg-primary)] px-4 py-4 md:hidden">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
