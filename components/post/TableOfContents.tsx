@@ -63,7 +63,7 @@ export default function TableOfContents({ headings }: TableOfContentsProps) {
         </h2>
         {tocList}
       </nav>
-      <div className="lg:hidden">
+      <nav aria-label="Table of contents" className="lg:hidden">
         <button
           type="button"
           aria-label="Toggle table of contents"
@@ -74,7 +74,7 @@ export default function TableOfContents({ headings }: TableOfContentsProps) {
           Table of Contents ▾
         </button>
         {mobileOpen && tocList}
-      </div>
+      </nav>
     </>
   );
 }

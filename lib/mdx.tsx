@@ -11,6 +11,9 @@ const components = {
   pre: Pre,
   Callout,
   Image: MDXImage,
+  img: ({ src, alt, ...props }: { src?: string; alt?: string; [key: string]: unknown }) => (
+    <MDXImage src={src} alt={alt} {...(props as Record<string, unknown>)} />
+  ),
 };
 
 export function renderMDX(

@@ -54,7 +54,8 @@ describe("TableOfContents", () => {
       { id: "intro", text: "Introduction", level: 2 },
     ];
     render(<TableOfContents headings={headings} />);
-    expect(screen.getByLabelText("Table of contents")).toBeInTheDocument();
+    const navs = screen.getAllByLabelText("Table of contents");
+    expect(navs.length).toBe(2);
   });
 
   it("toggles mobile TOC visibility", async () => {

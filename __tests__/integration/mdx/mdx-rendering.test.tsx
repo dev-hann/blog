@@ -37,6 +37,18 @@ describe("MDX custom components", () => {
       const { container } = render(<CustomLink href="/about" className="custom-class">Styled</CustomLink>);
       expect(container.querySelector(".custom-class")).toBeInTheDocument();
     });
+
+    it("external links have sr-only new tab indicator", async () => {
+      const { default: CustomLink } = await import("@/components/mdx/CustomLink");
+      render(<CustomLink href="https://example.com">External</CustomLink>);
+      expect(screen.getByText("(opens in new tab)")).toBeInTheDocument();
+    });
+
+    it("internal links do not have sr-only new tab indicator", async () => {
+      const { default: CustomLink } = await import("@/components/mdx/CustomLink");
+      render(<CustomLink href="/about">Internal</CustomLink>);
+      expect(screen.queryByText("(opens in new tab)")).not.toBeInTheDocument();
+    });
   });
 
   describe("Pre", () => {
