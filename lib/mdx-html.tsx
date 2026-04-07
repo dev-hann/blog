@@ -1,5 +1,6 @@
 import { prerenderToNodeStream } from "react-dom/static";
 import { compileMDX } from "next-mdx-remote/rsc";
+import rehypeSlug from "rehype-slug";
 import Callout from "@/components/mdx/Callout";
 import MDXImage from "@/components/mdx/Image";
 
@@ -24,7 +25,11 @@ const components = {
 };
 
 export async function renderMDXToHTML(source: string): Promise<string> {
-  const { content } = await compileMDX({ source, components });
+  const { content } = await compileMDX({
+    source,
+    components,
+    options: { mdxOptions: { rehypePlugins: [rehypeSlug] } },
+  });
   const { prelude } = await prerenderToNodeStream(content);
 
   return new Promise<string>((resolve, reject) => {

@@ -49,4 +49,11 @@ describe("Header", () => {
     const mobileLinks = screen.getAllByText("Home");
     expect(mobileLinks.length).toBeGreaterThanOrEqual(2);
   });
+
+  it("has aria-expanded on mobile toggle button", async () => {
+    const { default: Header } = await import("@/components/layout/Header");
+    render(<Header />);
+    const button = screen.getByLabelText("Toggle menu");
+    expect(button).toHaveAttribute("aria-expanded", "false");
+  });
 });

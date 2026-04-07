@@ -31,6 +31,7 @@ export default function PostList({ posts, postsPerPage = 10 }: PostListProps) {
         <nav className="mt-8 flex items-center justify-center gap-2">
           <button
             type="button"
+            aria-label="Previous page"
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
             className="rounded border border-[var(--color-border)] px-3 py-1 text-sm text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] disabled:opacity-50 disabled:hover:border-[var(--color-border)] disabled:hover:text-[var(--color-text-secondary)]"
@@ -41,6 +42,7 @@ export default function PostList({ posts, postsPerPage = 10 }: PostListProps) {
             <button
               key={p}
               type="button"
+              aria-label={`Page ${p}`}
               onClick={() => setPage(p)}
               className={`rounded px-3 py-1 text-sm ${
                 p === page
@@ -53,6 +55,7 @@ export default function PostList({ posts, postsPerPage = 10 }: PostListProps) {
           ))}
           <button
             type="button"
+            aria-label="Next page"
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={page === totalPages}
             className="rounded border border-[var(--color-border)] px-3 py-1 text-sm text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] disabled:opacity-50 disabled:hover:border-[var(--color-border)] disabled:hover:text-[var(--color-text-secondary)]"

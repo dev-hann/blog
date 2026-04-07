@@ -64,6 +64,13 @@ describe("PostList", () => {
     expect(screen.getByText("No posts found.")).toBeInTheDocument();
   });
 
+  it("has aria-label on pagination buttons", async () => {
+    const { default: PostList } = await import("@/components/post/PostList");
+    render(<PostList posts={mockPosts} postsPerPage={5} />);
+    expect(screen.getByLabelText("Previous page")).toBeInTheDocument();
+    expect(screen.getByLabelText("Next page")).toBeInTheDocument();
+  });
+
   it("does not show pagination when all posts fit on one page", async () => {
     const { default: PostList } = await import("@/components/post/PostList");
     render(<PostList posts={mockPosts.slice(0, 3)} postsPerPage={10} />);

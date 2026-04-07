@@ -11,14 +11,25 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 export const metadata: Metadata = {
   title: { default: SITE_CONFIG.name, template: `%s | ${SITE_CONFIG.name}` },
   description: SITE_CONFIG.description,
+  alternates: {
+    types: {
+      "application/rss+xml": `${SITE_CONFIG.url}/feed.xml`,
+    },
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded focus:bg-[var(--color-accent)] focus:px-4 focus:py-2 focus:text-[var(--color-bg-primary)]"
+        >
+          Skip to content
+        </a>
         <Header />
-        <div className="min-h-screen">{children}</div>
+        <main id="main-content" className="min-h-screen">{children}</main>
         <Footer />
       </body>
     </html>

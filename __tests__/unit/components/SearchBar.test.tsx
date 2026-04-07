@@ -63,6 +63,12 @@ describe("SearchBar", () => {
     });
   });
 
+  it("has accessible label on search input", async () => {
+    const { default: SearchBar } = await import("@/components/search/SearchBar");
+    render(<SearchBar posts={mockPosts} />);
+    expect(screen.getByRole("searchbox")).toBeInTheDocument();
+  });
+
   it("debounces input by 300ms", async () => {
     vi.useFakeTimers();
     const { default: SearchBar } = await import("@/components/search/SearchBar");

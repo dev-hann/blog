@@ -44,6 +44,7 @@ export default function Header() {
         <button
           type="button"
           aria-label="Toggle menu"
+          aria-expanded={mobileOpen}
           className="text-[var(--color-text-muted)] md:hidden"
           onClick={() => setMobileOpen((prev) => !prev)}
         >

@@ -37,6 +37,8 @@ export default function SearchBar({ posts }: SearchBarProps) {
     <div>
       <input
         type="text"
+        role="searchbox"
+        aria-label="Search posts"
         placeholder="Search posts..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
