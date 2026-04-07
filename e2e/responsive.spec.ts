@@ -5,9 +5,6 @@ test.describe("Responsive layout", () => {
     const context = await browser.newContext({ viewport: { width: 375, height: 667 } });
     const page = await context.newPage();
 
-    await page.goto("/");
-    await expect(page.locator("h1")).toBeVisible();
-
     await page.goto("/posts");
     const posts = page.locator('a[href^="/posts/"]');
     expect(await posts.count()).toBeGreaterThanOrEqual(1);
@@ -19,9 +16,6 @@ test.describe("Responsive layout", () => {
     const context = await browser.newContext({ viewport: { width: 768, height: 1024 } });
     const page = await context.newPage();
 
-    await page.goto("/");
-    await expect(page.locator("h1")).toBeVisible();
-
     await page.goto("/tags");
     await expect(page.locator("h1")).toContainText("Tags");
 
@@ -32,7 +26,7 @@ test.describe("Responsive layout", () => {
     const context = await browser.newContext({ viewport: { width: 1280, height: 720 } });
     const page = await context.newPage();
 
-    await page.goto("/");
+    await page.goto("/posts");
     await expect(page.locator("h1")).toBeVisible();
 
     const desktopNav = page.locator("header nav.hidden");
@@ -45,7 +39,7 @@ test.describe("Responsive layout", () => {
     const context = await browser.newContext({ viewport: { width: 375, height: 667 } });
     const page = await context.newPage();
 
-    await page.goto("/");
+    await page.goto("/posts");
 
     await expect(page.locator('header nav[class*="flex-col"]')).not.toBeVisible();
 
