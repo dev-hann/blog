@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen, waitFor, act, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
@@ -64,25 +64,25 @@ describe("SearchBar", () => {
   });
 
   it("debounces input by 300ms", async () => {
-    vi.useFakeTimers({ shouldAdvanceTime: true });
+    vi.useFakeTimers();
     const { default: SearchBar } = await import("@/components/search/SearchBar");
     render(<SearchBar posts={mockPosts} />);
     const input = screen.getByPlaceholderText(/search/i);
 
-    fireEvent.change(input, { target: { value: "Next" } });
+    act(() => {
+      fireEvent.change(input, { target: { value: "Next" } });
+    });
 
     act(() => {
       vi.advanceTimersByTime(150);
     });
-    expect(screen.queryByText("Next.js Guide")).not.toBeInTheDocument();
+    expect(screen.getByText("React Hooks")).toBeInTheDocument();
 
     act(() => {
       vi.advanceTimersByTime(200);
     });
-
-    await waitFor(() => {
-      expect(screen.getByText("Next.js Guide")).toBeInTheDocument();
-    }, { timeout: 3000 });
+    expect(screen.getByText("Next.js Guide")).toBeInTheDocument();
+    expect(screen.queryByText("React Hooks")).not.toBeInTheDocument();
 
     vi.useRealTimers();
   });
