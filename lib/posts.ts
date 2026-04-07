@@ -62,10 +62,11 @@ export function getAllTags(): Record<string, number> {
 }
 
 export function extractHeadings(content: string): Heading[] {
+  const stripped = content.replace(/```[\s\S]*?```/g, "");
   const headingRegex = /^(#{2,3})\s+(.+)$/gm;
   const headings: Heading[] = [];
   let match;
-  while ((match = headingRegex.exec(content)) !== null) {
+  while ((match = headingRegex.exec(stripped)) !== null) {
     const level = match[1].length;
     const text = match[2].trim();
     const id = text

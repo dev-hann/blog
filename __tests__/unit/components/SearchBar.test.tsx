@@ -63,6 +63,14 @@ describe("SearchBar", () => {
     });
   });
 
+  it("renders results using PostCard component", async () => {
+    const { default: SearchBar } = await import("@/components/search/SearchBar");
+    render(<SearchBar posts={mockPosts} />);
+    const articles = screen.getAllByRole("article");
+    expect(articles).toHaveLength(3);
+    expect(articles[0].querySelector("a")).toHaveAttribute("href", "/posts/post-1");
+  });
+
   it("has accessible label on search input", async () => {
     const { default: SearchBar } = await import("@/components/search/SearchBar");
     render(<SearchBar posts={mockPosts} />);

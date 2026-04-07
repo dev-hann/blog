@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useMemo, useEffect, useRef } from "react";
-import Link from "next/link";
 import type { Post } from "@/types/post";
-import { formatDate } from "@/lib/format";
+import PostCard from "@/components/post/PostCard";
 
 interface SearchBarProps {
   posts: Post[];
@@ -49,30 +48,7 @@ export default function SearchBar({ posts }: SearchBarProps) {
           <p className="text-[var(--color-text-muted)]">No results found for &ldquo;{debouncedQuery}&rdquo;</p>
         ) : (
           results.map((post) => (
-            <Link
-              key={post.slug}
-              href={`/posts/${post.slug}`}
-              className="block rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-4 transition-colors hover:border-[var(--color-accent)]"
-            >
-              <h3 className="font-semibold text-[var(--color-text-primary)]">
-                {post.title}
-              </h3>
-              <div className="mt-1 flex items-center gap-3 text-sm text-[var(--color-text-muted)]">
-                <time>{formatDate(post.date)}</time>
-                <div className="flex gap-2">
-                  {post.tags.map((tag) => (
-                    <span key={tag} className="text-xs text-[var(--color-text-accent)]">
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              {post.summary && (
-                <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
-                  {post.summary}
-                </p>
-              )}
-            </Link>
+            <PostCard key={post.slug} post={post} />
           ))
         )}
       </div>

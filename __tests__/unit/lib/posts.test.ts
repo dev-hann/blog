@@ -106,4 +106,12 @@ describe("extractHeadings", () => {
     expect(headings[1].id).toBe("hello-world");
     expect(headings[2].id).toBe("react-nextjs");
   });
+
+  it("ignores headings inside code blocks", () => {
+    const content = "## Real Heading\n\n```\n## Fake Heading\n### Also Fake\n```\n\n## Another Real";
+    const headings = extractHeadings(content);
+    expect(headings).toHaveLength(2);
+    expect(headings[0].text).toBe("Real Heading");
+    expect(headings[1].text).toBe("Another Real");
+  });
 });
