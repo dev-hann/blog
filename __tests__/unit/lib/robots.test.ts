@@ -1,17 +1,19 @@
-import { describe, it, expect } from "vitest";
-import { readFileSync } from "fs";
-import { resolve } from "path";
+import { describe, it, expect, vi } from "vitest";
 
-describe("robots.txt", () => {
-  const robots = readFileSync(resolve(process.cwd(), "public/robots.txt"), "utf-8");
+vi.mock("@/lib/constants", () => ({
+  SITE_CONFIG: { url: "https://blog.dev", name: "Blog", description: "", author: "", github: "", postsPerPage: 10 },
+}));
 
-  it("allows all crawlers", () => {
-    expect(robots).toContain("User-agent: *");
-    expect(robots).toContain("Allow:");
+describe("robots", () => {
+  it("allows all crawlers", async () => {
+    const mod = await import("@/app/robots");
+    const result = mod.default();
+    expect(result.rules).toEqual({ userAgent: "*", allow: "/" });
   });
 
-  it("includes sitemap reference", () => {
-    expect(robots).toContain("Sitemap:");
-    expect(robots).toContain("/sitemap.xml");
+  it("includes sitemap URL", async () => {
+    const mod = await import("@/app/robots");
+    const result = mod.default();
+    expect(result.sitemap).toContain("/sitemap.xml");
   });
 });

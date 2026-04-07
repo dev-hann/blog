@@ -1,5 +1,6 @@
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypeSlug from "rehype-slug";
+import rehypePrettyCode from "rehype-pretty-code";
 import CustomLink from "@/components/mdx/CustomLink";
 import Pre from "@/components/mdx/Pre";
 import Callout from "@/components/mdx/Callout";
@@ -20,7 +21,14 @@ export function renderMDX(
     <MDXRemote
       source={source}
       components={{ ...components, ...overrides }}
-      options={{ mdxOptions: { rehypePlugins: [rehypeSlug] } }}
+      options={{
+        mdxOptions: {
+          rehypePlugins: [
+            rehypeSlug,
+            [rehypePrettyCode, { theme: "github-dark" }],
+          ],
+        },
+      }}
     />
   );
 }
