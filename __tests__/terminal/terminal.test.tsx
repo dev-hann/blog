@@ -135,6 +135,61 @@ describe("Terminal", () => {
     });
   });
 
+  describe("Tab completion", () => {
+    it("preserves command prefix when completing slug after 'cat '", async () => {
+      const user = userEvent.setup();
+      renderTerminal();
+      const input = screen.getByRole("textbox");
+      await user.type(input, "cat post-01{Tab}");
+      await waitFor(() => {
+        expect(input).toHaveValue("cat post-01 ");
+      });
+    });
+
+    it("preserves 'cat ' prefix when completing partial slug", async () => {
+      const user = userEvent.setup();
+      renderTerminal();
+      const input = screen.getByRole("textbox");
+      await user.type(input, "cat post-0{Tab}");
+      await waitFor(() => {
+        const value = (input as HTMLInputElement).value;
+        expect(value).toMatch(/^cat post-0/);
+        expect(value.startsWith("cat ")).toBe(true);
+      });
+    });
+
+    it("shows completions list for multiple matches", async () => {
+      const user = userEvent.setup();
+      renderTerminal();
+      const input = screen.getByRole("textbox");
+      await user.type(input, "cat {Tab}");
+      await waitFor(() => {
+        expect(screen.getByText(/post-01/)).toBeInTheDocument();
+      });
+    });
+
+    it("completes command name with single match", async () => {
+      const user = userEvent.setup();
+      renderTerminal();
+      const input = screen.getByRole("textbox");
+      await user.type(input, "hel{Tab}");
+      await waitFor(() => {
+        expect(input).toHaveValue("help ");
+      });
+    });
+
+    it("preserves 'tag ' prefix when completing tag name", async () => {
+      const user = userEvent.setup();
+      renderTerminal();
+      const input = screen.getByRole("textbox");
+      await user.type(input, "tag next{Tab}");
+      await waitFor(() => {
+        const value = (input as HTMLInputElement).value;
+        expect(value).toBe("tag nextjs ");
+      });
+    });
+  });
+
   it("shows error for cat without slug", async () => {
     const user = userEvent.setup();
     renderTerminal();

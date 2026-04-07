@@ -84,9 +84,24 @@ export default function CommandInput({
     } else if (e.key === "Tab") {
       e.preventDefault();
       const available = getCompletions(input, COMMAND_LIST, slugs, tagNames);
+      const parts = input.split(/\s+/);
       if (available.length === 1) {
-        setInput(available[0] + " ");
+        if (parts.length === 1) {
+          setInput(available[0] + " ");
+        } else {
+          const prefix = input.slice(0, input.lastIndexOf(" ") + 1);
+          setInput(prefix + available[0] + " ");
+        }
       } else if (available.length > 1) {
+        const commonPrefix = available.reduce((a, b) => {
+          let i = 0;
+          while (i < a.length && i < b.length && a[i] === b[i]) i++;
+          return a.slice(0, i);
+        });
+        if (commonPrefix && commonPrefix !== parts[parts.length - 1]) {
+          const prefix = input.slice(0, input.lastIndexOf(" ") + 1);
+          setInput(prefix + commonPrefix);
+        }
         onShowCompletions(available);
       }
     }
