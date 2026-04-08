@@ -2,6 +2,7 @@ import React from "react";
 import { getAllTags } from "@/lib/posts";
 import TagBadge from "@/components/tag/TagBadge";
 import { generateMetadata } from "@/lib/metadata";
+import { generateJsonLd } from "@/lib/structured-data";
 import PageContainer from "@/components/ui/PageContainer";
 
 export const metadata = generateMetadata({
@@ -19,7 +20,7 @@ export default function TagsPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: generateJsonLd({
             "@context": "https://schema.org",
             "@type": "CollectionPage",
             name: "Tags",

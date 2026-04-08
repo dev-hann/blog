@@ -6,6 +6,7 @@ import { getAllPosts, getPostBySlug, getAdjacentPosts, extractHeadings } from "@
 import { formatDate } from "@/lib/format";
 import { calculateReadingTime, formatReadingTime } from "@/lib/reading-time";
 import { generateMetadata as genMeta } from "@/lib/metadata";
+import { generateJsonLd } from "@/lib/structured-data";
 import { SITE_CONFIG } from "@/lib/constants";
 import PostBody from "@/components/post/PostBody";
 import TableOfContents from "@/components/post/TableOfContents";
@@ -70,7 +71,7 @@ export default async function PostDetailPage({ params }: PageProps) {
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
+              __html: generateJsonLd({
                 "@context": "https://schema.org",
                 "@type": "BlogPosting",
                 headline: post.title,

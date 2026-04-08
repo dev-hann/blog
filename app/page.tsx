@@ -3,6 +3,7 @@ import { getAllPosts, getAllTags } from "@/lib/posts";
 import Terminal from "@/components/terminal/Terminal";
 import NoScriptFallback from "@/components/ui/NoScriptFallback";
 import { generateMetadata } from "@/lib/metadata";
+import { generateJsonLd } from "@/lib/structured-data";
 import { SITE_CONFIG } from "@/lib/constants";
 
 export const metadata = generateMetadata({
@@ -20,7 +21,7 @@ export default async function Home() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: generateJsonLd({
             "@context": "https://schema.org",
             "@type": "WebSite",
             name: SITE_CONFIG.name,

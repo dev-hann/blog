@@ -1,6 +1,7 @@
 import React from "react";
 import { SITE_CONFIG } from "@/lib/constants";
 import { generateMetadata } from "@/lib/metadata";
+import { generateJsonLd } from "@/lib/structured-data";
 import type { Project } from "@/types/project";
 import TagBadge from "@/components/tag/TagBadge";
 import PageContainer from "@/components/ui/PageContainer";
@@ -18,7 +19,7 @@ export default function ProjectsPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: generateJsonLd({
             "@context": "https://schema.org",
             "@type": "CollectionPage",
             name: "Projects",
