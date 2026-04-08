@@ -12,6 +12,8 @@ export default defineConfig({
     css: false,
     testTimeout: 10000,
     hookTimeout: 10000,
+    maxWorkers: 4,
+    pool: "threads",
   },
   resolve: {
     alias: {
