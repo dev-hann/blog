@@ -27,14 +27,21 @@ export function generateMetadata({ title, description, path, image }: MetaOption
       url,
       title,
       description,
-      images: ogImage,
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
       siteName: SITE_CONFIG.name,
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: ogImage,
+      images: [ogImage],
     },
   };
 }

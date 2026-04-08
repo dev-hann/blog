@@ -4,7 +4,7 @@ import { generateMetadata } from "@/lib/metadata";
 describe("generateMetadata", () => {
   it("generates Open Graph metadata", () => {
     const meta = generateMetadata({ title: "Test Page", description: "Test description", path: "/test" });
-    const openGraph = meta.openGraph as Record<string, string>;
+    const openGraph = meta.openGraph as Record<string, unknown>;
     expect(openGraph?.title).toBe("Test Page");
     expect(openGraph?.description).toBe("Test description");
   });
@@ -17,15 +17,16 @@ describe("generateMetadata", () => {
 
   it("generates Twitter card metadata", () => {
     const meta = generateMetadata({ title: "Test", description: "Desc", path: "/test" });
-    const twitter = meta.twitter as Record<string, string>;
+    const twitter = meta.twitter as Record<string, unknown>;
     expect(twitter?.card).toBe("summary_large_image");
     expect(twitter?.title).toBe("Test");
   });
 
   it("includes og:image when provided", () => {
     const meta = generateMetadata({ title: "Test", description: "Desc", path: "/test", image: "/og.png" });
-    const openGraph = meta.openGraph as Record<string, string>;
-    expect(openGraph?.images).toBe("/og.png");
+    const openGraph = meta.openGraph as Record<string, unknown>;
+    const images = openGraph?.images as Array<{ url: string; width: number; height: number; alt: string }>;
+    expect(images[0]?.url).toContain("/og.png");
   });
 
   it("includes robots metadata for indexing", () => {
