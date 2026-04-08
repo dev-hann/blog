@@ -1,5 +1,4 @@
-import React from "react";
-import { Suspense } from "react";
+import React, { Suspense } from "react";
 import { getAllPosts } from "@/lib/posts";
 import PostList from "@/components/post/PostList";
 import PageContainer from "@/components/ui/PageContainer";
