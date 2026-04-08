@@ -13,7 +13,7 @@ const variantStyles: Record<SkeletonVariant, string> = {
   circle: "rounded-full",
 };
 
-export default function Skeleton({ variant = "default", width = "", height = "", className = "", ...props }: SkeletonProps) {
+function Skeleton({ variant = "default", width = "", height = "", className = "", ...props }: SkeletonProps) {
   const baseClassName = "animate-pulse bg-[var(--color-bg-tertiary)]";
   const sizeClassName = `${width} ${height}`.trim();
   const finalClassName = `${baseClassName} ${variantStyles[variant]} ${sizeClassName} ${className}`.trim().replace(/\s+/g, " ");
@@ -25,3 +25,5 @@ export default function Skeleton({ variant = "default", width = "", height = "",
     </>
   );
 }
+
+export default React.memo(Skeleton);

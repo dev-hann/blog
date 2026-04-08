@@ -15,7 +15,7 @@ const variantStyles: Record<ButtonVariant, string> = {
     "rounded border border-[var(--color-border)] px-6 py-2 text-sm text-[var(--color-text-muted)] transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-text-accent)]",
 };
 
-export default function Button({ variant = "primary", asChild = false, className = "", children, ...props }: ButtonProps) {
+function Button({ variant = "primary", asChild = false, className = "", children, ...props }: ButtonProps) {
   if (asChild && React.isValidElement(children)) {
     const child = React.Children.only(children);
     return React.cloneElement(child, {
@@ -30,3 +30,5 @@ export default function Button({ variant = "primary", asChild = false, className
     </button>
   );
 }
+
+export default React.memo(Button);

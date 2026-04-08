@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import type { Post } from "@/types/post";
 import PostCard from "@/components/post/PostCard";
 
@@ -8,7 +8,7 @@ interface SearchBarProps {
   posts: Post[];
 }
 
-export default function SearchBar({ posts }: SearchBarProps) {
+function SearchBar({ posts }: SearchBarProps) {
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const timerRef = useRef<ReturnType<typeof setTimeout>>(null);
@@ -67,3 +67,7 @@ export default function SearchBar({ posts }: SearchBarProps) {
     </div>
   );
 }
+
+export default React.memo(SearchBar, (prevProps, nextProps) => {
+  return prevProps.posts.length === nextProps.posts.length;
+});
