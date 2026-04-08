@@ -10,6 +10,11 @@ export const SITE_CONFIG = {
 
 export const POSTS_PER_PAGE = SITE_CONFIG.postsPerPage;
 
+export const READING_TIME = {
+  WORDS_PER_MINUTE: 200,
+  CJK_CHARS_PER_MINUTE: 500,
+} as const;
+
 export const ERROR_MESSAGES = {
   POST_NOT_FOUND: (slug: string) => `Post not found: ${slug}`,
 } as const;

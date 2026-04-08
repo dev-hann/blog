@@ -1,5 +1,4 @@
-const WORDS_PER_MINUTE = 200;
-const CJK_CHARS_PER_MINUTE = 500;
+import { READING_TIME } from "@/lib/constants";
 
 const CJK_RANGE = /[\u4e00-\u9fff\uac00-\ud7af\u3040-\u309f\u30a0-\u30ff]/;
 
@@ -28,7 +27,7 @@ export function calculateReadingTime(content: string): number {
   wordCount = words.length;
 
   const minutes = Math.ceil(
-    wordCount / WORDS_PER_MINUTE + cjkCount / CJK_CHARS_PER_MINUTE
+    wordCount / READING_TIME.WORDS_PER_MINUTE + cjkCount / READING_TIME.CJK_CHARS_PER_MINUTE
   );
 
   return Math.max(1, minutes);

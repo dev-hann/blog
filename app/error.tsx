@@ -11,8 +11,8 @@ export default function GlobalError({
   reset: () => void;
 }) {
   return (
-    <div role="alert" className="flex flex-col items-center justify-center bg-[var(--color-bg-primary)] px-4 py-24">
-      <h1 className="text-6xl font-bold text-[var(--color-text-primary)]">Oops</h1>
+    <div role="alert" aria-labelledby="error-heading" className="flex flex-col items-center justify-center bg-[var(--color-bg-primary)] px-4 py-24">
+      <h1 id="error-heading" className="text-6xl font-bold text-[var(--color-text-primary)]">Oops</h1>
       <p className="mt-4 text-[var(--color-text-muted)]">
         {error.message || "Something went wrong."}
       </p>

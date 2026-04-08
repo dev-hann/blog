@@ -3,14 +3,13 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import type { Post } from "@/types/post";
+import { POSTS_PER_PAGE } from "@/lib/constants";
 import PostCard from "@/components/post/PostCard";
 
 interface PostListProps {
   posts: Post[];
   postsPerPage?: number;
 }
-
-const POSTS_PER_PAGE = 10;
 
 export default function PostList({ posts, postsPerPage = POSTS_PER_PAGE }: PostListProps) {
   const searchParams = useSearchParams();
