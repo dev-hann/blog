@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { SITE_CONFIG } from "@/lib/constants";
 
-export default function Footer() {
+function Footer() {
   return (
     <footer className="border-t border-[var(--color-border)] bg-[var(--color-bg-primary)] py-6">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4 text-sm text-[var(--color-text-muted)]">
@@ -29,3 +29,5 @@ export default function Footer() {
     </footer>
   );
 }
+
+export default React.memo(Footer);

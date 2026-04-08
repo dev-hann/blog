@@ -6,7 +6,7 @@ import GiscusComponent from "@giscus/react";
 const REPO_ID = process.env.NEXT_PUBLIC_GISCUS_REPO_ID ?? "";
 const CATEGORY_ID = process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID ?? "";
 
-export default function Giscus() {
+function Giscus() {
   const isConfigured = REPO_ID && CATEGORY_ID;
 
   return (
@@ -35,3 +35,5 @@ export default function Giscus() {
     </div>
   );
 }
+
+export default React.memo(Giscus);
