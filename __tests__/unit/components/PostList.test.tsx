@@ -5,7 +5,7 @@ import userEvent from "@testing-library/user-event";
 import type { Post } from "@/types/post";
 import PostList from "@/components/post/PostList";
 
-const mockSearchParamsGet = vi.fn((key: string) => (key === "page" ? null : null));
+const mockSearchParamsGet = vi.fn((key: string): string | null => (key === "page" ? null : null));
 const mockRouterPush = vi.fn();
 const mockRouterReplace = vi.fn();
 
