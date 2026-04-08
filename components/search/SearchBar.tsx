@@ -69,5 +69,5 @@ function SearchBar({ posts }: SearchBarProps) {
 }
 
 export default React.memo(SearchBar, (prevProps, nextProps) => {
-  return prevProps.posts.length === nextProps.posts.length;
+  return prevProps.posts === nextProps.posts;
 });

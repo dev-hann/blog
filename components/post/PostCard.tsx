@@ -43,5 +43,5 @@ export default React.memo(PostCard, (prevProps, nextProps) => {
   return prevProps.post.slug === nextProps.post.slug &&
          prevProps.post.title === nextProps.post.title &&
          prevProps.post.summary === nextProps.post.summary &&
-         JSON.stringify(prevProps.post.tags) === JSON.stringify(nextProps.post.tags);
+         prevProps.post.tags === nextProps.post.tags;
 });
