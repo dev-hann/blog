@@ -1,9 +1,12 @@
 import React from "react";
 import Link from "next/link";
+
 import type { Post } from "@/types/post";
+
 import { formatDate } from "@/lib/format";
-import TagBadge from "@/components/tag/TagBadge";
 import { highlightText } from "@/lib/highlight";
+
+import TagBadge from "@/components/tag/TagBadge";
 
 interface PostCardProps {
   post: Post;

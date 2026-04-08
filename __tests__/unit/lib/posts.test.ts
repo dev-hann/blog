@@ -34,11 +34,11 @@ describe("getAllPosts", () => {
 
 describe("getPostBySlug", () => {
   it("returns PostDetail for valid slug", () => {
-    const post = getPostBySlug("nextjs-blog-guide");
-    expect(post.slug).toBe("nextjs-blog-guide");
-    expect(post.title).toBe("Next.js 16으로 블로그 만들기");
+    const post = getPostBySlug("become-leader");
+    expect(post.slug).toBe("become-leader");
+    expect(post.title).toBe("태크 리더가 되었다");
     expect(post.content).toBeTruthy();
-    expect(post.tags).toContain("nextjs");
+    expect(post.tags).toContain("자아성찰");
   });
 
   it("throws for non-existent slug", () => {
@@ -49,10 +49,10 @@ describe("getPostBySlug", () => {
 describe("getAllTags", () => {
   it("returns tag counts", () => {
     const tags = getAllTags();
-    expect(tags).toHaveProperty("nextjs");
-    expect(tags).toHaveProperty("typescript");
-    expect(tags.nextjs).toBeGreaterThanOrEqual(1);
-    expect(tags.typescript).toBeGreaterThanOrEqual(1);
+    expect(tags).toHaveProperty("error");
+    expect(tags).toHaveProperty("번역");
+    expect(tags.error).toBeGreaterThanOrEqual(1);
+    expect(tags.번역).toBeGreaterThanOrEqual(1);
   });
 
   it("excludes tags from draft posts", () => {
