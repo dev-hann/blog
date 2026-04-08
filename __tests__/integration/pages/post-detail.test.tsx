@@ -118,7 +118,7 @@ describe("Post detail page", () => {
     const params = Promise.resolve({ slug: "post-1" });
     const result = await PostDetailPage({ params });
     render(result);
-    expect(screen.getByLabelText("Post navigation")).toBeInTheDocument();
+    expect(screen.getByLabelText("Posts navigation")).toBeInTheDocument();
   });
 
   it("prev/next links have descriptive aria-label", async () => {
