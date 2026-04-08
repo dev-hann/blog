@@ -12,13 +12,23 @@
 # Error details
 
 ```
-Error: browserType.launch: Executable doesn't exist at /home/hann/.cache/ms-playwright/chromium_headless_shell-1217/chrome-linux/headless_shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝
+Error: browserType.launch: 
+╔══════════════════════════════════════════════════════╗
+║ Host system is missing dependencies to run browsers. ║
+║ Please install them with the following command:      ║
+║                                                      ║
+║     sudo npx playwright install-deps                 ║
+║                                                      ║
+║ Alternatively, use apt:                              ║
+║     sudo apt-get install libatk1.0-0t64\             ║
+║         libxcomposite1\                              ║
+║         libxdamage1\                                 ║
+║         libxfixes3\                                  ║
+║         libxrandr2\                                  ║
+║         libgbm1\                                     ║
+║         libasound2t64\                               ║
+║         libatspi2.0-0t64                             ║
+║                                                      ║
+║ <3 Playwright Team                                   ║
+╚══════════════════════════════════════════════════════╝
 ```
