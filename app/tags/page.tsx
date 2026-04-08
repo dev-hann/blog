@@ -4,6 +4,7 @@ import TagBadge from "@/components/tag/TagBadge";
 import { generateMetadata } from "@/lib/metadata";
 import { generateJsonLd } from "@/lib/structured-data";
 import PageContainer from "@/components/ui/PageContainer";
+import PageHeading from "@/components/ui/PageHeading";
 
 export const metadata = generateMetadata({
   title: "Tags",
@@ -28,9 +29,7 @@ export default function TagsPage() {
           }),
         }}
       />
-      <h1 id="tags-heading" className="mb-8 text-2xl font-bold text-[var(--color-text-primary)]">
-        Tags
-      </h1>
+      <PageHeading id="tags-heading">Tags</PageHeading>
       <div className="flex flex-wrap gap-3">
         {entries.map(([tag, count]) => (
           <TagBadge key={tag} tag={tag} count={count} />

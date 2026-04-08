@@ -5,6 +5,7 @@ import { getAllTags, getAllPosts } from "@/lib/posts";
 import { generateMetadata as makeMetadata } from "@/lib/metadata";
 import PostList from "@/components/post/PostList";
 import PageContainer from "@/components/ui/PageContainer";
+import PageHeading from "@/components/ui/PageHeading";
 
 interface PageProps {
   params: Promise<{ tag: string }>;
@@ -41,12 +42,12 @@ export default async function TagDetailPage({ params }: PageProps) {
   return (
     <PageContainer>
       <section aria-labelledby={headingId}>
-        <h1 id={headingId} className="mb-8 text-2xl font-bold text-[var(--color-text-primary)]">
+        <PageHeading id={headingId}>
           <span className="text-[var(--color-text-accent)]">#{tag}</span>
           <span className="ml-2 text-base font-normal text-[var(--color-text-muted)]">
             {posts.length} post{posts.length !== 1 ? "s" : ""}
           </span>
-        </h1>
+        </PageHeading>
       <Suspense>
         <PostList posts={posts} />
       </Suspense>

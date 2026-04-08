@@ -3,6 +3,7 @@ import { getAllPosts } from "@/lib/posts";
 import SearchBar from "@/components/search/SearchBar";
 import { generateMetadata } from "@/lib/metadata";
 import PageContainer from "@/components/ui/PageContainer";
+import PageHeading from "@/components/ui/PageHeading";
 
 export const metadata = generateMetadata({
   title: "Search",
@@ -26,9 +27,7 @@ export default function SearchPage() {
           }),
         }}
       />
-      <h1 id="search-heading" className="mb-8 text-2xl font-bold text-[var(--color-text-primary)]">
-        Search
-      </h1>
+      <PageHeading id="search-heading">Search</PageHeading>
       <SearchBar posts={posts} />
     </PageContainer>
   );

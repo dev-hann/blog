@@ -3,6 +3,7 @@ import Link from "next/link";
 import { SITE_CONFIG } from "@/lib/constants";
 import { generateMetadata } from "@/lib/metadata";
 import PageContainer from "@/components/ui/PageContainer";
+import PageHeading from "@/components/ui/PageHeading";
 
 export const metadata = generateMetadata({
   title: "About",
@@ -26,9 +27,7 @@ export default function AboutPage() {
           }),
         }}
       />
-      <h1 id="about-heading" className="mb-8 text-2xl font-bold text-[var(--color-text-primary)]">
-        About
-      </h1>
+      <PageHeading id="about-heading">About</PageHeading>
       <section aria-labelledby="about-heading" className="space-y-4">
         <p className="text-[var(--color-text-secondary)]">
           <span className="text-[var(--color-text-accent)]">{SITE_CONFIG.author}</span> — developer & writer

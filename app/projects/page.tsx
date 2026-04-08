@@ -5,6 +5,7 @@ import { generateJsonLd } from "@/lib/structured-data";
 import type { Project } from "@/types/project";
 import TagBadge from "@/components/tag/TagBadge";
 import PageContainer from "@/components/ui/PageContainer";
+import PageHeading from "@/components/ui/PageHeading";
 import projectsData from "@/content/projects.json";
 
 export const metadata = generateMetadata({
@@ -53,9 +54,7 @@ export default function ProjectsPage() {
           }),
         }}
       />
-      <h1 id="projects-heading" className="mb-8 text-2xl font-bold text-[var(--color-text-primary)]">
-        Projects
-      </h1>
+      <PageHeading id="projects-heading">Projects</PageHeading>
       <div className="grid gap-4 sm:grid-cols-2">
         {projects.map((project) => (
           <article
