@@ -1,37 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Blog
 
-## Getting Started
+Next.js 16 + Tailwind CSS v4 + MDX 기반 개인 기술 블로그 (미니멀 다크 테마)
 
-First, run the development server:
+## 기술 스택
+
+- Framework: Next.js 16.2.2 (App Router)
+- Language: TypeScript 6
+- Styling: Tailwind CSS v4 (CSS custom properties 기반 다크 테마)
+- Content: 로컬 MDX (gray-matter + next-mdx-remote)
+- Test: Vitest (happy-dom) + React Testing Library
+- E2E: Playwright
+
+## 시작하기
+
+개발 서버 실행:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+[http://localhost:3000](http://localhost:3000)에서 확인합니다.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 명령어
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# 개발 서버
+npm run dev
 
-## Learn More
+# 프로덕션 빌드
+npm run build
 
-To learn more about Next.js, take a look at the following resources:
+# 프로덕션 서버
+npm run start
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Lint
+npm run lint
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Unit + Integration 테스트
+npm run test
 
-## Deploy on Vercel
+# 테스트 워치 모드
+npm run test:watch
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# E2E 테스트
+npm run test:e2e
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# blog
+## 폴더 구조
+
+```
+blog/
+├── app/              # Next.js App Router 페이지
+├── components/       # React 컴포넌트
+├── content/         # MDX 포스트 파일
+├── lib/             # 유틸리티 함수
+├── types/           # TypeScript 타입 정의
+├── __tests__/       # Vitest 테스트
+├── e2e/             # Playwright E2E 테스트
+└── docs/            # 프로젝트 문서
+```
+
+## 기능
+
+- **터미널 인터페이스**: CLI 스타일 블로그 네비게이션
+- **포스트 시스템**: MDX 기반 블로그 포스트
+- **태그 시스템**: 태그별 포스트 필터링
+- **검색 기능**: 클라이언트 사이드 포스트 검색
+- **댓글**: Giscus (GitHub Discussions) 통합
+- **SEO**: RSS 피드, Sitemap, Open Graph 메타 태그
+- **반응형**: 모바일/태블릿/데스크탑 지원
+- **다크 테마**: 기본 다크 테마
+
+## 배포
+
+### Vercel
+
+Vercel에 배포하는 가장 쉬운 방법입니다:
+
+[Create Next App](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=readme)
+
+### GitHub Actions
+
+`.github/workflows/deploy.yml`를 참조하세요.
+
+## 문서
+
+- [SPEC.md](./docs/SPEC.md) — 기능 명세
+- [ARCHITECTURE.md](./docs/ARCHITECTURE.md) — 폴더 구조, 데이터 흐름, 의존관계
+- [DESIGN.md](./docs/DESIGN.md) — 다크 테마 디자인 시스템
+- [TEST_PLAN.md](./docs/TEST_PLAN.md) — 테스트 전략
+
+## 라이선스
+
+MIT
