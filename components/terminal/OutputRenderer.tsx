@@ -3,7 +3,7 @@
 import React from "react";
 import type { TerminalLine } from "@/lib/terminal/types";
 
-export default function OutputRenderer({ line }: { line: TerminalLine }) {
+function OutputRenderer({ line }: { line: TerminalLine }) {
   switch (line.type) {
     case "input":
       return (
@@ -39,3 +39,9 @@ export default function OutputRenderer({ line }: { line: TerminalLine }) {
       return null;
   }
 }
+
+export default React.memo(OutputRenderer, (prevProps, nextProps) => {
+  return prevProps.line.id === nextProps.line.id &&
+         prevProps.line.type === nextProps.line.type &&
+         prevProps.line.content === nextProps.line.content;
+});
