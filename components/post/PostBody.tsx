@@ -1,3 +1,4 @@
+import React from "react";
 import { renderMDX } from "@/lib/mdx";
 
 interface PostBodyProps {
