@@ -52,7 +52,10 @@ blog/
 │   ├── ui/
 │   │   ├── PageContainer.tsx
 │   │   ├── ScrollToTop.tsx
-│   │   └── NoScriptFallback.tsx     # NoScript용 빠른 네비게이션
+│   │   ├── NoScriptFallback.tsx     # NoScript용 빠른 네비게이션
+│   │   ├── Skeleton.tsx              # 스켈레톤 로딩
+│   │   ├── Button.tsx                # 버튼 컴포넌트
+│   │   └── PageHeading.tsx           # 페이지 제목
 │   └── mdx/
 │       ├── CustomLink.tsx
 │       ├── Pre.tsx
@@ -76,6 +79,8 @@ blog/
 │   ├── clipboard.ts                # 클립보드 복사 유틸
 │   ├── reading-time.ts             # 읽기 시간 계산
 │   ├── css-a11y.ts                # CSS 접근성 검증
+│   ├── utils.ts                    # 공통 유틸리티
+│   ├── structured-data.ts         # JSON-LD 구조화된 데이터
 │   └── terminal/
 │       ├── commands.ts              # 터미널 명령어 처리
 │       ├── types.ts                 # 터미널 타입 정의
@@ -90,21 +95,69 @@ blog/
 │   ├── unit/
 │   │   ├── lib/
 │   │   │   ├── posts.test.ts
-│   │   │   └── constants.test.ts
-│   │   └── components/
-│   │       ├── PostCard.test.tsx
-│   │       ├── TagBadge.test.tsx
-│   │       ├── SearchBar.test.tsx
-│   │       ├── Header.test.tsx
-│   │       └── Footer.test.tsx
+│   │   │   ├── constants.test.ts
+│   │   │   ├── format.test.ts
+│   │   │   ├── search.test.ts
+│   │   │   ├── metadata.test.ts
+│   │   │   ├── rss.test.ts
+│   │   │   ├── sitemap.test.ts
+│   │   │   ├── robots.test.ts
+│   │   │   ├── reading-time.test.ts
+│   │   │   ├── css-a11y.test.ts
+│   │   │   ├── utils.test.ts
+│   │   │   ├── structured-data.test.ts
+│   │   │   ├── terminal-utils.test.ts
+│   │   │   ├── terminal-commands.test.ts
+│   │   │   └── terminal-commands-enhanced.test.ts
+│   │   ├── components/
+│   │   │   ├── PostCard.test.tsx
+│   │   │   ├── TagBadge.test.tsx
+│   │   │   ├── SearchBar.test.tsx
+│   │   │   ├── Header.test.tsx
+│   │   │   ├── Header-accessibility.test.tsx
+│   │   │   ├── Footer.test.tsx
+│   │   │   ├── Giscus.test.tsx
+│   │   │   ├── TableOfContents.test.tsx
+│   │   │   ├── PostBody.test.tsx
+│   │   │   ├── PostList.test.tsx
+│   │   │   ├── PageContainer.test.tsx
+│   │   │   ├── PageHeading.test.tsx
+│   │   │   ├── ScrollToTop.test.tsx
+│   │   │   ├── NoScriptFallback.test.tsx
+│   │   │   ├── Skeleton.test.tsx
+│   │   │   ├── Button.test.tsx
+│   │   │   ├── CustomLink.test.tsx
+│   │   │   ├── Pre.test.tsx
+│   │   │   ├── Callout.test.tsx
+│   │   │   ├── Image.test.tsx
+│   │   │   ├── CommandInput.test.tsx
+│   │   │   ├── OutputRenderer.test.tsx
+│   │   │   └── mdx.test.tsx
+│   │   └── terminal/
+│   │       ├── CommandInput.test.tsx
+│   │       ├── Terminal.test.tsx
+│   │       └── OutputRenderer.test.tsx
 │   ├── integration/
 │   │   ├── pages/
 │   │   │   ├── home.test.tsx
+│   │   │   ├── home-jsonld.test.tsx
 │   │   │   ├── post-list.test.tsx
+│   │   │   ├── posts-jsonld.test.tsx
 │   │   │   ├── post-detail.test.tsx
+│   │   │   ├── post-error.test.tsx
 │   │   │   ├── tags.test.tsx
+│   │   │   ├── tags-jsonld.test.tsx
 │   │   │   ├── about.test.tsx
-│   │   │   └── projects.test.tsx
+│   │   │   ├── about-jsonld.test.tsx
+│   │   │   ├── projects.test.tsx
+│   │   │   ├── projects-jsonld.test.tsx
+│   │   │   ├── projects-jsonld-extended.test.tsx
+│   │   │   ├── search.test.tsx
+│   │   │   ├── search-jsonld.test.tsx
+│   │   │   ├── not-found.test.tsx
+│   │   │   ├── error.test.tsx
+│   │   │   ├── loading.test.tsx
+│   │   │   └── layout.test.tsx
 │   │   └── mdx/
 │   │       └── mdx-rendering.test.tsx
 │   └── e2e/
