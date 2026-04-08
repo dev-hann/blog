@@ -4,21 +4,13 @@ import { generateMetadata } from "@/lib/metadata";
 import type { Project } from "@/types/project";
 import TagBadge from "@/components/tag/TagBadge";
 import PageContainer from "@/components/ui/PageContainer";
+import projectsData from "@/content/projects.json";
 
 export const metadata = generateMetadata({
   title: "Projects",
   description: "Projects by " + SITE_CONFIG.author,
   path: "/projects",
 });
-
-const projects: Project[] = [
-  {
-    name: "Blog",
-    description: "Next.js 16 + Tailwind CSS v4 + MDX 기반 개인 기술 블로그",
-    tags: ["nextjs", "typescript", "tailwindcss", "mdx"],
-    github: SITE_CONFIG.github,
-  },
-];
 
 export default function ProjectsPage() {
   return (
@@ -38,7 +30,7 @@ export default function ProjectsPage() {
         Projects
       </h1>
       <div className="grid gap-4 sm:grid-cols-2">
-        {projects.map((project) => (
+        {(projectsData as Project[]).map((project) => (
           <article
             key={project.name}
             aria-labelledby={`project-${project.name}`}
