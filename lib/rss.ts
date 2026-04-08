@@ -1,14 +1,6 @@
 import { SITE_CONFIG } from "@/lib/constants";
 import type { Post } from "@/types/post";
-
-function escapeXml(str: string): string {
-  return str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&apos;");
-}
+import { escapeHtml as escapeXml } from "@/lib/utils";
 
 export function generateRSS(posts: Post[]): string {
   const items = posts.slice(0, 20)

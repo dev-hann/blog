@@ -5,6 +5,7 @@ import { copyToClipboard } from "@/lib/clipboard";
 
 type PreProps = React.ComponentProps<"pre"> & {
   children: React.ReactNode;
+  htmlOnly?: boolean;
 };
 
 function getLanguage(children: React.ReactNode): string | null {
@@ -15,13 +16,14 @@ function getLanguage(children: React.ReactNode): string | null {
   return match ? match[1] : null;
 }
 
-export default function Pre({ children, ...props }: PreProps) {
+export default function Pre({ children, htmlOnly = false, ...props }: PreProps) {
   const [copied, setCopied] = useState(false);
   const [failed, setFailed] = useState(false);
   const preRef = useRef<HTMLPreElement>(null);
-  const lang = getLanguage(children);
+  const lang = htmlOnly ? null : getLanguage(children);
 
   const handleCopy = async () => {
+    if (htmlOnly) return;
     const text = preRef.current?.textContent ?? "";
     try {
       await copyToClipboard(text);
@@ -34,6 +36,17 @@ export default function Pre({ children, ...props }: PreProps) {
       setTimeout(() => setFailed(false), 2000);
     }
   };
+
+  if (htmlOnly) {
+    return (
+      <pre
+        className="overflow-x-auto rounded-lg bg-[var(--color-bg-tertiary)] p-4 text-sm"
+        {...props}
+      >
+        {children}
+      </pre>
+    );
+  }
 
   return (
     <div className="group relative">

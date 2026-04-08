@@ -33,15 +33,18 @@ export default function PostList({ posts, postsPerPage = 10 }: PostListProps) {
       params.delete("page");
     }
     const qs = params.toString();
-    router.replace(qs ? `?${qs}` : window.location.pathname, { scroll: false });
+    router.replace(qs ? `/posts?${qs}` : "/posts", { scroll: false });
   }
 
   return (
     <div>
+      <a href="#posts-heading" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:right-4 rounded bg-[var(--color-accent)] px-4 py-2 text-[var(--color-bg-primary)]">
+        Skip to posts
+      </a>
       {posts.length === 0 ? (
         <p role="status" className="text-[var(--color-text-muted)]">No posts found.</p>
       ) : (
-        <div aria-live="polite" className="flex flex-col gap-4">
+        <div id="posts-heading" aria-live="polite" className="flex flex-col gap-4">
           {currentPosts.map((post) => (
             <PostCard key={post.slug} post={post} />
           ))}

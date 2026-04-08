@@ -1,26 +1,17 @@
 import { prerenderToNodeStream } from "react-dom/static";
 import { compileMDX } from "next-mdx-remote/rsc";
 import type { MdxComponentProps, MdxLinkProps } from "@/types/mdx";
+import Pre from "@/components/mdx/Pre";
+import CustomLink from "@/components/mdx/CustomLink";
 import Callout from "@/components/mdx/Callout";
 import MDXImage from "@/components/mdx/Image";
 import { rehypePlugins } from "@/lib/mdx-plugins";
 
-function ServerPre({ children, ...props }: MdxComponentProps) {
-  return (
-    <pre className="overflow-x-auto rounded-lg bg-[var(--color-bg-tertiary)] p-4 text-sm" {...props}>
-      {children}
-    </pre>
-  );
-}
-
-function ServerLink({ href, children, ...props }: MdxLinkProps) {
-  if (!href) return <span {...props}>{children}</span>;
-  return <a href={href} target="_blank" rel="noopener noreferrer" {...props}>{children}</a>;
-}
-
 const components = {
-  a: ServerLink,
-  pre: ServerPre,
+  a: ({ href, children, ...props }: MdxLinkProps) => (
+    <CustomLink href={href} htmlOnly {...props}>{children}</CustomLink>
+  ),
+  pre: ({ children, ...props }: MdxComponentProps) => <Pre htmlOnly {...props}>{children}</Pre>,
   Callout,
   Image: MDXImage,
 };
