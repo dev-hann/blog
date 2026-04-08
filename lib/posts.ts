@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import type { Post, PostDetail, Heading } from "@/types/post";
+import { ERROR_MESSAGES } from "@/lib/constants";
 
 const POSTS_DIR = path.join(process.cwd(), "content/posts");
 
@@ -48,7 +49,7 @@ export function getPostBySlug(slug: string): PostDetail {
   const fileName = `${slug}.mdx`;
   const filePath = path.join(POSTS_DIR, fileName);
   if (!fs.existsSync(filePath)) {
-    throw new Error(`Post not found: ${slug}`);
+    throw new Error(ERROR_MESSAGES.POST_NOT_FOUND(slug));
   }
   const raw = fs.readFileSync(filePath, "utf-8");
   const { data, content } = matter(raw);
