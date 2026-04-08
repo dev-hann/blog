@@ -1,37 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { Heading } from "@/types/post";
 
 interface TableOfContentsProps {
   headings: Heading[];
 }
 
-export default function TableOfContents({ headings }: TableOfContentsProps) {
+function TableOfContents({ headings }: TableOfContentsProps) {
   const [activeId, setActiveId] = useState<string>("");
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-          }
-        }
-      },
-      { rootMargin: "-80px 0px -80% 0px" }
-    );
-
-    for (const heading of headings) {
-      const el = document.getElementById(heading.id);
-      if (el) observer.observe(el);
-    }
-
-    return () => observer.disconnect();
-  }, [headings]);
-
-  if (headings.length === 0) return null;
 
   const tocList = (
     <ul className="space-y-1 border-l border-[var(--color-border)]">
@@ -54,6 +32,28 @@ export default function TableOfContents({ headings }: TableOfContentsProps) {
       ))}
     </ul>
   );
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setActiveId(entry.target.id);
+          }
+        }
+      },
+      { rootMargin: "-80px 0px -80% 0px" }
+    );
+
+    for (const heading of headings) {
+      const el = document.getElementById(heading.id);
+      if (el) observer.observe(el);
+    }
+
+    return () => observer.disconnect();
+  }, [headings]);
+
+  if (headings.length === 0) return null;
 
   const mobileContentId = "toc-mobile-content";
 
@@ -87,3 +87,7 @@ export default function TableOfContents({ headings }: TableOfContentsProps) {
     </>
   );
 }
+
+export default React.memo(TableOfContents, (prevProps, nextProps) => {
+  return prevProps.headings === nextProps.headings;
+});

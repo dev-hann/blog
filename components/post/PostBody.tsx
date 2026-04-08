@@ -5,6 +5,10 @@ interface PostBodyProps {
   content: string;
 }
 
-export default function PostBody({ content }: PostBodyProps) {
+function PostBody({ content }: PostBodyProps) {
   return <div className="mdx-content">{renderMDX(content)}</div>;
 }
+
+export default React.memo(PostBody, (prevProps, nextProps) => {
+  return prevProps.content === nextProps.content;
+});
