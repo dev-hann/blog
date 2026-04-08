@@ -56,6 +56,14 @@ export default function Header() {
     }
   }, []);
 
+  const handleToggleMobile = useCallback(() => {
+    setMobileOpen((prev) => !prev);
+  }, []);
+
+  const handleCloseMobile = useCallback(() => {
+    setMobileOpen(false);
+  }, []);
+
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--color-border)] bg-[var(--color-bg-primary)]/80 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4">
@@ -85,7 +93,7 @@ export default function Header() {
           aria-label="Toggle menu"
           aria-expanded={mobileOpen}
           className="text-[var(--color-text-muted)] md:hidden"
-          onClick={() => setMobileOpen((prev) => !prev)}
+          onClick={handleToggleMobile}
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             {mobileOpen ? (
@@ -103,7 +111,7 @@ export default function Header() {
             <Link
               key={link.href}
               href={link.href}
-              onClick={() => setMobileOpen(false)}
+              onClick={handleCloseMobile}
               aria-current={isActive(pathname, link.href) ? "page" : undefined}
               className={`py-2 text-sm ${
                 isActive(pathname, link.href)

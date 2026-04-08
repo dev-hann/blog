@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import type { Heading } from "@/types/post";
 
 interface TableOfContentsProps {
@@ -11,13 +11,21 @@ function TableOfContents({ headings }: TableOfContentsProps) {
   const [activeId, setActiveId] = useState<string>("");
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const handleCloseMobile = useCallback(() => {
+    setMobileOpen(false);
+  }, []);
+
+  const handleToggleMobile = useCallback(() => {
+    setMobileOpen((prev) => !prev);
+  }, []);
+
   const tocList = (
     <ul className="space-y-1 border-l border-[var(--color-border)]">
       {headings.map((heading) => (
         <li key={heading.id}>
           <a
             href={`#${heading.id}`}
-            onClick={() => setMobileOpen(false)}
+            onClick={handleCloseMobile}
             className={`block text-sm transition-colors ${
               heading.level === 3 ? "pl-6" : "pl-4"
             } ${
@@ -71,7 +79,7 @@ function TableOfContents({ headings }: TableOfContentsProps) {
           aria-label="Toggle table of contents"
           aria-expanded={mobileOpen}
           aria-controls={mobileContentId}
-          onClick={() => setMobileOpen((prev) => !prev)}
+          onClick={handleToggleMobile}
           className="mb-2 text-sm font-semibold text-[var(--color-text-muted)]"
         >
           Table of Contents ▾

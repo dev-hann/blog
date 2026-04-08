@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import type { Post } from "@/types/post";
 import PostCard from "@/components/post/PostCard";
@@ -10,7 +10,9 @@ interface PostListProps {
   postsPerPage?: number;
 }
 
-export default function PostList({ posts, postsPerPage = 10 }: PostListProps) {
+const POSTS_PER_PAGE = 10;
+
+export default function PostList({ posts, postsPerPage = POSTS_PER_PAGE }: PostListProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pageFromUrl = Number(searchParams.get("page")) || 1;
@@ -24,17 +26,20 @@ export default function PostList({ posts, postsPerPage = 10 }: PostListProps) {
   const start = (page - 1) * postsPerPage;
   const currentPosts = posts.slice(start, start + postsPerPage);
 
-  function goToPage(p: number) {
-    setPage(p);
-    const params = new URLSearchParams(searchParams.toString());
-    if (p > 1) {
-      params.set("page", String(p));
-    } else {
-      params.delete("page");
-    }
-    const qs = params.toString();
-    router.replace(qs ? `/posts?${qs}` : "/posts", { scroll: false });
-  }
+  const goToPage = useCallback(
+    (p: number) => {
+      setPage(p);
+      const params = new URLSearchParams(searchParams.toString());
+      if (p > 1) {
+        params.set("page", String(p));
+      } else {
+        params.delete("page");
+      }
+      const qs = params.toString();
+      router.replace(qs ? `/posts?${qs}` : "/posts", { scroll: false });
+    },
+    [searchParams, router]
+  );
 
   return (
     <div>
