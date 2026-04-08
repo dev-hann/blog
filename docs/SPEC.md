@@ -22,9 +22,8 @@
 
 ### 2.1 홈 (`/`)
 
-- **히어로 섹션**: 블로그 제목, 한줄 소개
-- **최신 포스트**: 최신 글 5개 카드 형태로 노출
-- **빠른 네비게이션**: 포스트, 태그, 프로젝트 링크
+- **터미널 인터페이스**: CLI 스타일 블로그 네비게이션 (ls, cat, tags, grep, about, projects 등 명령어 지원)
+- **빠른 네비게이션**: NoScript 폴백으로 자바스크립트 없이도 네비게이션 가능
 
 ### 2.2 포스트 목록 (`/posts`)
 
@@ -116,46 +115,55 @@ draft: false          # true면 빌드에서 제외
 
 ## 4. 컴포넌트 명세
 
-### 4.1 Header (`components/layout/Header.tsx`)
+### 4.1 Terminal (`components/terminal/Terminal.tsx`)
 
+- Props: `{ posts, tags }`
+- CLI 스타일 블로그 네비게이션 인터페이스
+- 지원 명령어: `ls`, `cat <slug>`, `tags`, `tag <name>`, `about`, `projects`, `grep <query>`, `whoami`, `neofetch`, `date`, `echo <msg>`, `links`, `history`, `clear`, `help`
+- 탭 자동완성 지원 (명령어, 포스트 slug, 태그명)
+- 명령어 히스토리 (상/하향화살표로 이동)
+- NoScript 폴백 지원 (자바스크립트 없이도 빠른 네비게이션)
+
+### 4.2 Header (`components/layout/Header.tsx`)
+ 
 - 로고/사이트명 (좌측)
 - 네비게이션 링크: 홈, 포스트, 태그, 프로젝트, 소개, 검색
 - 모바일: 햄버거 메뉴 → 슬라이드 메뉴
 - 현재 경로에 활성 링크 표시
 - 스크롤 시 상단 고정 (sticky)
-
-### 4.2 Footer (`components/layout/Footer.tsx`)
+ 
+### 4.3 Footer (`components/layout/Footer.tsx`)
 
 - 저작권 정보
 - GitHub 링크
 - RSS 링크
 
-### 4.3 PostCard (`components/post/PostCard.tsx`)
+### 4.4 PostCard (`components/post/PostCard.tsx`)
 
 - Props: `{ slug, title, date, summary, tags }`
 - 제목 클릭 시 `/posts/[slug]` 이동
 - 날짜 포맷: YYYY년 MM월 DD일
 - 태그 뱃지 표시
 
-### 4.4 PostBody (`components/post/PostBody.tsx`)
+### 4.5 PostBody (`components/post/PostBody.tsx`)
 
 - MDX 콘텐츠 렌더링 래퍼
 - 커스텀 컴포넌트 매핑 (CustomLink, Pre, Callout, Image)
 
-### 4.5 TableOfContents (`components/post/TableOfContents.tsx`)
+### 4.6 TableOfContents (`components/post/TableOfContents.tsx`)
 
 - 헤딩(h2, h3) 기반 목차 자동 생성
 - 현재 위치 하이라이트 (Intersection Observer)
 - 클릭 시 해당 섹션으로 스크롤
 - 데스크탑: 사이드바 고정 / 모바일: 접히는 형태
 
-### 4.6 TagBadge (`components/tag/TagBadge.tsx`)
+### 4.7 TagBadge (`components/tag/TagBadge.tsx`)
 
 - Props: `{ tag, count? }`
 - 클릭 시 `/tags/[tag]` 이동
 - 다크 테마에 맞는 스타일
 
-### 4.7 SearchBar (`components/search/SearchBar.tsx`)
+### 4.8 SearchBar (`components/search/SearchBar.tsx`)
 
 - 검색어 입력 인풋
 - 디바운스 300ms
@@ -163,13 +171,13 @@ draft: false          # true면 빌드에서 제외
 - 로딩 상태 표시
 - 빈 결과 안내
 
-### 4.8 Giscus (`components/comment/Giscus.tsx`)
+### 4.9 Giscus (`components/comment/Giscus.tsx`)
 
 - GitHub Discussions 기반 댓글
 - lazy loading (화면 진입 시 로드)
 - 다크 테마 설정
 
-### 4.9 Metadata (`lib/metadata.ts`)
+### 4.10 Metadata (`lib/metadata.ts`)
 
 - Function: `generateMetadata({ title, description, path, image? })`
 - Open Graph 태그
@@ -177,7 +185,7 @@ draft: false          # true면 빌드에서 제외
 - canonical URL
 - robots meta (index, follow)
 
-### 4.10 MDX 커스텀 컴포넌트
+### 4.11 MDX 커스텀 컴포넌트
 
 - **CustomLink**: 외부 링크 → new tab + rel="noopener noreferrer", 내부 링크 → next/link
 - **Pre**: 코드 블록 + 복사 버튼, 언어 표시, 라인 하이라이팅

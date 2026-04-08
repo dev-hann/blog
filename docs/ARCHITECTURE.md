@@ -8,7 +8,7 @@
 blog/
 ├── app/
 │   ├── layout.tsx                  # 루트 레이아웃 (Header, Footer, 메타)
-│   ├── page.tsx                    # 홈
+│   ├── page.tsx                    # 홈 (터미널 인터페이스)
 │   ├── not-found.tsx               # 커스텀 404
 │   ├── globals.css                 # 전역 스타일 + 다크 테마 토큰
 │   ├── posts/
@@ -45,8 +45,14 @@ blog/
 │   │   └── SearchBar.tsx
 │   ├── comment/
 │   │   └── Giscus.tsx
-│   ├── seo/
-│   │   └── Meta.tsx
+│   ├── terminal/
+│   │   ├── Terminal.tsx            # CLI 스타일 인터페이스
+│   │   ├── CommandInput.tsx
+│   │   └── OutputRenderer.tsx
+│   ├── ui/
+│   │   ├── PageContainer.tsx
+│   │   ├── ScrollToTop.tsx
+│   │   └── NoScriptFallback.tsx     # NoScript용 빠른 네비게이션
 │   └── mdx/
 │       ├── CustomLink.tsx
 │       ├── Pre.tsx
@@ -62,11 +68,23 @@ blog/
 ├── lib/
 │   ├── posts.ts                    # 포스트 CRUD 유틸
 │   ├── mdx.ts                      # MDX 렌더링 유틸
+│   ├── mdx-plugins.ts             # MDX 플러그인 설정
 │   ├── constants.ts                # 사이트 메타 상수
-│   └── search.ts                   # 검색 인덱스 생성
+│   ├── search.ts                   # 검색 인덱스 생성
+│   ├── metadata.ts                 # 메타데이터 생성 함수
+│   ├── format.ts                   # 날짜/시간 포맷 유틸
+│   ├── clipboard.ts                # 클립보드 복사 유틸
+│   ├── reading-time.ts             # 읽기 시간 계산
+│   ├── css-a11y.ts                # CSS 접근성 검증
+│   └── terminal/
+│       ├── commands.ts              # 터미널 명령어 처리
+│       ├── types.ts                 # 터미널 타입 정의
+│       └── utils.ts                 # 터미널 유틸 함수
 │
 ├── types/
-│   └── post.ts                     # Post 타입 정의
+│   ├── post.ts                     # Post 타입 정의
+│   ├── mdx.ts                      # MDX 타입 정의
+│   └── project.ts                  # Project 타입 정의
 │
 ├── __tests__/
 │   ├── unit/
@@ -126,22 +144,28 @@ blog/
 content/posts/*.mdx
        │
        ▼
-  lib/posts.ts
-  ├─ gray-matter로 frontmatter 파싱
-  ├─ 파일명에서 slug 추출
-  ├─ 날짜순 정렬
-  └─ 태그 집계
-       │
-       ├──────────────────┬──────────────────┐
-       ▼                  ▼                  ▼
-  app/page.tsx      app/posts/page.tsx   app/tags/page.tsx
-  (최신 5개)         (전체 목록)          (태그 집계)
-                          │
-                          ▼
-                  app/posts/[slug]/page.tsx
-                  ├─ lib/posts.ts → getPostBySlug()
-                  ├─ lib/mdx.ts → MDX 렌더링
-                  └─ 커스텀 컴포넌트 매핑
+   lib/posts.ts
+   ├─ gray-matter로 frontmatter 파싱
+   ├─ 파일명에서 slug 추출
+   ├─ 날짜순 정렬
+   └─ 태그 집계
+        │
+        ├──────────────────┬──────────────────┐
+        ▼                  ▼                  ▼
+   app/page.tsx      app/posts/page.tsx   app/tags/page.tsx
+   (터미널용)       (전체 목록)          (태그 집계)
+        │                  │
+        │                  ▼
+        │          app/posts/[slug]/page.tsx
+        │          ├─ lib/posts.ts → getPostBySlug()
+        │          ├─ lib/mdx.ts → MDX 렌더링
+        │          └─ 커스텀 컴포넌트 매핑
+        │
+        ▼
+   components/terminal/Terminal.tsx
+   ├─ lib/terminal/commands.ts → 명령어 처리
+   ├─ lib/terminal/utils.ts → 유틸리티 함수
+   └─ NoScriptFallback → NoScript용 빠른 네비게이션
 ```
 
 ### 2.2 검색 데이터 흐름
