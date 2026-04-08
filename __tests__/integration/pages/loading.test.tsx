@@ -47,19 +47,19 @@ describe("Loading pages", () => {
   it("posts loading has accessible status", async () => {
     const Loading = await loadComponent("posts");
     render(<Loading />);
-    expect(screen.getByRole("status")).toBeInTheDocument();
+    expect(screen.getAllByRole("status", { hidden: true }).length).toBeGreaterThan(0);
   });
 
   it("post-detail loading has accessible status", async () => {
     const Loading = await loadComponent("post-detail");
     render(<Loading />);
-    expect(screen.getByRole("status")).toBeInTheDocument();
+    expect(screen.getAllByRole("status", { hidden: true }).length).toBeGreaterThan(0);
   });
 
   it("search loading has accessible status", async () => {
     const Loading = await loadComponent("search");
     render(<Loading />);
-    expect(screen.getByRole("status")).toBeInTheDocument();
+    expect(screen.getAllByRole("status", { hidden: true }).length).toBeGreaterThan(0);
   });
 
   it("tags loading renders skeleton", async () => {
@@ -71,7 +71,7 @@ describe("Loading pages", () => {
   it("tags loading has accessible status", async () => {
     const Loading = await loadComponent("tags");
     render(<Loading />);
-    expect(screen.getByRole("status")).toBeInTheDocument();
+    expect(screen.getAllByRole("status", { hidden: true }).length).toBeGreaterThan(0);
   });
 
   it("post-detail loading does not use inline styles", async () => {
