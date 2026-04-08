@@ -14,6 +14,9 @@ export const metadata = generateMetadata({
 });
 
 export default function ProjectsPage() {
+  const projects = projectsData as Project[];
+  const projectUrl = `${SITE_CONFIG.url}/projects`;
+
   return (
     <PageContainer>
       <script
@@ -21,9 +24,32 @@ export default function ProjectsPage() {
         dangerouslySetInnerHTML={{
           __html: generateJsonLd({
             "@context": "https://schema.org",
+            "@type": "ItemList",
+            name: "Projects",
+            description: "Projects by " + SITE_CONFIG.author,
+            itemListElement: projects.map((project, index) => ({
+              "@type": "ListItem",
+              position: index + 1,
+              item: {
+                "@type": "SoftwareApplication",
+                name: project.name,
+                description: project.description,
+                applicationCategory: project.tags.join(", "),
+                url: project.github || project.demo,
+              },
+            })),
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
             "@type": "CollectionPage",
             name: "Projects",
             description: "Projects by " + SITE_CONFIG.author,
+            url: projectUrl,
           }),
         }}
       />
@@ -31,7 +57,7 @@ export default function ProjectsPage() {
         Projects
       </h1>
       <div className="grid gap-4 sm:grid-cols-2">
-        {(projectsData as Project[]).map((project) => (
+        {projects.map((project) => (
           <article
             key={project.name}
             aria-labelledby={`project-${project.name}`}
