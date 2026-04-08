@@ -30,9 +30,7 @@ describe("Root Layout accessibility", () => {
   it("has skip-to-content link", async () => {
     const { default: Layout } = await import("@/app/layout");
     
-    render(<Layout><div>Test</div></Layout>, {
-      container: document.body,
-    });
+    render(<Layout><div>Test</div></Layout>);
     
     const skipLink = screen.getByText("Skip to content");
     expect(skipLink).toBeInTheDocument();
@@ -42,22 +40,19 @@ describe("Root Layout accessibility", () => {
   it("has main landmark with id main-content", async () => {
     const { default: Layout } = await import("@/app/layout");
     
-    render(<Layout><div>Test</div></Layout>, {
-      container: document.body,
-    });
+    render(<Layout><div>Test</div></Layout>);
     
-    const main = document.body.querySelector("main#main-content");
+    const main = screen.getByRole("main");
     expect(main).toBeInTheDocument();
+    expect(main).toHaveAttribute("id", "main-content");
   });
 
   it("renders children inside main", async () => {
     const { default: Layout } = await import("@/app/layout");
     
-    const { container } = render(<Layout><div data-testid="child">Child Content</div></Layout>, {
-      container: document.body,
-    });
+    render(<Layout><div data-testid="child">Child Content</div></Layout>);
     
-    const main = container.querySelector("main#main-content");
+    const main = screen.getByRole("main");
     expect(main).toContainElement(screen.getByTestId("child"));
   });
 });
