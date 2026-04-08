@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import type { TerminalLine } from "@/lib/terminal/types";
 
 export default function OutputRenderer({ line }: { line: TerminalLine }) {

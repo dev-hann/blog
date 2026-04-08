@@ -1,3 +1,5 @@
+import React from "react";
+
 type CalloutType = "info" | "warning" | "danger";
 
 interface CalloutProps {
