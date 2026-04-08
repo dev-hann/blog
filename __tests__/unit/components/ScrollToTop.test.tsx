@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ScrollToTop from "@/components/ui/ScrollToTop";
 
@@ -34,7 +34,9 @@ describe("ScrollToTop", () => {
     vi.spyOn(window, "removeEventListener").mockImplementation(() => {});
 
     render(<ScrollToTop />);
-    for (const fn of listeners) fn();
+    act(() => {
+      for (const fn of listeners) fn();
+    });
 
     expect(screen.getByLabelText("Scroll to top")).toBeInTheDocument();
   });
@@ -48,7 +50,9 @@ describe("ScrollToTop", () => {
     vi.spyOn(window, "removeEventListener").mockImplementation(() => {});
 
     render(<ScrollToTop />);
-    for (const fn of listeners) fn();
+    act(() => {
+      for (const fn of listeners) fn();
+    });
 
     const user = userEvent.setup();
     await user.click(screen.getByLabelText("Scroll to top"));
