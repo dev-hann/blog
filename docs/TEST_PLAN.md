@@ -219,12 +219,14 @@ e2e/                                  # 브라우저 전체 플로우
 | 1 | renders Giscus container | 컴포넌트 렌더링 |
 | 2 | has correct data attributes | repo, theme 등 속성 확인 |
 
-#### components/Meta.test.tsx
+#### lib/metadata.test.ts
 | # | 테스트 케이스 | 설명 |
 |---|---|---|
-| 1 | renders OG title | og:title 메타 |
-| 2 | renders OG description | og:description 메타 |
-| 3 | renders canonical URL | canonical 링크 |
+| 1 | generates Open Graph metadata | og:title, og:description 메타 |
+| 2 | generates canonical URL | canonical 링크 |
+| 3 | generates Twitter card metadata | twitter:card, twitter:title 메타 |
+| 4 | includes robots metadata | index, follow 설정 |
+| 5 | includes og:image when provided | 사용자 정의 이미지 |
 
 #### components/TableOfContents.test.tsx
 | # | 테스트 케이스 | 설명 |
