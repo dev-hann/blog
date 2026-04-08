@@ -4,10 +4,16 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 describe("Global error boundary", () => {
-  it("renders error message", async () => {
+  it("renders error heading", async () => {
     const { default: ErrorPage } = await import("@/app/error");
     render(<ErrorPage error={new Error("Test error")} reset={() => {}} />);
     expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
+  });
+
+  it("displays error message", async () => {
+    const { default: ErrorPage } = await import("@/app/error");
+    render(<ErrorPage error={new Error("Test error message")} reset={() => {}} />);
+    expect(screen.getByText(/test error message/i)).toBeInTheDocument();
   });
 
   it("renders try again button", async () => {

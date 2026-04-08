@@ -4,10 +4,16 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 describe("Post detail error boundary", () => {
-  it("renders error message", async () => {
+  it("renders error heading", async () => {
     const { default: PostError } = await import("@/app/posts/[slug]/error");
     render(<PostError error={new Error("MDX render failed")} reset={() => {}} />);
     expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
+  });
+
+  it("displays error message", async () => {
+    const { default: PostError } = await import("@/app/posts/[slug]/error");
+    render(<PostError error={new Error("MDX render failed")} reset={() => {}} />);
+    expect(screen.getByText(/mdx render failed/i)).toBeInTheDocument();
   });
 
   it("renders try again button", async () => {
