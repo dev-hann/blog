@@ -143,4 +143,11 @@ describe("SearchBar", () => {
 
     vi.useRealTimers();
   });
+
+  it("has aria-live on results container for screen readers", async () => {
+    const { default: SearchBar } = await import("@/components/search/SearchBar");
+    render(<SearchBar posts={mockPosts} />);
+    const container = screen.getByRole("search").querySelector('[aria-live="polite"]');
+    expect(container).toBeInTheDocument();
+  });
 });
