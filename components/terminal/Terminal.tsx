@@ -91,10 +91,10 @@ export default function Terminal({ posts, tags }: TerminalProps) {
     setCompletions(items);
   }, []);
 
-  const handleBodyClick = () => {
+  const handleBodyClick = useCallback(() => {
     const input = scrollRef.current?.querySelector(".command-input") as HTMLInputElement | null;
     input?.focus();
-  };
+  }, []);
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-[var(--color-bg-primary)]">

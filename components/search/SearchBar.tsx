@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, useRef } from "react";
+import React, { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import type { Post } from "@/types/post";
 import PostCard from "@/components/post/PostCard";
 
@@ -12,6 +12,10 @@ function SearchBar({ posts }: SearchBarProps) {
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const timerRef = useRef<ReturnType<typeof setTimeout>>(null);
+
+  const handleQueryChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+  }, []);
 
   useEffect(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
@@ -42,7 +46,7 @@ function SearchBar({ posts }: SearchBarProps) {
         aria-label="Search posts"
         placeholder="Search posts..."
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={handleQueryChange}
         className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-secondary)] px-4 py-3 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus:border-[var(--color-accent)] focus:outline-none"
       />
       {isDebouncing && (
