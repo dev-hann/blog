@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Button from "@/components/ui/Button";
 
 export default function NotFound() {
   return (
@@ -8,12 +9,9 @@ export default function NotFound() {
       <p className="mt-4 text-[var(--color-text-muted)]">
         Page not found.
       </p>
-      <Link
-        href="/"
-        className="mt-6 rounded bg-[var(--color-accent)] px-6 py-2 text-sm text-[var(--color-bg-primary)] transition-colors hover:bg-[var(--color-accent-hover)]"
-      >
-        Go Home
-      </Link>
+      <Button variant="primary" className="mt-6" asChild>
+        <Link href="/">Go Home</Link>
+      </Button>
     </div>
   );
 }

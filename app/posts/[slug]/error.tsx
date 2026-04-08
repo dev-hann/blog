@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Button from "@/components/ui/Button";
 
 export default function PostDetailError({
   reset,
@@ -16,19 +17,12 @@ export default function PostDetailError({
         An error occurred while rendering this post.
       </p>
       <div className="mt-6 flex gap-4">
-        <button
-          type="button"
-          onClick={reset}
-          className="rounded bg-[var(--color-accent)] px-6 py-2 text-sm text-[var(--color-bg-primary)] transition-colors hover:bg-[var(--color-accent-hover)]"
-        >
+        <Button variant="primary" onClick={reset}>
           Try again
-        </button>
-        <Link
-          href="/posts"
-          className="rounded border border-[var(--color-border)] px-6 py-2 text-sm text-[var(--color-text-muted)] transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-text-accent)]"
-        >
-          Back to posts
-        </Link>
+        </Button>
+        <Button variant="outline" asChild>
+          <Link href="/posts">Back to posts</Link>
+        </Button>
       </div>
     </div>
   );

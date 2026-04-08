@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Button from "@/components/ui/Button";
 
 export default function GlobalError({
   reset,
@@ -14,13 +15,9 @@ export default function GlobalError({
       <p className="mt-4 text-[var(--color-text-muted)]">
         Something went wrong.
       </p>
-      <button
-        type="button"
-        onClick={reset}
-        className="mt-6 rounded bg-[var(--color-accent)] px-6 py-2 text-sm text-[var(--color-bg-primary)] transition-colors hover:bg-[var(--color-accent-hover)]"
-      >
+      <Button variant="primary" className="mt-6" onClick={reset}>
         Try again
-      </button>
+      </Button>
     </div>
   );
 }
