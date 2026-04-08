@@ -66,11 +66,15 @@ async function handleCat(
   args: string[],
   context: CommandContext
 ): Promise<CommandResult> {
-  const slug = args[0];
-  if (!slug) {
+  if (args.length === 0) {
     return { lines: [err("Usage: cat <slug>")] };
   }
 
+  if (args.length > 1) {
+    return { lines: [err("Usage: cat <slug> (only one post at a time)")] };
+  }
+
+  const slug = args[0];
   const post = context.posts.find((p) => p.slug === slug);
   if (!post) {
     return { lines: [err(`cat: ${escapeHtml(slug)}: No such post`)] };
