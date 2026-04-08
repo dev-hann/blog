@@ -1,10 +1,8 @@
-import { getAllPosts, getAllTags, getPostBySlug } from "@/lib/posts";
+import { getAllPosts, getAllTags } from "@/lib/posts";
 import Terminal from "@/components/terminal/Terminal";
 import NoScriptFallback from "@/components/ui/NoScriptFallback";
-import { renderMDXToHTML } from "@/lib/mdx-html";
 import { generateMetadata } from "@/lib/metadata";
 import { SITE_CONFIG } from "@/lib/constants";
-import type { PostHtmlMap } from "@/types/post";
 
 export const metadata = generateMetadata({
   title: "Blog",
@@ -15,16 +13,6 @@ export const metadata = generateMetadata({
 export default async function Home() {
   const posts = getAllPosts();
   const tags = getAllTags();
-
-  const postHtml: PostHtmlMap = {};
-  for (const post of posts) {
-    try {
-      const detail = getPostBySlug(post.slug);
-      postHtml[post.slug] = await renderMDXToHTML(detail.content);
-    } catch {
-      postHtml[post.slug] = "";
-    }
-  }
 
   return (
     <>
@@ -41,7 +29,7 @@ export default async function Home() {
           }),
         }}
       />
-      <Terminal posts={posts} tags={tags} postHtml={postHtml} />
+      <Terminal posts={posts} tags={tags} />
       <NoScriptFallback />
     </>
   );

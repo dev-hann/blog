@@ -7,12 +7,11 @@ import type { TerminalLine } from "@/lib/terminal/types";
 import { genId } from "@/lib/terminal/utils";
 import { executeCommand } from "@/lib/terminal/commands";
 import { SITE_CONFIG } from "@/lib/constants";
-import type { Post, PostHtmlMap } from "@/types/post";
+import type { Post } from "@/types/post";
 
 interface TerminalProps {
   posts: Post[];
   tags: Record<string, number>;
-  postHtml?: PostHtmlMap;
 }
 
 function createWelcomeLines(): TerminalLine[] {
@@ -24,7 +23,7 @@ function createWelcomeLines(): TerminalLine[] {
   ];
 }
 
-export default function Terminal({ posts, tags, postHtml }: TerminalProps) {
+export default function Terminal({ posts, tags }: TerminalProps) {
   const [lines, setLines] = useState<TerminalLine[]>(createWelcomeLines);
   const [history, setHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
@@ -63,14 +62,14 @@ export default function Terminal({ posts, tags, postHtml }: TerminalProps) {
 
       setIsProcessing(true);
       setLines((prev) => [...prev, inputLine]);
-      const result = await executeCommand(input, { posts, tags, postHtml: postHtml ?? {} }, history);
+      const result = await executeCommand(input, { posts, tags }, history);
       setIsProcessing(false);
 
       setLines((prev) => [...prev, ...result.lines]);
       setHistory((prev) => [...prev, input]);
       setHistoryIndex(-1);
     },
-    [posts, tags, postHtml, history]
+    [posts, tags, history]
   );
 
   const handleHistoryUp = useCallback(() => {

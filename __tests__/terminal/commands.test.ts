@@ -91,7 +91,7 @@ describe("executeCommand", () => {
       const result = await executeCommand("cat post-02", mockContext, []);
       const text = result.lines.map((l) => l.content).join(" ");
       expect(text).toContain("Post 2");
-      expect(text).toContain("MDX rendering unavailable");
+      expect(text).toContain("Tip: Use the web interface to read full posts with syntax highlighting");
     });
   });
 

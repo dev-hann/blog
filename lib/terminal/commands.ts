@@ -86,7 +86,7 @@ async function handleCat(
         out(`<span class="output-muted">tags:</span> [${post.tags.join(", ")}]`),
         out(`<span class="output-muted">summary:</span> ${post.summary}`),
         out(`<span class="output-muted">---</span>`),
-        err("(MDX rendering unavailable)"),
+        out(`<span class="output-accent">Tip: Use the web interface to read full posts with syntax highlighting</span>`),
       ],
     };
   }
