@@ -1,8 +1,9 @@
 import { describe, it, expect, vi } from "vitest";
+import type { Metadata } from "next";
 import { generateMetadata } from "@/lib/metadata";
 
 vi.mock("@/lib/metadata", () => ({
-  generateMetadata: vi.fn((props) => ({
+  generateMetadata: vi.fn((props): Metadata => ({
     title: props.title || "Default Title",
     description: props.description || "Default Description",
     openGraph: {
@@ -18,7 +19,7 @@ vi.mock("@/lib/metadata", () => ({
       title: props.title || "Default Title",
       description: props.description || "Default Description",
       images: ["https://example.com/og.png"],
-    },
+    } as Metadata["twitter"],
     alternates: {
       canonical: "https://example.com/test",
     },
@@ -65,7 +66,7 @@ describe("Meta", () => {
       path: "/test",
     });
 
-    expect(meta.twitter?.card).toBe("summary_large_image");
+    expect((meta.twitter as { card?: string })?.card).toBe("summary_large_image");
     expect(meta.twitter?.title).toBe("Test");
   });
 });
