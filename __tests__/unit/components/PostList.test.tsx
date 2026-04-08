@@ -3,17 +3,23 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { Post } from "@/types/post";
 
-const mockSearchParams = vi.hoisted(() => ({ get: (key: string): string | null => (key === "page" ? null : null) }));
-
-vi.mock("next/link", () => ({
-  default: ({ children, href }: { children: React.ReactNode; href: string }) => (
-    <a href={href}>{children}</a>
-  ),
-}));
+const mockSearchParamsGet = vi.fn((key: string) => (key === "page" ? null : null));
+const mockRouterPush = vi.fn();
+const mockRouterReplace = vi.fn();
 
 vi.mock("next/navigation", () => ({
-  useSearchParams: () => mockSearchParams,
-  useRouter: () => ({ push: vi.fn() }),
+  useSearchParams: () => ({
+    get: mockSearchParamsGet,
+    toString: () => "",
+  }),
+  useRouter: () => ({
+    push: mockRouterPush,
+    replace: mockRouterReplace,
+    prefetch: vi.fn(),
+    back: vi.fn(),
+    forward: vi.fn(),
+    refresh: vi.fn(),
+  }),
 }));
 
 const mockPosts: Post[] = Array.from({ length: 15 }, (_, i) => ({
@@ -119,20 +125,20 @@ describe("PostList", () => {
   });
 
   it("reads initial page from URL search params", async () => {
-    mockSearchParams.get = (key: string) => (key === "page" ? "2" : null);
+    mockSearchParamsGet.mockImplementation((key: string) => (key === "page" ? "2" : null));
     const { default: PostList } = await import("@/components/post/PostList");
     render(<PostList posts={mockPosts} postsPerPage={5} />);
     expect(screen.getByText("Post 6")).toBeInTheDocument();
     expect(screen.queryByText("Post 1")).not.toBeInTheDocument();
-    mockSearchParams.get = (key: string) => (key === "page" ? null : null);
+    mockSearchParamsGet.mockImplementation((key: string) => (key === "page" ? null : null));
   });
 
   it("syncs page state when searchParams change via re-render", async () => {
-    mockSearchParams.get = (key: string) => (key === "page" ? "3" : null);
+    mockSearchParamsGet.mockImplementation((key: string) => (key === "page" ? "3" : null));
     const { default: PostList } = await import("@/components/post/PostList");
     const { rerender } = render(<PostList posts={mockPosts} postsPerPage={5} />);
     expect(screen.getByText("Post 11")).toBeInTheDocument();
-    mockSearchParams.get = (key: string) => (key === "page" ? null : null);
+    mockSearchParamsGet.mockImplementation((key: string) => (key === "page" ? null : null));
     rerender(<PostList posts={mockPosts} postsPerPage={5} />);
     expect(screen.getByText("Post 1")).toBeInTheDocument();
     expect(screen.queryByText("Post 11")).not.toBeInTheDocument();

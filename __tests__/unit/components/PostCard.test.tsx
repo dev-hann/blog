@@ -39,12 +39,16 @@ describe("PostCard", () => {
     expect(time).toHaveAttribute("datetime", "2026-04-06");
   });
 
-  it("tags link to tag detail pages", () => {
+  it("tags are rendered as spans (not links) when inside PostCard", () => {
     render(<PostCard post={mockPost} />);
-    const nextjsLink = screen.getByRole("link", { name: "nextjs" });
-    expect(nextjsLink).toHaveAttribute("href", "/tags/nextjs");
-    const reactLink = screen.getByRole("link", { name: "react" });
-    expect(reactLink).toHaveAttribute("href", "/tags/react");
+    const nextjsTag = screen.getByText("nextjs");
+    const reactTag = screen.getByText("react");
+    expect(nextjsTag).toBeInTheDocument();
+    expect(reactTag).toBeInTheDocument();
+    expect(nextjsTag.tagName.toLowerCase()).toBe("span");
+    expect(reactTag.tagName.toLowerCase()).toBe("span");
+    expect(nextjsTag).toHaveAttribute("aria-label", "Tag: nextjs");
+    expect(reactTag).toHaveAttribute("aria-label", "Tag: react");
   });
 
   it("article has aria-labelledby pointing to heading id", () => {
