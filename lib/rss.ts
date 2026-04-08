@@ -23,7 +23,7 @@ export function generateRSS(posts: Post[]): string {
     <title>${SITE_CONFIG.name}</title>
     <link>${SITE_CONFIG.url}</link>
     <description>${SITE_CONFIG.description}</description>
-    <language>ko</language>
+    <language>${SITE_CONFIG.language}</language>
     <atom:link href="${SITE_CONFIG.url}/feed.xml" rel="self" type="application/rss+xml" />
     ${items}
   </channel>

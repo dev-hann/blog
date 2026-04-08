@@ -5,6 +5,7 @@ export const SITE_CONFIG = {
   author: "hann",
   github: "https://github.com/hann",
   postsPerPage: 10,
+  language: "ko",
 } as const;
 
 export const POSTS_PER_PAGE = SITE_CONFIG.postsPerPage;

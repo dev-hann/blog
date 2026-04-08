@@ -49,4 +49,10 @@ describe("generateRSS", () => {
     expect(xml).not.toContain("<category>react&next</category>");
     expect(xml).not.toContain("<category>ui/ux<design></category>");
   });
+
+  it("includes language from SITE_CONFIG", () => {
+    const posts = getAllPosts();
+    const xml = generateRSS(posts);
+    expect(xml).toContain("<language>ko</language>");
+  });
 });
