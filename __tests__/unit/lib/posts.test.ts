@@ -81,6 +81,12 @@ describe("getAdjacentPosts", () => {
     const { next } = getAdjacentPosts(posts[posts.length - 1].slug);
     expect(next).toBeNull();
   });
+
+  it("returns null for both when slug not found", () => {
+    const { prev, next } = getAdjacentPosts("non-existent-post");
+    expect(prev).toBeNull();
+    expect(next).toBeNull();
+  });
 });
 
 describe("extractHeadings", () => {
