@@ -1,0 +1,235 @@
+---
+title: "Garbage Collection (번역)"
+date: "2023-10-23"
+tags: ["번역"]
+summary: "Dart 언어의 GC 관련글을 번역한 글입니다."
+---
+
+원글: https://dart.googlesource.com/sdk/+/refs/tags/3.3.0-32.0.dev/runtime/docs/gc.md
+참고영상: https://www.youtube.com/watch?v=3gp2H7h0qO4
+업데이트: 2023.10.26
+
+# 가비지 컬렉션
+
+Dart VM 은 2세대(two generations)로 나누어진 `garbage collector` 를 가지고 있습니다. new generation은  parallel, stop-the-world semispace [scavenger](https://github.com/dart-lang/sdk/blob/main/runtime/vm/heap/scavenger.h) 에 의해 수집(collect)됩니다. old generation 은 concurrent-[mark](https://github.com/dart-lang/sdk/blob/main/runtime/vm/heap/marker.h)-concurrent-[sweep](https://github.com/dart-lang/sdk/blob/main/runtime/vm/heap/sweeper.h) 이나 concurrent-mark-parallel-[compact](https://github.com/dart-lang/sdk/blob/main/runtime/vm/heap/compactor.h) 에 의해 수집됩니다. It supports the one-way version of [become](https://github.com/dart-lang/sdk/blob/main/runtime/vm/heap/become.h).
+
+## Object representation
+Object pointers는 ‘immediate objects’ 또는 ‘heap objects’를 가리킵니다. 이 두 ‘objects’는 ‘pointer’의 하위 비트에 있는 태그로 구분됩니다. Dart VM 은 한 종류의 ‘immediate objects’를 가지고 있는데, 바로 ‘Smis’(small integers)이며, ‘pointers’의 태그는 0입니다. 
+
+‘Heap objects’ 의 ‘pointer’ 태그는 1입니다. ‘Smi pointer’의 상위 비트는 해당 값을 나타내며, ‘heap object pointer’의 상위 비트는 해당 주소의 가장 중요한 비트입니다(힙 객체는 항상 2바이트 이상의 정렬을 갖기 때문에 최하위 비트는 항상 0임).
+
+태그가 0이면 ‘untagging’ 및 ‘retagging’ 없이도 ‘Smis’에서 많은 작업을 수행할 수 있습니다.
+
+태그가 1이면 ‘load’ 및 ‘store’ 명령어에서 사용하는 오프셋에 태그를 제거할 수 있으므로 힙 객체 접근에는 불이익이 없습니다.
+
+힙 객체는 항상 ‘double-word’(32비트) 단위로 할당됩니다. ‘old-space’ 에서 객체는 ‘double-word’ 정렬(address % double-word == 0)이 유지되며, ‘new-space’에 있는 객체는 ‘double-word’ 정렬(address % double-word == word)에서 오프셋이 유지됩니다. 이렇게 하면 ‘boundary address’와 비교하지 않고도 객체의 나이를 확인할 수 있으므로 힙 영역에 대한 제한을 피하고 ‘thread-local’ 저장소에서 경계를 로드하지 않아도 됩니다. 게다가 ‘scavenger’는 단일 브랜치로 바로 앞의 객체와 오래된 객체를 모두 빠르게 건너뛸 수 있습니다.
+
+| Pointer | Referent |
+| --- | --- |
+| 0x00000002 | Small integer 1 |
+| 0xFFFFFFFE | Small integer -1 |
+| 0x00A00001 | Heap object at 0x00A00000, in old-space |
+| 0x00B00005 | Heap object at 0x00B00004, in new-space |
+
+힙 객체는 객체의 클래스, 사이즈, 몇가지 상태 플래그등을 인코딩한 ‘single-word’ 해더를 가지고 있습니다.
+
+64비트 아키텍처에서 힙 객체의 헤더에는 32비트 ID 해시 필드도 포함됩니다. 32비트 아키텍처에서는 힙 객체의 ID 해시가 별도의 해시 테이블에 보관됩니다.
+
+
+## Handles
+Dart VM 의 GC 는 ‘precise’, ‘movimg’ 한 특성이 있습니다.
+
+### precise
+
+ 힙 영역에서 수집(collection) 이 일어날때, 수집 대상이 무엇인지, 포인터가 인지 아닌지 정확히 알고있을때, 정확(precise) 하다고 불려집니다. 예를들어 컴파일된 Dart 코드 VM 은 스택 슬롯에 담겨진 ‘object pointers’ , ‘unboxded values’ 들을 추적합니다. 이는 ‘unboxed value’일지라도 포인터 크기의 값은 힙 영역에 대한 포인터일 수 있다고 간주하는 보수적 GC와는 반대되는 방식입니다.
+
+### moving
+
+ 객체의 주소가 변경되어 해당 객체의 포인터도 업데이트 될 수도 있습니다. Dart VM 에서, 객체들은 ‘[scavenge](https://dart.googlesource.com/sdk/+/refs/tags/3.3.0-32.0.dev/runtime/docs/gc.md#scavenge)’, ‘[compaction](https://dart.googlesource.com/sdk/+/refs/tags/3.3.0-32.0.dev/runtime/docs/gc.md#mark-compact)’, ‘[become](https://dart.googlesource.com/sdk/+/refs/tags/3.3.0-32.0.dev/runtime/docs/gc.md#become)’ 작업에서 움직(moving)일수 있습니다. ‘moving’한 GC 는 꼭 ’precise’해야합니다. 보수적인 GC 가 보장되지 않은 ‘pointer’를 업데이트 할때, 그 값이 ‘pointer’가 아닐경우, 실행에 에러가 발생합니다.
+
+VM 은 C++ 로 구현된 자체 런타임을 비롯한, 스택 슬롯, 전역, 외부언어로 된 Dart 힙 포인터를 담고있는 객체 필드를 구별할수 없습니다. 
+
+GC 는 ‘precise’를 유지하기위해, “handles” 를 통해 간접적으로 Dart 객체를 참조합니다. ‘Handles’는 ‘pointer’의 ‘pointer’로 생각하면 됩니다. 그들은 VM 으로 부터 할당되며, GC 는 수집 중에 ‘handles’에 포함된 ‘pointer’를 방문(가능하면 업데이트)합니다.
+
+
+
+## Safepoints
+
+ 힙 영역에서 읽거나 쓸수있는 GC가 아닌 ‘thread’를 ‘mutator’라고 부릅니다(because it can mutate the object graph). GC의 일부 단계에선 ‘mutator’가 힙을 사용하지 못하는데, 이를 “safepoint operations(연산)” 라고 부릅니다. ‘safepoint’ 연산의 예로는 marking roots at the beginning of concurrent marking and the entirety of a scavenge.
+
+이러한 연산들을 수행하려면, 모든 ‘mutator’가 일시작으로 힙 영역에 접근을 멈춰야 합니다. 이때를 ‘mutator’가 “safepoint” 에 도달했다 라고 말합니다.
+
+‘safepoint’에 도달한 ‘mutator’는 ‘safepoint’ 연산이 완료될때까지 힙 영역 접근 재개를 하지 못합니다.  게다가 ‘safepoint’ 에 도달한 ‘mutator’는 힙 영역의 어떤 ‘pointers’ 도 잡고(holding) 있으면 안됩니다, 그렇지 않으면 GC가 포인터를 방문(visit) 할 수 없습니다.
+
+VM 런타임 코드로 봤을때, 위 속성의 의미는, ‘handle’만 가지고 있으며, ‘ObjectPtr’나 ’UntaggedObject’는 가지고 있지 않는걸 의미합니다.
+
+‘Safepoint’에 도달하는 상황을 예로 보면, ‘allocations’, ‘stack overflow checks’, 컴파일된 코드와 런타임 및 네이티브 코드간 트랜지션이 있습니다.
+
+‘mutator’는 중지 되지 않은채로 ‘safepoint’에 도달할수 있습니다. 이 작업은 아마 힙 영역에 접근하지 않는 긴 작업을 수행중일수 있습니다. ‘safepoint’에 벗어나 힙 영역에 접근 재개를 하기위해선 이 ‘safepoint’ 연산이 끝나길 기다려야 합니다.
+
+‘safepoint’ 연산은 Dart 코드의 실행은 제외하기 때문에, 이 속성만 필요한 ‘non-GC’ 작업에 사용되기도 합니다. 예를들면, 백그라운드 컴파일이 완료되어 그 결과를 설치할때, ‘safepoint’ 연산을 이용하여 설치중에 Dart 실행이 중간 상태를 보지 못하도록 합니다.
+
+
+## Scavenge
+
+[Cheney's algorithm](https://en.wikipedia.org/wiki/Cheney%27s_algorithm) 를 참고하세요.
+
+## Parallel Scavenge
+
+‘FLAG_scavenger_tasks(default 2) workers’는 별도의 스레드에서 시작됩니다. 각 ‘worker’는 루트 세트의 일부(기억된 세트 포함)를 처리하기 위해 경쟁합니다. ‘worker’가 객체를 ‘to-space’에 복사하면 ‘worker-local bump allocation’ 영역에서 할당합니다. 동일한 ‘worker’가 복사된 객체를 처리합니다. worker가 개체를 ‘old-space’로 승격하면 ‘worker-local freelist’에서 할당하며, 이 ‘freelist’는 ‘large free block’에 범프 할당을 사용합니다. 
+
+승격된 개체는 ‘work stealing’를 구현하는 작업 목록에 추가되므로 다른 ‘worker’가 승격된 개체를 처리할 수 있습니다. 객체가 비워진 후 ‘worker’는 ‘compare-and-swap’을 사용하여 ‘forwarding pointer’를 ‘from-space’ 객체의 헤더에 설치합니다. 경쟁에서 패배하면 방금 할당했던 공간 또는 ‘old-space’ 개체의 할당을 취소하고 승자의 개체를 사용하여 처리 중이던 포인터를 업데이트합니다. ‘worker’는 모든 작업 세트가 처리되고 모든 ‘worker’가 승격된 작업 목록의 ‘to-space’ 객체와 해당 로컬 부분을 처리할 때까지 실행됩니다.
+
+## Mark-Sweep
+
+모든 객체에는 헤더에 ‘mark bit’라는 비트가 있습니다. 수집 주기(collection cycle)가 시작될 때 모든 객체는 이 비트를 지웁니다.
+
+ ‘Marking’ 단계 동안, ‘collector’ 는 각각의 ‘root pointers’를 방문한다. 그리고 대상 객체의 ‘mark bit’ 가 비워져있으면, ‘mark bit’를 설정하고 마킹 스택(또는 gray set)에 추가합니다. 그후 ‘collector’ 는 마킹 스택에 있는 객체를 하나씩 지우고 방문하며, 다시 그 객체가 참조하고 있는 다른 객체를 마킹 스택에 추가를 하고 ‘mark bit’를 세팅하고 삭제한다. 위 동작을 마킹 스택이 비어있을때까지 반복한다. 이 과정에서, 모든 접근 가능한 객체는 ‘mark bit’ 이 세팅되고, 접근 불가능한 객체는 ‘mark bit’ 이 비어있는 상태이다.
+
+ ‘Sweeping’ 단계 동안, ‘collector’ 는 각 객체를 방문합니다. ‘mark bit’ 이 비어있다면, 그 객체의 메모리는 ‘[free list](https://github.com/dart-lang/sdk/blob/main/runtime/vm/heap/freelist.h)’ 에 추가되어 다른 객체의 메모리 할당에 사용됩니다. 일부 페이지의 모든 객체에 접근할 수 없는 경우 해당 페이지는 OS에 의해 해제됩니다.
+
+
+## Mark-Compact
+
+Dart VM 은 ‘sliding compactor’를 포함하고 있습니다. ‘forwarding table’은 힙 영역을 블록 단위로 나누고, 각 블록의 ‘target address’와 메모리에서 해제되지 않고 유지되는 64비트(surviving double-word)의 비트벡터 정보들을 빼곡히 담고있습니다. ‘table’ 은 힙 페이지의 정렬된 상태를 유지함으로써 고정된 시간(constant time)안에 접근 될수 있고, 모든 객체의 마스킹을 통해 ‘page header’ 접근할 수 있습니다.  
+
+## Concurrent Marking
+
+‘old-space’의 GC들은 ‘mutator’가 멈추는 시간을 줄이기위해, 대부분의 마킹 작업중의 ‘mutator’가 계속 실행되도록 허락합니다.
+
+
+
+### Barrier
+
+‘mutator’ 와 ‘marker’ 는 동시간대(concurrently) 실행되면, 뮤테이터가 이미 마킹되어 방문한 객체(SOURCE)에 마킹되지 않은 객체(TARGET)에 대한 포인터를 쓸 수 있으며, 이로 인해 대상 수집이 잘못될 수 있습니다. To prevent this, the write barrier checks if a store creates a pointer from an old-space object to an old-space object that is not marked, and marks the target object for such stores. ‘new-space’ 객체를 ‘roots’라 판단하고 마킹을 완료하기위해 다시 방문하기때문에 ‘new-space’ 객체의 포인터는 무시합니다. 
+
+‘header’와 ‘Slot’에 대한 액세스의 재정렬로 인해 마킹을 건너뛰지 않도록 하는 데 필요한 메모리 장벽을 피하기 위해 소스 객체의 마킹 상태를 무시하고, 마킹 중에 액세스한 객체는 마킹이 완료될 때에도 활성 상태로 유지될 가능성이 높다는 가정하에 마킹을 무시합니다.
+
+‘barrier’은 아래와 같습니다.
+
+```
+StorePointer(ObjectPtr source, ObjectPtr* slot, ObjectPtr target) {
+  *slot = target;
+  if (target->IsSmi()) return;
+  if (source->IsOldObject() && !source->IsRemembered() && target->IsNewObject()) {
+    source->SetRemembered();
+    AddToRememberedSet(source);
+  } else if (source->IsOldObject() && target->IsOldObject() && !target->IsMarked() && Thread::Current()->IsMarking()) {
+    if (target->TryAcquireMarkBit()) {
+      AddToMarkList(target);
+    }
+  }
+}
+
+```
+
+‘shift-and-mask’ 를 ‘generational’ 과 ‘incremental’ 체크와 결합시킵니다.
+
+```
+enum HeaderBits {
+  ...
+  kNotMarkedBit,            // Incremental barrier target.
+  kNewBit,                  // Generational barrier target.
+  kAlwaysSetBit,            // Incremental barrier source.
+  kOldAndNotRememberedBit,  // Generational barrier source.
+  ...
+};
+
+static constexpr intptr_t kGenerationalBarrierMask = 1 IsSmi()) return;
+  if ((source->header() >> kBarrierOverlapShift) &&
+      (target->header()) &&
+      Thread::Current()->barrier_mask()) {
+    if (target->IsNewObject()) {
+      source->SetRemembered();
+      AddToRememberedSet(source);
+    } else {
+      if (target->TryAcquireMarkBit()) {
+        AddToMarkList(target);
+      }
+    }
+  }
+}
+
+StoreIntoObject(object, value, offset)
+  str   value, object#offset
+  tbnz  value, kSmiTagShift, done
+  lbu   tmp, value#headerOffset
+  lbu   tmp2, object#headerOffset
+  and   tmp, tmp2 LSR kBarrierOverlapShift
+  tst   tmp, BARRIER_MASK
+  bz    done
+  mov   tmp2, value
+  lw    tmp, THR#writeBarrierEntryPointOffset
+  blr   tmp
+done:
+
+```
+
+
+
+### Data races
+
+‘headers’ 와 ‘slots’에 대한 작업은 ‘[relaxed ordering](https://en.cppreference.com/w/cpp/atomic/memory_order)’을 사용하며 동기화를 제공하지 않습니다.
+
+동시성을 지닌 마커는 ‘acquire-release’ 작업과 같이 시작되므로 마킹이 시작될 때까지 ‘mutator’에 의한 모든 쓰기가 마커에 표시됩니다.
+
+마킹이 시작되기 전 생성된 ‘old-space’ 객체의 경우 각 슬롯에서 마커는 마킹이 시작된 시점의 값 또는 슬롯에 정렬된 모든 후속 값을 볼 수 있습니다. 포인터가 포함된 슬롯은 객체의 수명 동안 유효한 포인터를 계속 포함하므로 마커가 어떤 값을 보더라도 포인터가 아닌 것을 포인터로 해석하지 않습니다. (The one interesting case here is array truncation, where some slot in the array will become the header of a filler object. We ensure this is safe for concurrent marking by ensuring the header for the filler object looks like a Smi.) 마커에 이전 값이 표시되면 정밀도가 떨어지고 죽은 객체가 유지될 수 있지만, ‘mutator’에 의해 새 값이 표시되었으므로 정확성을 유지합니다.
+
+마킹이 시작된 후에 생성된 ‘old-space’ 개체의 경우 ‘slots’에 대한 작업이 동기화되지 않기 때문에 마커에 초기화되지 않은 값이 표시될 수 있습니다. 이를 방지하기 위해 마킹하는 동안 마커가 ‘old-space’ 객체를 방문하지 않도록 [검은색(marked)](https://en.wikipedia.org/wiki/Tracing_garbage_collection#TRI-COLOR)을 할당하고, ‘new-space’ 객체와 ‘roots’는 ‘safepoint’ 중에만 방문하며 ‘safepoints’는 동기화를 설정합니다.
+
+‘mutator’의 마크 블록이 가득 차게되면, ‘acquire-release’ 작업을 통해 마커로 전송되므로, 마커는 블록 안에 저장소를 볼 수 있습니다.
+
+
+
+## Write barrier elimination
+
+힙 영역에 `container.slot = value` 이 저장되어있을때마다, 저장소가 GC에 알려야 하는 참조를 생성하는지 확인해야 합니다.
+
+‘scavenger’가 필요로 하는 ‘The generational write barrier’는 다음 사항을 확인해야 합니다.
+
+- `container` 는 ‘old’ 이며, ’remembered set’에 있으면 안됩니다.
+- `value` 은 새로운 값이어��� 합니다.
+
+이런 경우, ‘remembered set’ 에 `container` 를 반드시 넣어야합니다.
+
+마커에 필요한 ‘incremental marking write barrier’은 다음을 확인합니다. 
+
+- `container` 는 ‘old’ 이며
+- `value` 는 ‘old’ 이며, 마크되지 않아야 합니다.
+- 마킹중이어야 합니다.
+
+이런경우, ‘marking worklist’ 에 `value` 를 반드시 넣어야합니다.
+
+컴파일러가 이러한 경우가 발생하지 않거나 런타임에 의해 보정된다는 것을 증명할 수 있는 경우 이러한 검사를 제거할 수 있습니다. 컴파일러는 다음과 같은 경우에 이를 증명할 수 있습니다.
+
+- `value` 는 ‘constant’ 입니다. ‘Constant’는 항상 ‘old’ 이고., `container`를 통해 마킹하지 못하더라도 ‘constant’ 풀을 통해 마킹됩니다.
+- `value` 는 ’static bool’(‘null’, ‘false’, ‘true’) 타입 의 ‘constants’ 값을 가지고 있습니다.
+- `value` 는 힙 객체가 아닌 ‘Smi’입니다.
+- `container` 는 `value`와 같은 객체 입니다. GC는 ‘self-reference’를 발견하면 ‘additional’ 객체를 유지할 필요가 없으므로 ‘self-reference’를 무시해도 접근 가능한 객체를 해제할 수 없습니다.
+- `container` 는 ‘new’ 객체 이거나, 마킹 과정중일경우, ‘remembered set’ 안의 마킹된 ‘old’ 객체 입니다.
+
+We can know that `container` meets the last property if `container` is the result of an allocation (instead of a heap load), and there is no instruction that can trigger a GC between the allocation and the store. This is because the allocation stubs ensure the result of AllocateObject is either a new-space object (common case, bump pointer allocation succeeds), or has been preemptively added to the remembered set and marking worklist (uncommon case, entered runtime to allocate object, possibly triggering GC).
+
+```
+container 
+StoreInstanceField(container, value, NoBarrier)
+```
+
+We can further eliminate barriers when `container` is the result of an allocation, and there is no instruction that can create an additional Dart frame between the allocation and the store. This is because after a GC, any old-space objects in the frames below an exit frame will be preemptively added to the remembered set and marking worklist (Thread::RestoreWriteBarrierInvariant).
+
+```
+container 
+StoreInstanceField(container, value, NoBarrier)
+```
+
+## Weakness
+
+## Finalizers
+
+## Become
+
+‘Become’ 은 원자적(atomically)으로 객체 집합의 ‘identity’를 전달하는 연산입니다. ‘heap walk’는 ‘*before’* 객체의 모든 포인터가 *‘after’* 객체의 포인터로 대체되고, *‘after’* 객체는 해당 *‘before’* 객체의 'ID hash'를 얻는 방식으로 수행됩니다. Dart VM 에서는 기존 크기의 ‘old program and instances’ 와 새 크기의 ‘new program and instances’를 맵핑하기위해 ‘[reload](https://github.com/dart-lang/sdk/wiki/Hot-reload)’ 중에 사용됩니다.
+
+이 연산은 초기 ‘Smalltalk’ 구현에 사용된 방법입니다. 포인터가 객체 테이블을 통해 간접적으로 사용되었고 컬렉션의 크기를 조정하는 데 사용되었기 때문에 O(1)이었습니다.
+
+‘ID’를 교환하는 여러 ‘become’ 연산이 존재하지만, Dart VM 에서는 사용되지 않습니다. 프록시를 하위 그래프 앞에 설치하고 프록시 뒤에 있는 객체에 대한 참조를 유지해야 하는 경우에 유용합니다. ‘paging’방식 이전엔, 이 방식이 가상 메모리에 대한 접근 방식이었습니다.

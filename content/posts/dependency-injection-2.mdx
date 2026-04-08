@@ -1,0 +1,130 @@
+---
+title: "누들누들 타이쿤 (feat, 의존성 주입) (2)"
+date: "2023-09-21"
+tags: ["의존성 주입"]
+summary: "의존성 주입으로 라면가게 운영하기! 2"
+---
+
+## Answer) Noodle 구현 방법의 정답은..
+
+(1) Method 1 ⇒ 추상화 패턴
+(2) Method 2 ⇒ 팩토리 패턴
+
+```dart
+// Method 1
+abstract class Noodle {
+  Noodle({
+    required this.name,
+    required this.waterML,
+    required this.cookTime,
+  });
+  final String name;
+  final int waterML;
+  final Duration cookTime;
+  bool _cook = false;
+  bool get isCooked => _cook;
+  void cook() {
+    _cook = true;
+  }
+}
+
+class SinNoodle extends Noodle {
+  SinNoodle()
+      : super(
+          name: "Sin",
+          waterML: 550,
+          cookTime: const Duration(minutes: 5, seconds: 30),
+        );
+}
+
+// Method 2
+class Noodle {
+  Noodle({
+    required this.name,
+    required this.waterML,
+    required this.cookTime,
+  });
+  final String name;
+  final int waterML;
+  final Duration cookTime;
+  bool _cook = false;
+  bool get isCooked => _cook;
+  void cook() {
+    _cook = true;
+  }
+
+  factory Noodle.sin() {
+    return Noodle(
+      name: "Sin",
+      waterML: 550,
+      cookTime: const Duration(minutes: 5, seconds: 30),
+    );
+  }
+}
+```
+
+**추상화**를 통한 **상속관계**가 맞지 않을까 생각합니다!
+팩토리 패턴의 목적은 생성 과정을 캡슐화 하는것 이며, 
+>‘Noodle’ 과 ‘SinNoodle’ 은 is-a 관계이기에 
+추상화를 통한 상속이 더 적합하다고 생각되네요.
+
+다른 의견은 댓글로 남겨주시면 감사하겠습니다!
+
+## Awesome 한 학생관리 프로그램
+
+그럼 다시 학생 관리 프로그램으로 돌아와서..
+
+```dart
+//
+class Student {
+  Student({
+    required this.name,
+    required this.className,
+  });
+  final String name;
+  final String className;
+}
+
+//
+Widget studentListTile({
+    required String name,
+    required String className,
+  }) {
+    return ListTile(
+      title: Text(name),
+      subtitle: Text(className),
+    );
+ }
+```
+
+그럼 일단 ‘studentListTile’ 이 오용되는것을 막아줍시다.
+(누가 잘못했는지 따지기 보단, 다시 발생하지 않도록 하는게 중요하다고 생각합니다)
+앞에 배운 의존성 주입을 이용해서.. 따란~
+
+```dart
+Widget studentListTile({
+    required Student student,
+  }) {
+    return ListTile(
+      title: Text(student.name),
+      subtitle: Text(student.className),
+    );
+ }
+```
+
+‘studentListTile’ 에 ‘Student’ 의 의존성을 주입해줌으로써, 
+이제 ‘Message’ 는 이제 들어올수 없어요! 
+
+하지만 이렇게 **콘크리트 클래스**에 의존할경우 재사용성이 떨어집니다.
+(기계만 수백대인 윤사장님 라면가게처럼..) 
+
+그렇기에 한단계 추상화를 해주면 조금 더 유연한 코드가 되지 않을까 합니다.
+나머지 부분은 여러분이 직접 완성해보세요!
+
+## 마치며
+
+이 글을 쓰면서, DI(Dependency Injection) 에 관련된 글을 많이 찾아봤는데, 
+생각보다 많은 글들이 이해하기 어렵고, 1차원적인 설명뿐이라 조금 아쉬웠습니다.
+**어떻게 적용하면 실전에서 잘 사용할 수 있을까?**  라는 출발점에서 고민하다 
+윤사장님의 라면가게에 빗대어 풀어봤습니다. 기술적 의미가 잘 전달 됐으면 좋겠네요.
+끝으로 윤사장님 라면가게 대성하시길 바라겠습니다.

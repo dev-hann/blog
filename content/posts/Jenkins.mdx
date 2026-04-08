@@ -1,0 +1,289 @@
+---
+title: "Jenkins를 이용한 Flutter 배포 자동화(feat. Fastlane)"
+date: "2023-09-20"
+tags: ["CI CD"]
+summary: "내가 Jenkins를 처음 만난건 첫 회사에서였다.Flutter 로 앱을 개발하여 IOS 와 AOS 두 플랫폼 배포를 해야하니,한두번은 그러려니 하겠지만, 매번 배포하려면 꽤나 귀찮고 오랜시간이 걸렸다."
+---
+
+### *Intro*
+
+내가 Jenkins를 처음 만난건 첫 회사에서였다.
+Flutter 로 앱을 개발하여 IOS 와 AOS 두 플랫폼 배포를 해야하니,
+한두번은 그러려니 하겠지만, 매번 배포하려면 꽤나 귀찮고 오랜시간이 걸렸다.
+(특히 IOS는 TestFlight를 통해 배포했는데, 시간낭비가 유독 심했다)
+결국 배포 자동화를 결심했고, 내가 상황에 딱 맞는 Jenkins 를 발견했다.
+
+> 이 글은 Jenkins 의 관한 자세한 설치 & 사용법은 설명하지 않습니다.
+전체적인 흐름도 & 파이프 라인 코어부분만 설명하려 합니다.
+
+### *나만의 집사 'Jenkins처럼'*
+
+위 사진 좌측에 깔끔한 양복차림의 집사님(?)이 바로 Jenkins.
+Jenkins 의 탄생은 이렇다. Hudson 이란 CI 툴이 Oracle 에 인수된후,
+원래 개발자들이 Hudsond을 포크해서 탄생한게 Jenkins 라고 한다.
+
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Hudson_Screenshot.png/500px-Hudson_Screenshot.png)
+Hudson(Jenkins 선조격 CI 툴)
+
+
+---
+
+Jenkins 작업 단위는 Job 이라 부르며, Job 의 내부는 크게 2 부분으로 나뉜다.
+
+- Build Triggers
+- Pipeline
+
+### Build Triggers
+
+개인적으로 Jenkins 를 사용하는 가장 큰 이유중 하나인 Build Triggers.
+설정된 Trigger 의 조건이 만족되면, Pipeline의 스크립트가 실행되는 방식인데,
+여러 옵션중, ‘Build Periodically’ 를 선택해준다.
+[Unix cron](https://crontab.cronhub.io/) 포멧으로 일정 시간 간격으로 Trigger 해준다.
+
+
+![](https://velog.velcdn.com/images/flutter_dev_han/post/c431fc6a-df58-4049-899f-0344ebe707ae/image.png)
+
+
+
+### Pipeline
+
+이제 Pipeline 을 작성할 차례이다. 파이프 라인에 대해서 자세한건 [여기](https://www.jenkins.io/doc/book/pipeline/)를 참고바란다.
+
+
+![](https://velog.velcdn.com/images/flutter_dev_han/post/812c95a6-e2f8-4764-81d0-dc62ecaa58f6/image.png)
+
+
+
+> 일단 전체 Pipneline 스크립트부터 투척!
+대충 훑어본후 각 부분별로 톺아보자
+> 
+
+```groovy
+pipeline {
+    agent any
+
+    environment {
+        WORK_DIRECTORY = 'repo_name'
+        GIT_TOKEN = 'GitToken'
+        FAILURE_STAGE=''
+        PUSH_MESSAGE=''
+    }
+
+    stages {
+        stage('Warm Up') {
+            steps {
+                script{
+                    if (!fileExists(WORK_DIRECTORY)) {
+                        echo "Not Exist Repository."
+                        sh 'git clone '
+                    }
+                }
+                dir(WORK_DIRECTORY) {
+                    sh "git pull"
+                }
+            }
+            post {
+                failure {
+                    script{
+                        FAILURE_STAGE="Warm Up"
+                    }
+                }
+            }
+        }
+        stage('Run Test') {
+            steps {
+                dir(WORK_DIRECTORY) {
+                    sh "flutter test"
+                }
+            }
+            post {
+                failure {
+                    script{
+                        FAILURE_STAGE="Run Test"
+                    }
+                }
+            }
+        }
+        stage('Build/Deploy') {
+            steps {
+                dir('${WORK_DIRECTORY}/ios') {
+                    sh "fastlane deploy"
+                }
+                dir('${WORK_DIRECTORY}/android') {
+                    sh "fastlane deploy"
+                }
+            }
+            post {
+                failure {
+                    script{
+                        FAILURE_STAGE="Build/Deploy"
+                    }
+                }
+            }
+        }
+    }
+    post{
+        failure {
+            script{
+                def message = "Fail on ${FAILURE_STAGE} stage."
+                PUSH_MESSAGE+="\\n ${message}"
+            }
+            echo message
+        }
+        success {
+            script{
+                def message = "Succsee CI & CD."
+                PUSH_MESSAGE+="\\n ${message}"
+            }
+            echo message
+        }
+        always{
+            // push Line message with [PUSH_MESSAGE]
+            echo PUSH_MESSAGE
+        }
+    }
+}
+
+```
+
+### Environment
+
+```groovy
+environment {
+        WORK_DIRECTORY = 'repo_name'
+        GIT_TOKEN = 'GitToken'
+        FAILURE_STAGE=''
+        PUSH_MESSAGE=''
+}
+
+```
+
+스크립트의 전역 변수 선언부이다.
+
+- WORK_DIRECTORY: Git 에서 받아온 Repository 의 경로
+- GIT_TOKEN: Repository 가 Private 인 관계로 토큰을 통해 인증한다.
+- FAILURE_STAGE: 애러 발생시 해당 스테이지의 이름을 저장한다.
+- PUSH_MESSAGE: 빌드가 완료 되면, 결과를 저장한다.
+
+### Warm Up
+
+```groovy
+stage('Warm Up') {
+    steps {
+        script{
+            if (!fileExists(WORK_DIRECTORY)) {
+                echo "Not Exist Repository."
+                sh 'git clone '
+            }
+        }
+        dir(WORK_DIRECTORY) {
+            sh "git pull"
+        }
+    }
+    post {
+        failure {
+            script{
+                FAILURE_STAGE="Warm Up"
+            }
+        }
+    }
+}
+
+```
+
+Git 에 커밋된 최신 코드를 Clone & Pull 해오는 과정이다.
+(Repository 가 존재할시, pull, 존재하지 않으면 clone 해온다)
+외부 플러그인을 써도 되지만, 간단한 작업이기에 Shell을 사용했다.
+
+### Run Test
+
+```groovy
+stage('Run Test') {
+    steps {
+        dir(WORK_DIRECTORY) {
+            sh "flutter test"
+        }
+    }
+    post {
+        failure {
+            script{
+                FAILURE_STAGE="Run Test"
+            }
+        }
+    }
+}
+
+```
+
+**flutter cli**를 통해 이미 작성된 테스트 코드를 실행하는 부분이다.
+
+_테스트 코드를 작성을 습관화 합시다._
+
+### Build / Deploy
+
+```groovy
+stage('Build/Deploy') {
+    steps {
+        dir('${WORK_DIRECTORY}/ios') {
+            sh "fastlane deploy"
+        }
+        dir('${WORK_DIRECTORY}/android') {
+            sh "fastlane deploy"
+        }
+    }
+    post {
+        failure {
+            script{
+                FAILURE_STAGE="Build/Deploy"
+            }
+        }
+    }
+}
+
+```
+
+Fastlane 을 통해 Build / Deploy 를 처리했다.
+이유인 즉, Build / Deploy 동작은 수동적으로 진행할 경우가 있고,
+플랫폼 별로 진행 될수도 있기에 (그밖에 여러 변수들이 존재) Fastlane에 의존했다.
+(Jenkins 에서 fastlane 을 못찾을경우, 따로 한경변수 설정을 해줘야한다)
+
+### Post Actions
+
+```groovy
+post {
+    failure {
+        script{
+            def message = "Fail on ${FAILURE_STAGE} stage."
+            PUSH_MESSAGE+="\\n ${message}"
+        }
+        echo message
+    }
+    success {
+        script{
+            def message = "Succsee CI & CD."
+            PUSH_MESSAGE+="\\n ${message}"
+        }
+        echo message
+    }
+    always{
+        // push Line message with [PUSH_MESSAGE]
+        echo PUSH_MESSAGE
+    }
+}
+
+```
+
+Golang을 통해 간단한 Line 메세지를 보내는 프로그램을 만들어
+결과를 바탕으로 성공 & 실패 메세지를 통보해준다
+
+### 커밍순..
+
+
+![](https://t1.daumcdn.net/thumb/R720x0/?fname=http://t1.daumcdn.net/brunch/service/user/1p8k/image/jWQ66AHx46HIuzZyhY6DaAPbdww)
+
+
+사실 Jenkins 기능의 대부분도 사용 못하였고,
+결정적으로 Framework 에 대한 이해를 전혀 하지 못했다.
+(사용은 했지만, 어떻게 돌아가는지 내부 구조 파악을 전혀 하지 못했다)
+이렇게 사용하는건 화장실 나온뒤 뒷처리를 안한 느낌이다.
+나중에 꼭 Jenkins 톺아보기 시리즈 만들어보겠다.

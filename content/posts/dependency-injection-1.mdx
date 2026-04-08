@@ -1,0 +1,242 @@
+---
+title: "누들누들 타이쿤 (feat, 의존성 주입) (1)"
+date: "2023-09-21"
+tags: ["의존성 주입"]
+summary: "의존성 주입으로 라면가게 운영하기!"
+---
+
+## _intro_
+
+오늘도 열심히 학생 관리 프로그램을 만들던 Hann님..
+```dart
+//
+class Student {
+  Student({
+    required this.name,
+    required this.className,
+  });
+  final String name;
+  final String className;
+}
+
+//
+Widget studentListTile({
+    required String name,
+    required String className,
+  }) {
+    return ListTile(
+      title: Text(name),
+      subtitle: Text(className),
+    );
+ }
+```
+
+‘Student’ 모델을 만들고, 
+Awesome 한 화면을 만들기 위해 ‘studentListTile’ 을 만들었습니다.
+
+```dart
+// student model
+final hann = Student(
+    name: "Hann",
+    className: "dev",
+  );
+
+// student listTile Widget
+ return studentListTile(
+    name: hann.name,
+    className: hann.className,
+ );
+```
+
+그리고 ‘hann’ 이라는 'Student' 를 만들고,
+‘studentListTile’ 에 넣어줬습니다. 따란~
+
+![](https://velog.velcdn.com/images/dev-hann/post/2f2d4891-1560-491b-a605-413688da21dd/image.jpg)
+
+그렇게 시간이 흘러..
+
+```dart
+// Message model
+final msg = Message(
+		title="Hello",
+		text="World!",
+	);
+
+// student? message? listTile Widget
+return studentListTile(
+   name: msg.title,
+   className: msg.text,
+);
+```
+
+미래의 Hann님은 채팅 기능을 추가하던중,  Awesome 한 Widget을 발견했다며, 
+‘Message’ 를 냅다 ‘studentListTile‘에 넣어버렸습니다.
+
+![](https://velog.velcdn.com/images/dev-hann/post/a89ea96c-774c-4cae-aeff-636253eae33d/image.png)
+그럼 이건 studentListTile 일까요? messageListTile 일까요?
+
+이런 사태를 어떻게 방지할수 있을까요?
+
+---
+
+## 누들누들 타이쿤
+
+### 신장개업
+
+(앞에 대충 라면 좋아하는 윤사장님 성장 스토리..)
+결국 윤사장님은 그렇게 라면가게를 시작하는데..
+신.장.개.업! 뚜둥
+![](https://velog.velcdn.com/images/dev-hann/post/373f753c-ba77-4bec-9580-19e069935e33/image.png)
+
+
+### 고민
+
+뒷골목식당 애청자인 윤사장님은 그분의 말에따라 단일 메뉴 식당을 하기로 결심합니다.  
+단일 메뉴 **‘신라면’** 을 끓이기 위해, 라면 끓이는 기계를 산 윤사장님.
+
+```dart
+class SinNoodle {
+  final String name = "Sin";
+  final int waterML = 550;
+  final Duration cookTime = const Duration(minutes: 5, seconds: 30);
+  bool _cooked = false;
+  bool get isCooked => _cooked;
+  void cook() {
+    _cooked = true;
+  }
+}
+
+class SinNoodleMachine {
+  Future cook(SinNoodle noodle) async {
+    print("Start cook ${noodle.name} Noodle");
+    await Future.delayed(noodle.cookTime);
+    noodle.cook();
+    return noodle;
+  }
+}
+```
+
+단일 메뉴니까 신라면만 끓이는 기계면 되겠지? 라는 생각으로
+**의존성 높은** ‘SinNoodleMachine’ 을 구매합니다.
+
+> ‘SinNoodle’ 이 코드가 바뀌면 ‘SinNoodleMachine’ 의 코드도 바뀔 수 있기에, 이를 의존 한다고 표현합니다.
+
+그렇게 가게는 번성하고, 행복하게 살았답니다.. 면 좋겠지만,
+
+![](https://velog.velcdn.com/images/dev-hann/post/35ddeb2d-315d-4eef-baf2-deca2b28bb2f/image.png)
+
+
+겨울이 다가오고.. 손님들은 뜨끈한 우동을 찾기 시작했습니다.
+결국 우동을 끓이는 기계를 사기로 합니다.
+
+```dart
+class WudongNoodle {
+  final String name = "Wudong";
+  final int waterML = 600;
+  final Duration cookTime = const Duration(minutes: 6, seconds: 00);
+  bool _cooked = false;
+  bool get isCooked => _cooked;
+  void cook() {
+    _cooked = true;
+  }
+}
+
+class WudongNoodleMachine {
+  Future cook(WudongNoodle noodle) async {
+    print("Start cook ${noodle.name} Noodle");
+    await Future.delayed(noodle.cookTime);
+    noodle.cook();
+    return noodle;
+  }
+}
+```
+
+이렇게 메뉴가 하나 둘씩 늘어나며, 관리해야하는 기계가 늘어났습니다. 
+그렇게 겨울이 지나고 우동을 찾는 손님이 잦아들며, 우동 기계는 먼지만 쌓였습니다.
+그렇게 시간이 지나 여름이 되자 새콤달콤 냉면을 찾는 손님이 늘고.. 
+결국 냉면 기계를 사들이고..
+가게는 어느새 각종 기계들로 가득찼습니다.  면 끓이는 기계의 효율성이 너무 낮았습니다. 
+
+>프로그래밍에선 코드의 재사용성이 낮다 라고 합니다.
+
+결국 이도저도 못하고 .. 고민하던 윤사장님에게.. 한통의 문자가 도착합니다.
+
+### 희망
+
+[광고] 이 기계는 무료로 해줍니다!
+어떤 면이든 넣기만 하면 알아서 끓여주는 뉴-우 제너레이션 머신!
+
+```dart
+class NewGenerationMachine {
+  Future cook(Noodle noodle) async {
+    print("Start cook ${noodle.name}");
+    await Future.delayed(noodle.cookTime);
+    noodle.cook();
+    return noodle;
+  }
+}
+```
+
+그런데 작은 문제점이 하나 있습니다. 면이 조금 특별해야합니다.
+
+### Quiz) 그러면 Noodle 은 어떻게 만들어 줘야할까요?
+
+(1) Method 1 ⇒ 추상화 패턴
+(2) Method 2 ⇒ 팩토리 패턴
+
+```dart
+// Method 1
+abstract class Noodle {
+  Noodle({
+    required this.name,
+    required this.waterML,
+    required this.cookTime,
+  });
+  final String name;
+  final int waterML;
+  final Duration cookTime;
+  bool _cook = false;
+  bool get isCooked => _cook;
+  void cook() {
+    _cook = true;
+  }
+}
+
+class SinNoodle extends Noodle {
+  SinNoodle()
+      : super(
+          name: "Sin",
+          waterML: 550,
+          cookTime: const Duration(minutes: 5, seconds: 30),
+        );
+}
+
+// Method 2
+class Noodle {
+  Noodle({
+    required this.name,
+    required this.waterML,
+    required this.cookTime,
+  });
+  final String name;
+  final int waterML;
+  final Duration cookTime;
+  bool _cook = false;
+  bool get isCooked => _cook;
+  void cook() {
+    _cook = true;
+  }
+
+  factory Noodle.sin() {
+    return Noodle(
+      name: "Sin",
+      waterML: 550,
+      cookTime: const Duration(minutes: 5, seconds: 30),
+    );
+  }
+}
+```
+
+### 커밍쑨!
+
+정답과 이유를 한번 잘 생각해보시고 다음 글에서 다시 찾아뵙겠습니다!

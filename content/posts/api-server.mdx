@@ -1,0 +1,360 @@
+---
+title: "API 서버 개발기"
+date: "2023-09-29"
+tags: ["개발기"]
+summary: " 기존 WebView 방식의 앱을 Flutter 로 완전히 바꾸면서, 각 기능에 대한 API가 필요했다. 그렇게 서버 개발자들과 같이 협업을 하게 되었고, 시간이 지나며 문제가 생기기 시작했다. 예를들면, 일정이 지켜지지 않다거나.. 개발이 딜레이 되거나.. 결과물이 "
+---
+
+## *Intro*
+
+ 기존 WebView 방식의 앱을 Flutter 로 완전히 바꾸면서, 각 기능에 대한 API가 필요했다. 
+
+그렇게 서버 개발자들과 같이 협업을 하게 되었고, 시간이 지나며 문제가 생기기 시작했다. 
+
+예를들면, 
+
+일정이 지켜지지 않다거나.. 개발이 딜레이 되거나.. 결과물이 늦게 나온다던가..
+
+(심지어 2주동안 그대로였던..)
+![](https://velog.velcdn.com/images/dev-hann/post/1a1c15ac-7b95-491b-b823-4da8bf1e681a/image.png)
+
+
+팀장이 주장했던 **‘자율적으로 개발하기’,** 그건 이상적인 ~~공산주의~~같은 것이었다.
+
+결국 팀장과 회의 끝에 이번 **‘API 서버 개발 프로젝트’**는 내가 리드 하기로했다.
+
+## *나를 죽이지 못하는 Legacy는 나를 힘들게 한다*
+
+ Flutter 개발자로 입사 했지만, 서버 코드를 보는시간이 더 많았다.
+
+기존 서버에 API 문서도 없었고, 중요한건 기존의 앱이 WebView 방식이었다.
+
+모든 로직 & 화면이 서버에 있었기에, 일단은 그쪽에 하루빨리 익숙해져야 했다.
+
+(이렇다 저렇다 불평할 시간에 코드 한줄 더 보고 빨리 해결하고 싶은 마음이 더 깊었다)
+
+기존 서버를 한마디로 표현하자면..
+![](https://velog.velcdn.com/images/dev-hann/post/fe7cc20a-a753-4c33-a91b-d9d8a10faaed/image.png)
+
+**  
+
+**‘핑계없는 무덤은 없다’**라고 모든 코드에도 각자의 상황과 사정이 있었을것이다.
+
+(그래도 “함수” 하나에 몇천줄.. “변수명”이 한자.. 는 정말 이해가 안됐다)
+
+기존 서버를 유지보수 하는 방법도 있엇지만, 동료들이 너무 낡은 Framework 로 고통받는걸 봐왔기에,
+
+협의 하에 당시 최신 버전인 dotnet7 으로 개발을 시작했다.
+
+( 추후 LTS 버전인 dotnet 8 으로 마이그레이션 했다, 두 버전간 호환이 너무 자연스러웠다. 역시 마소.. )
+![](https://velog.velcdn.com/images/dev-hann/post/d1264498-bff2-4a47-b2ab-5907e5f8f634/image.png)
+
+( .NET Framework 4.5 는 이만 놔줘.. 16년 1월에 이미 Expired )
+
+## *나무 말고 숲*
+
+1차 목표는 Only For App. 앱에서 필요한 기능을 우선적으로 작성하는것으로 잡았다.
+
+앱에 필요한 API 들만 따로 정리후, 빠르게 구조부터 잡았다.
+
+비지니스 로직 없이 더미 모델만 Response 해주는 API 를 만든후, 
+
+동료들에게 기존 서버를 참고해 로직 부분만 채운후 데이터를 모델에 담아 리턴 해달라고 부탁했다.
+
+짧은 스탭으로 목표를 잡아주고, 짧은 스탭로 성취감을 느낄수 있어서였는지..
+
+이후로는 신기하게도 일정이 거의 밀리지 않았다. 
+
+### Architecture
+![](https://velog.velcdn.com/images/dev-hann/post/c370e816-6b7b-4427-9627-9e9533512909/image.png)
+
+그럼 서버 전체 구조를 간단하게 살펴보자.
+
+한문장으로 표현하면.. **‘Clean Architecture 를 기반으로 MVC 를 이용해 Restful 한 API 서버’** 
+
+역할에 따라 Layer 을 나눴고, Layer 간 브릿지를 통해 응집성을 낮추는 유연한 설계를 했다.
+
+( **Clean Architecture** 에 관해서는 다른 글로 자세히 찾아뵙겠습니다 )
+
+그럼 간략하게 각 Layer 를 살펴보자.
+
+( 공지 기능을 예로 들었으며, 실제코드와는 조금 차이가  있습니다 )
+
+- ***Presentation Layer***
+
+```csharp
+// AnnounceController.cs
+public class AnnounceController : ControllerBase
+    {
+        private readonly AnnounceUseCase useCase = new AnnounceUseCase(
+             new AnnounceRepository()
+        );
+
+        [HttpGet("list")]
+        public ResponseModel AnnounceList()
+        {
+            var either = useCase.AnnounceList();
+            return either.Match(
+                Left: (fail) =>
+                {
+                    return new ResponseModel>(fail);
+                },
+                Right: (list) =>
+                {
+                    return new ResponseModel>(list);
+                }
+            );
+        }
+}
+```
+
+사용자에게 보여지는 화면 (View) 계층.
+
+화면 로직이 복잡할 경우 ViewModel 통해 로직과 뷰를 분리하는 경우도 있다.
+
+API 서버가 사용자에게 보여지는 부분은 API 로 판단하고, 이쪽으로 Presentation Layer 로 잡아주었다.
+
+UseCase 를 통해 불러온 데이터를 Functional 하게 처리해 주었다.
+
+- ***Domain Layer***
+
+```csharp
+// AnnounceUseCase.cs
+class AnnounceUseCase : IUseCase{
+	
+	public AnnounceUseCase(IAnnounceRepository repository) : base(repository) { }
+
+	public Either> AnnounceList()
+	{
+            try
+            {
+                List list = new List();
+                IEnumerable data = repository.AnnounceList(
+		              // Request Data  
+			          );
+                foreach (var row in data)
+                {
+                    var item = new AnnounceModel(
+                           // Response Data
+                    );
+                    list.Add(item);
+                }
+                return list;
+            }
+            catch (Exception e)
+            {
+                logger.Error(e);  // log4net
+                return new FailureModel(e); // Handle Error
+            }
+	}
+}
+```
+
+비지니스 로직을 담당하고있는 UseCase 를 담고있으며, 추상화된 Repository 를 통해 Data Layer 와 소통 할 수 있다.
+
+( [의존성 주입](https://velog.io/@dev-hann/dependency-injection-1)을 통해 유연하게, 테스트 가능하게 설계했다 )
+
+
+
+Repository 를 통해 받아온 데이터는 DTO 객체를 통해 Model 로 바꿔줄수도 있다.
+
+전반적인 애러 처리는 UseCase 에서 처리했으며, Functional 하게 API 쪽으로 Response 해줌.
+
+
+
+```csharp
+// IAnnounceRepository.cs
+public interface IAnnounceRepository : IRepository
+{
+		public abstract IEnumerable AnnounceList();
+}
+
+public class AnnounceRepository : IAnnounceRepository
+{
+	protected readonly DataBase dataBase = DataBase.GetInstance;
+
+	public IEnumerable AnnounceList()
+	{
+			// Awesome SQL Query
+			string sql = @" SELECT * FROM Announce";
+		  return dataBase.Query(sql);
+	}
+}
+```
+
+IAnnounceRepository 를 상속받은 AnnounceRepository 는 각 데이터를 불러는 로직을 구체화 시켜준다.
+
+이렇게 설계함으로, 비지니스 로직을 테스트를 해야하거나, DB Framework 를 교체 해야 할경우, 
+
+다른 Layer 에 코드 변경을 최소화 하며 진행 할 수 있게 해줬다.
+
+- ***Data Layer***
+
+DB & 다른 Service 와 CRUD 로직을 담당하는 계층.
+
+ORM 부분에서 팀원들과 정말 많은 의견들을 나눠봤다.
+
+Entity Framework 나 Dapper 를 사용하면 재사용성 & 생산성 같은 여러 장점들이 있지만,
+
+복잡한 Query 를 작성하거나 추후 성능 문제에 관해 대응할만큼의 각 ORM 에 이해도가 깊지 않아,
+
+이 부분에서는 일단 사용하지 않기 합의 보았다.
+
+## *살 붙이기*
+![](https://velog.velcdn.com/images/dev-hann/post/ef93005d-93e4-436b-a1f5-946a1b50532b/image.png)
+
+기본적인 API 서버의 뼈대는 거의 완성 되었다. 
+
+뼈대를 완성하나니, 이곳저곳 불편한 점이 보였다.
+
+한번 쓰고 버릴 코드라면 감수하고 쓰겠지만, 그게 아닌이상.. 
+
+투머치 하지 않게 **‘벌크업’** 하기로 했다.
+
+### *Swagger*
+![](https://velog.velcdn.com/images/dev-hann/post/42a55033-4bf3-4531-b747-1dbe3659a9e6/image.png)
+
+힘들게 작성한 코드, 잘 작동하는지 테스트 해봐 하지 않겠는가?
+
+Postman 을 통해 테스트 하고, API 문서도 작성했는데.. 
+
+코드가 수정될때마다 업데이트 해줘야하는게 여간 귀찮은게 아니엇다.
+
+결국 코드 기반의 Swagger를 달아주었다. [코드 몇줄](https://learn.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-7.0&tabs=visual-studio)이면 정말 간단하 사용 할수 있었다.
+
+( 역시 갓 마소.. )
+
+### *Health Check*
+![](https://velog.velcdn.com/images/dev-hann/post/b82900ba-8b47-48e9-b955-aedf5b9bfbf6/image.png)
+
+몇몇 고객들은 보안상 이유로 서버를 자사의 로컬 환경에서 서비스 되는 경우도 있다.
+
+이럴 경우 애러 발생하면, Trace 하기도 까다롭고 가끔은 알수없는 애러들이 발생할때가 있다.
+
+심지어 애러 로그에도 기록이 안되있고, 이럴때는 정말 내가 탐정이라도 된 느낌이다.
+
+특히나 로컬 환경의 고객 인경우, (동의 하에) 고객 서비 환경에 원격으로 접속하여 
+
+뭐가 문제인지 하나하나 체크 해봐야 될때가 있는다.
+
+( [전설의 냉장고때문에 컴퓨터 화면](https://www.clien.net/service/board/park/15494635)이 꺼지는 일을 아시는가..? )  
+
+ 
+
+이 부분을 고려해서, 동료들에게 채크 리스트를 요청후, 
+
+Health Check 기능에 넣어 원격이 아니더라도 1차 진단이 가능하게 만들었다.
+
+- SQL Server Version
+- Driver Space
+- Internet Status
+
+```jsx
+public class ASHealthCheckSQLServer : IHealthCheck
+{
+    public Task CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var dataBase = DataBase.GetInstance;
+            var data = dataBase.Query("SELECT @@version");
+            var version = data.First();
+
+            IDictionary result = new Dictionary();
+            result["version"] = version;
+            return Task.FromResult(
+                HealthCheckResult.Healthy(data: new ReadOnlyDictionary(result))
+             );
+        }
+        catch (Exception e)
+        {
+            return Task.FromResult(
+                HealthCheckResult.Unhealthy(exception: e)
+            );
+        }
+    }
+}
+```
+
+위 처럼 IHealthCheck 인터페이스를 상속받아, 구현했다.
+
+```jsx
+services.AddHealthChecks()
+.AddCheck("DB")
+.AddCheck("Drive")
+.AddCheck("Internet");
+
+```
+
+그리고 위 처럼 서비에 각 서비스를 등록했다. 
+
+```json
+{
+  "status": "Healthy",
+  "totalDuration": "00:00:00.0795347",
+  "entries": {
+    "DB": {
+      "data": {
+        "version": "Microsoft Azure SQL Edge Developer (RTM) - 15.0.2000.1565 (ARM64) \n\tJun 14 2022 00:37:12 \n\tCopyright (C) 2019 Microsoft Corporation\n\tLinux (Ubuntu 18.04.6 LTS aarch64) "
+      },
+      "duration": "00:00:00.0082505",
+      "status": "Healthy",
+      "tags": []
+    },
+    "Drive": {
+      "data": {
+        "driveList": [
+          {
+            "name": "/",
+            "freeSize": 215112691712,
+            "totalSize": 494384795648
+          },
+          {
+            "name": "/System/Volumes/VM",
+            "freeSize": 215112691712,
+            "totalSize": 494384795648
+          },
+         // skip..
+          {
+            "name": "/System/Volumes/Data/home",
+            "freeSize": 0,
+            "totalSize": 0
+          }
+        ]
+      },
+      "duration": "00:00:00.0002856",
+      "status": "Healthy",
+      "tags": []
+    },
+    "Internet": {
+      "data": {},
+      "duration": "00:00:00.0791675",
+      "status": "Healthy",
+      "tags": []
+    }
+  }
+}
+```
+
+다시한번 느끼는 거지만, 마소의 설계 정말 감동한다.
+
+Middleware 나, Service 등록 등 정말 간편하게 사용할 수 있게 개발자들을 배려 한게 느껴졌다.
+
+추후 이 API 를 통해서 HealthCheck UI page 를 만들 계획이다.
+
+## *마치며*
+![](https://velog.velcdn.com/images/dev-hann/post/ed75b140-99ca-44ea-ba4f-466593b977c6/image.png)
+
+글에 다 담진 못했지만, 개발 과정에서 많은 고민과 노력이 있었다. 
+
+기술적인 부분뿐만 아니라, 팀원 & 일정 관리등.. 여러 부분에서 신경쓸게 많았다. 
+
+그래도 끝까지 믿고 따라와준 팀원에게 고마울 뿐이다.
+
+돌아보면 개발 기간동안 고생한 만큼 성장했고, 단단해졌다.
+
+그리고 **‘성숙한 리더’** 가 무엇인지 돌아볼수있는 기회이기도 했다.
+
+소중했던 경험들중 **기술적인 부분**만 이 글을 통해 공유해보고자 한다.
+
+( 팀원들과 있었던 이야기는 다른 글로 찾아뵙겠습니다 )
