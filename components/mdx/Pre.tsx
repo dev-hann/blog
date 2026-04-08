@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, Children, isValidElement } from "react";
+import { useState, useRef, Children, isValidElement, useEffect } from "react";
 import { copyToClipboard } from "@/lib/clipboard";
 
 type PreProps = React.ComponentProps<"pre"> & {
@@ -20,7 +20,16 @@ export default function Pre({ children, htmlOnly = false, ...props }: PreProps) 
   const [copied, setCopied] = useState(false);
   const [failed, setFailed] = useState(false);
   const preRef = useRef<HTMLPreElement>(null);
+  const copiedTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const failedTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lang = htmlOnly ? null : getLanguage(children);
+
+  useEffect(() => {
+    return () => {
+      if (copiedTimeoutRef.current) clearTimeout(copiedTimeoutRef.current);
+      if (failedTimeoutRef.current) clearTimeout(failedTimeoutRef.current);
+    };
+  }, []);
 
   const handleCopy = async () => {
     if (htmlOnly) return;
@@ -29,11 +38,13 @@ export default function Pre({ children, htmlOnly = false, ...props }: PreProps) 
       await copyToClipboard(text);
       setFailed(false);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      if (copiedTimeoutRef.current) clearTimeout(copiedTimeoutRef.current);
+      copiedTimeoutRef.current = setTimeout(() => setCopied(false), 2000);
     } catch {
       setCopied(false);
       setFailed(true);
-      setTimeout(() => setFailed(false), 2000);
+      if (failedTimeoutRef.current) clearTimeout(failedTimeoutRef.current);
+      failedTimeoutRef.current = setTimeout(() => setFailed(false), 2000);
     }
   };
 
