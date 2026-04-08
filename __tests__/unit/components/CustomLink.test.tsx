@@ -57,4 +57,13 @@ describe("CustomLink", () => {
     const { container } = render(<CustomLink href="/test" className="text-bold">Test</CustomLink>);
     expect(container.querySelector(".text-bold")).toBeInTheDocument();
   });
+
+  it("is wrapped with React.memo for performance optimization", async () => {
+    const { default: CustomLink } = await import("@/components/mdx/CustomLink");
+    const { rerender } = render(<CustomLink href="/test">Test</CustomLink>);
+    const link = screen.getByRole("link");
+    const firstRender = link.textContent;
+    rerender(<CustomLink href="/test">Test</CustomLink>);
+    expect(link.textContent).toBe(firstRender);
+  });
 });

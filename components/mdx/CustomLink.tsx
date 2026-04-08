@@ -7,7 +7,7 @@ interface CustomLinkProps extends React.ComponentProps<"a"> {
   htmlOnly?: boolean;
 }
 
-export default function CustomLink({ href, children, htmlOnly = false, ...props }: CustomLinkProps) {
+function CustomLink({ href, children, htmlOnly = false, ...props }: CustomLinkProps) {
   if (!href) return <span {...props}>{children}</span>;
 
   const isExternal = href.startsWith("http");
@@ -31,3 +31,9 @@ export default function CustomLink({ href, children, htmlOnly = false, ...props 
     </Link>
   );
 }
+
+export default React.memo(CustomLink, (prevProps, nextProps) => {
+  return prevProps.href === nextProps.href &&
+         prevProps.htmlOnly === nextProps.htmlOnly &&
+         prevProps.children === nextProps.children;
+});

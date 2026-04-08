@@ -31,7 +31,7 @@ const typeLabels: Record<CalloutType, string> = {
   danger: "Danger",
 };
 
-export default function Callout({ children, type = "info" }: CalloutProps) {
+function Callout({ children, type = "info" }: CalloutProps) {
   return (
     <div
       className={`my-4 rounded-lg border-l-4 p-4 ${typeStyles[type]}`}
@@ -45,3 +45,8 @@ export default function Callout({ children, type = "info" }: CalloutProps) {
     </div>
   );
 }
+
+export default React.memo(Callout, (prevProps, nextProps) => {
+  return prevProps.type === nextProps.type &&
+         prevProps.children === nextProps.children;
+});
