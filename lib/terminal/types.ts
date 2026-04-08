@@ -1,4 +1,4 @@
-import type { Post, PostHtmlMap } from "@/types/post";
+import type { Post } from "@/types/post";
 
 export interface TerminalLine {
   id: string;
@@ -9,7 +9,6 @@ export interface TerminalLine {
 export interface CommandContext {
   posts: Post[];
   tags: Record<string, number>;
-  postHtml?: PostHtmlMap;
 }
 
 export interface CommandResult {

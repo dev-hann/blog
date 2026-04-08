@@ -14,13 +14,11 @@ const mockPosts: Post[] = Array.from({ length: 15 }, (_, i) => ({
 const mockContext: CommandContext = {
   posts: mockPosts,
   tags: { nextjs: 8, react: 8, typescript: 7 },
-  postHtml: { "post-01": "<p>rendered</p>" },
 };
 
 const emptyContext: CommandContext = {
   posts: [],
   tags: {},
-  postHtml: {},
 };
 
 describe("COMMAND_LIST", () => {
@@ -79,12 +77,12 @@ describe("executeCommand", () => {
       expect(result.lines[0].content).toContain("No such post");
     });
 
-    it("renders post with valid slug", async () => {
+    it("renders post frontmatter with tip", async () => {
       const result = await executeCommand("cat post-01", mockContext, []);
-      expect(result.lines.length).toBeGreaterThanOrEqual(2);
-      expect(result.lines[0].type).toBe("html");
-      expect(result.lines[1].type).toBe("mdx");
-      expect(result.lines[1].content).toBe("<p>rendered</p>");
+      expect(result.lines.length).toBeGreaterThanOrEqual(7);
+      expect(result.lines[0].type).toBe("output");
+      expect(result.lines[0].content).toContain("---");
+      expect(result.lines[result.lines.length - 1].content).toContain("Tip: Use the web interface");
     });
 
     it("falls back to frontmatter when html unavailable", async () => {

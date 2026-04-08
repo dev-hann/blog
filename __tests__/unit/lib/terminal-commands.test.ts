@@ -22,7 +22,6 @@ const mockContext: CommandContext = {
     },
   ],
   tags: { nextjs: 1, react: 1, typescript: 1, javascript: 1 },
-  postHtml: {},
 };
 
 describe("executeCommand", () => {

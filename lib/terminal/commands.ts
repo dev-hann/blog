@@ -76,38 +76,15 @@ async function handleCat(
     return { lines: [err(`cat: ${escapeHtml(slug)}: No such post`)] };
   }
 
-  const html = context.postHtml?.[slug];
-  if (!html) {
-    return {
-      lines: [
-        out(`<span class="output-muted">---</span>`),
-        out(`<span class="output-muted">title:</span> ${post.title}`),
-        out(`<span class="output-muted">date:</span> ${post.date}`),
-        out(`<span class="output-muted">tags:</span> [${post.tags.join(", ")}]`),
-        out(`<span class="output-muted">summary:</span> ${post.summary}`),
-        out(`<span class="output-muted">---</span>`),
-        out(`<span class="output-accent">Tip: Use the web interface to read full posts with syntax highlighting</span>`),
-      ],
-    };
-  }
-
-  const frontmatter = [
-    `<span class="output-muted">---</span>`,
-    `<span class="output-muted">title:</span> ${post.title}`,
-    `<span class="output-muted">date:</span> ${post.date}`,
-    `<span class="output-muted">tags:</span> [${post.tags.join(", ")}]`,
-    post.summary
-      ? `<span class="output-muted">summary:</span> ${post.summary}`
-      : null,
-    `<span class="output-muted">---</span>`,
-  ]
-    .filter(Boolean)
-    .join("\n");
-
   return {
     lines: [
-      { id: genId(), type: "html", content: frontmatter },
-      { id: genId(), type: "mdx", content: html },
+      out(`<span class="output-muted">---</span>`),
+      out(`<span class="output-muted">title:</span> ${post.title}`),
+      out(`<span class="output-muted">date:</span> ${post.date}`),
+      out(`<span class="output-muted">tags:</span> [${post.tags.join(", ")}]`),
+      out(`<span class="output-muted">summary:</span> ${post.summary}`),
+      out(`<span class="output-muted">---</span>`),
+      out(`<span class="output-accent">Tip: Use the web interface to read full posts with syntax highlighting</span>`),
     ],
   };
 }
