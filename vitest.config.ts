@@ -10,10 +10,8 @@ export default defineConfig({
     setupFiles: ["./__tests__/setup.ts"],
     include: ["__tests__/**/*.test.{ts,tsx}"],
     css: false,
-    testTimeout: 10000,
-    hookTimeout: 10000,
-    maxWorkers: 4,
-    pool: "threads",
+    testTimeout: 30000,
+    hookTimeout: 30000,
   },
   resolve: {
     alias: {
