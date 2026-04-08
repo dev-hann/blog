@@ -4,6 +4,7 @@ import PostList from "@/components/post/PostList";
 import PageContainer from "@/components/ui/PageContainer";
 import PageHeading from "@/components/ui/PageHeading";
 import { generateMetadata } from "@/lib/metadata";
+import { generateJsonLd } from "@/lib/structured-data";
 
 export const metadata = generateMetadata({
   title: "Posts",
@@ -19,7 +20,7 @@ export default function PostsPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: generateJsonLd({
             "@context": "https://schema.org",
             "@type": "CollectionPage",
             name: "Posts",

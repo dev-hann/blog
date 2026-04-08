@@ -2,6 +2,7 @@ import React from "react";
 import { getAllPosts } from "@/lib/posts";
 import SearchBar from "@/components/search/SearchBar";
 import { generateMetadata } from "@/lib/metadata";
+import { generateJsonLd } from "@/lib/structured-data";
 import PageContainer from "@/components/ui/PageContainer";
 import PageHeading from "@/components/ui/PageHeading";
 
@@ -19,7 +20,7 @@ export default function SearchPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: generateJsonLd({
             "@context": "https://schema.org",
             "@type": "CollectionPage",
             name: "Search",

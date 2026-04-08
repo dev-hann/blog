@@ -45,7 +45,7 @@ export default function ProjectsPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: generateJsonLd({
             "@context": "https://schema.org",
             "@type": "CollectionPage",
             name: "Projects",

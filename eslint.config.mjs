@@ -10,6 +10,12 @@ const eslintConfig = defineConfig([
       "@next/next/no-head-element": "off",
     },
   },
+  {
+    files: ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts"],
+    rules: {
+      "@next/next/no-img-element": "off",
+    },
+  },
   globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts"]),
 ]);
 

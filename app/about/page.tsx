@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { SITE_CONFIG } from "@/lib/constants";
 import { generateMetadata } from "@/lib/metadata";
+import { generateJsonLd } from "@/lib/structured-data";
 import PageContainer from "@/components/ui/PageContainer";
 import PageHeading from "@/components/ui/PageHeading";
 
@@ -17,7 +18,7 @@ export default function AboutPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: generateJsonLd({
             "@context": "https://schema.org",
             "@type": "Person",
             name: SITE_CONFIG.author,

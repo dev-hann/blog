@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllTags, getAllPosts } from "@/lib/posts";
 import { generateMetadata as makeMetadata } from "@/lib/metadata";
+import { generateJsonLd } from "@/lib/structured-data";
+import { SITE_CONFIG } from "@/lib/constants";
 import PostList from "@/components/post/PostList";
 import PageContainer from "@/components/ui/PageContainer";
 import PageHeading from "@/components/ui/PageHeading";
@@ -41,6 +43,18 @@ export default async function TagDetailPage({ params }: PageProps) {
 
   return (
     <PageContainer>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: generateJsonLd({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            name: `#${tag}`,
+            description: `Posts tagged with ${tag}`,
+            url: `${SITE_CONFIG.url}/tags/${tag}`,
+          }),
+        }}
+      />
       <section aria-labelledby={headingId}>
         <PageHeading id={headingId}>
           <span className="text-[var(--color-text-accent)]">#{tag}</span>

@@ -4,7 +4,6 @@ import { render, screen, fireEvent } from "@testing-library/react";
 
 vi.mock("next/image", () => ({
   default: ({ src, alt, width, height, sizes, priority, onError }: { src: string; alt: string; width: number; height: number; sizes?: string; priority?: boolean; onError?: () => void }) => (
-    // eslint-disable-next-line @next/next/no-img-element
     <img src={src} alt={alt} width={width} height={height} data-sizes={sizes} data-priority={priority ? "true" : undefined} onError={onError} />
   ),
 }));
