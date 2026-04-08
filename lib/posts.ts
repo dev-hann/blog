@@ -20,14 +20,26 @@ function getMdxFiles(): string[] {
   return fs.readdirSync(POSTS_DIR).filter((f) => f.endsWith(".mdx"));
 }
 
+function isString(value: unknown): value is string {
+  return typeof value === "string";
+}
+
+function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every(isString);
+}
+
+function isBoolean(value: unknown): value is boolean {
+  return typeof value === "boolean";
+}
+
 function parseFrontmatter(slug: string, data: Record<string, unknown>): Omit<Post, 'content'> {
   return {
     slug,
-    title: (data.title as string) ?? "",
-    date: (data.date as string) ?? "",
-    tags: (data.tags as string[]) ?? [],
-    summary: (data.summary as string) ?? "",
-    draft: (data.draft as boolean) ?? false,
+    title: isString(data.title) ? data.title : "",
+    date: isString(data.date) ? data.date : "",
+    tags: isStringArray(data.tags) ? data.tags : [],
+    summary: isString(data.summary) ? data.summary : "",
+    draft: isBoolean(data.draft) ? data.draft : false,
   };
 }
 
