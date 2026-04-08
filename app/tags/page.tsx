@@ -1,3 +1,4 @@
+import React from "react";
 import { getAllTags } from "@/lib/posts";
 import TagBadge from "@/components/tag/TagBadge";
 import { generateMetadata } from "@/lib/metadata";

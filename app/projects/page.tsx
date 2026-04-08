@@ -1,3 +1,4 @@
+import React from "react";
 import { SITE_CONFIG } from "@/lib/constants";
 import { generateMetadata } from "@/lib/metadata";
 import type { Project } from "@/types/project";

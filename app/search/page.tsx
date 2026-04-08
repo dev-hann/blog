@@ -1,3 +1,4 @@
+import React from "react";
 import { getAllPosts } from "@/lib/posts";
 import SearchBar from "@/components/search/SearchBar";
 import { generateMetadata } from "@/lib/metadata";

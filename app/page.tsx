@@ -1,3 +1,4 @@
+import React from "react";
 import { getAllPosts, getAllTags } from "@/lib/posts";
 import Terminal from "@/components/terminal/Terminal";
 import NoScriptFallback from "@/components/ui/NoScriptFallback";

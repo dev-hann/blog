@@ -1,3 +1,4 @@
+import React from "react";
 import type { Metadata } from "next";
 import { Geist_Mono, Geist } from "next/font/google";
 import Header from "@/components/layout/Header";
