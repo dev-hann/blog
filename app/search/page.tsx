@@ -14,6 +14,17 @@ export default function SearchPage() {
 
   return (
     <PageContainer>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            name: "Search",
+            description: "Search blog posts",
+          }),
+        }}
+      />
       <h1 id="search-heading" className="mb-8 text-2xl font-bold text-[var(--color-text-primary)]">
         Search
       </h1>

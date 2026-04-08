@@ -15,6 +15,17 @@ export default function TagsPage() {
 
   return (
     <PageContainer>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            name: "Tags",
+            description: "Browse posts by tag",
+          }),
+        }}
+      />
       <h1 id="tags-heading" className="mb-8 text-2xl font-bold text-[var(--color-text-primary)]">
         Tags
       </h1>
