@@ -1,6 +1,6 @@
+import { SITE_CONFIG } from "@/lib/constants";
 import type { CommandContext, CommandResult, TerminalLine } from "./types";
 import { genId, escapeHtml } from "./utils";
-import { SITE_CONFIG } from "@/lib/constants";
 
 function line(type: TerminalLine["type"], content: string): TerminalLine {
   return { id: genId(), type, content };

@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import CommandInput from "./CommandInput";
-import OutputRenderer from "./OutputRenderer";
+import type { Post } from "@/types/post";
+import { SITE_CONFIG } from "@/lib/constants";
 import type { TerminalLine } from "@/lib/terminal/types";
 import { genId } from "@/lib/terminal/utils";
 import { executeCommand } from "@/lib/terminal/commands";
-import { SITE_CONFIG } from "@/lib/constants";
-import type { Post } from "@/types/post";
+import CommandInput from "./CommandInput";
+import OutputRenderer from "./OutputRenderer";
 
 interface TerminalProps {
   posts: Post[];
