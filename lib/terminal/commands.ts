@@ -1,4 +1,4 @@
-import { SITE_CONFIG } from "@/lib/constants";
+import { SITE_CONFIG, POSTS_PER_PAGE } from "@/lib/constants";
 import type { CommandContext, CommandResult, TerminalLine } from "./types";
 import { genId, escapeHtml } from "./utils";
 
@@ -46,7 +46,7 @@ function handleHelp(): CommandResult {
 
 function handleLs(args: string[], context: CommandContext): CommandResult {
   const showAll = args.includes("--all");
-  const posts = showAll ? context.posts : context.posts.slice(0, 10);
+  const posts = showAll ? context.posts : context.posts.slice(0, POSTS_PER_PAGE);
 
   if (posts.length === 0) {
     return { lines: [out("No posts found.")] };
@@ -54,9 +54,9 @@ function handleLs(args: string[], context: CommandContext): CommandResult {
 
   const lines: TerminalLine[] = posts.map((post) => out(formatPostEntry(post)));
 
-  if (!showAll && context.posts.length > 10) {
+  if (!showAll && context.posts.length > POSTS_PER_PAGE) {
     lines.push(out(""));
-    lines.push(out(`  ... (${context.posts.length - 10} more posts. Use 'ls --all' to see all)`));
+    lines.push(out(`  ... (${context.posts.length - POSTS_PER_PAGE} more posts. Use 'ls --all' to see all)`));
   }
 
   return { lines };
