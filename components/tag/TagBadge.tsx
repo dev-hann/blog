@@ -7,7 +7,7 @@ interface TagBadgeProps {
   asLink?: boolean;
 }
 
-export default function TagBadge({ tag, count, asLink = true }: TagBadgeProps) {
+function TagBadge({ tag, count, asLink = true }: TagBadgeProps) {
   const ariaLabel = count !== undefined ? `Tag: ${tag}, ${count} post${count !== 1 ? "s" : ""}` : `Tag: ${tag}`;
   const className = "inline-flex items-center gap-1 rounded bg-[var(--color-bg-tertiary)] px-2.5 py-1 text-sm text-[var(--color-text-accent)] transition-colors hover:bg-[var(--color-bg-hover)]";
 
@@ -34,3 +34,9 @@ export default function TagBadge({ tag, count, asLink = true }: TagBadgeProps) {
     </Link>
   );
 }
+
+export default React.memo(TagBadge, (prevProps, nextProps) => {
+  return prevProps.tag === nextProps.tag &&
+         prevProps.count === nextProps.count &&
+         prevProps.asLink === nextProps.asLink;
+});

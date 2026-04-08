@@ -8,7 +8,7 @@ interface PostCardProps {
   post: Post;
 }
 
-export default function PostCard({ post }: PostCardProps) {
+function PostCard({ post }: PostCardProps) {
   const headingId = `post-title-${post.slug}`;
   return (
     <article aria-labelledby={headingId} className="group">
@@ -38,3 +38,10 @@ export default function PostCard({ post }: PostCardProps) {
     </article>
   );
 }
+
+export default React.memo(PostCard, (prevProps, nextProps) => {
+  return prevProps.post.slug === nextProps.post.slug &&
+         prevProps.post.title === nextProps.post.title &&
+         prevProps.post.summary === nextProps.post.summary &&
+         JSON.stringify(prevProps.post.tags) === JSON.stringify(nextProps.post.tags);
+});
