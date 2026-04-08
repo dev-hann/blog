@@ -5,6 +5,15 @@ import type { Post, PostDetail, Heading } from "@/types/post";
 
 const POSTS_DIR = path.join(process.cwd(), "content/posts");
 
+export function isValidDate(dateString: string): boolean {
+  if (!dateString || typeof dateString !== "string") return false;
+  
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return false;
+  
+  return dateString.match(/^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(\.\d{3})?(Z|[+-]\d{2}:\d{2})?)?$/) !== null;
+}
+
 function getMdxFiles(): string[] {
   if (!fs.existsSync(POSTS_DIR)) return [];
   return fs.readdirSync(POSTS_DIR).filter((f) => f.endsWith(".mdx"));
@@ -31,7 +40,7 @@ function parsePost(fileName: string): Post {
 export function getAllPosts(): Post[] {
   return getMdxFiles()
     .map(parsePost)
-    .filter((p) => !p.draft)
+    .filter((p) => !p.draft && isValidDate(p.date))
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
