@@ -64,7 +64,7 @@ function SearchBar({ posts }: SearchBarProps) {
           <p className="text-[var(--color-text-muted)]">No results found for &ldquo;{debouncedQuery}&rdquo;</p>
         ) : (
           results.map((post) => (
-            <PostCard key={post.slug} post={post} />
+            <PostCard key={post.slug} post={post} highlightQuery={debouncedQuery} />
           ))
         )}
       </div>

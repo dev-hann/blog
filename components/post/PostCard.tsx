@@ -3,12 +3,14 @@ import Link from "next/link";
 import type { Post } from "@/types/post";
 import { formatDate } from "@/lib/format";
 import TagBadge from "@/components/tag/TagBadge";
+import { highlightText } from "@/lib/highlight";
 
 interface PostCardProps {
   post: Post;
+  highlightQuery?: string;
 }
 
-function PostCard({ post }: PostCardProps) {
+function PostCard({ post, highlightQuery }: PostCardProps) {
   const headingId = `post-title-${post.slug}`;
   return (
     <article aria-labelledby={headingId} className="group">
@@ -18,7 +20,7 @@ function PostCard({ post }: PostCardProps) {
       >
         <header>
           <h3 id={headingId} className="text-lg font-semibold text-[var(--color-text-primary)] group-hover:text-[var(--color-accent)]">
-            {post.title}
+            <span dangerouslySetInnerHTML={{ __html: highlightText(post.title, highlightQuery ?? "") }} />
           </h3>
           <time dateTime={post.date} className="text-sm text-[var(--color-text-muted)]">
             {formatDate(post.date)}
@@ -26,7 +28,7 @@ function PostCard({ post }: PostCardProps) {
         </header>
         {post.summary && (
           <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
-            {post.summary}
+            <span dangerouslySetInnerHTML={{ __html: highlightText(post.summary, highlightQuery ?? "") }} />
           </p>
         )}
         <div className="mt-2 flex flex-wrap gap-2">

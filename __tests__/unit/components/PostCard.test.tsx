@@ -57,7 +57,7 @@ describe("PostCard", () => {
     const article = screen.getByRole("article");
     expect(article).toHaveAttribute("aria-labelledby");
     const labelledby = article.getAttribute("aria-labelledby");
-    const heading = screen.getByText("테스트 포스트 제목");
+    const heading = screen.getByRole("heading", { name: "테스트 포스트 제목" });
     expect(heading).toHaveAttribute("id", labelledby);
   });
 
@@ -67,5 +67,18 @@ describe("PostCard", () => {
     expect(header).toBeInTheDocument();
     expect(header).toContainHTML("테스트 포스트 제목");
     expect(header).toContainHTML("2026년 04월 06일");
+  });
+
+  it("highlights matching text in title and summary when highlightQuery is provided", () => {
+    const { container } = render(<PostCard post={mockPost} highlightQuery="테스트" />);
+    const heading = screen.getByRole("heading");
+    expect(heading.innerHTML).toContain("<mark>테스트</mark>");
+    const summary = container.querySelector("p");
+    expect(summary?.innerHTML).toContain("<mark>테스트</mark>");
+  });
+
+  it("does not highlight when highlightQuery is empty", () => {
+    render(<PostCard post={mockPost} highlightQuery="" />);
+    expect(screen.getByText("테스트 포스트 제목").innerHTML).not.toContain("<mark>");
   });
 });
