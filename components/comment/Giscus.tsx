@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import GiscusComponent from "@giscus/react";
 
 export default function Giscus() {
