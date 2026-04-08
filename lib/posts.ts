@@ -10,18 +10,22 @@ function getMdxFiles(): string[] {
   return fs.readdirSync(POSTS_DIR).filter((f) => f.endsWith(".mdx"));
 }
 
+function parseFrontmatter(slug: string, data: Record<string, unknown>): Omit<Post, 'content'> {
+  return {
+    slug,
+    title: (data.title as string) ?? "",
+    date: (data.date as string) ?? "",
+    tags: (data.tags as string[]) ?? [],
+    summary: (data.summary as string) ?? "",
+    draft: (data.draft as boolean) ?? false,
+  };
+}
+
 function parsePost(fileName: string): Post {
   const slug = fileName.replace(/\.mdx$/, "");
   const raw = fs.readFileSync(path.join(POSTS_DIR, fileName), "utf-8");
   const { data } = matter(raw);
-  return {
-    slug,
-    title: data.title ?? "",
-    date: data.date ?? "",
-    tags: data.tags ?? [],
-    summary: data.summary ?? "",
-    draft: data.draft ?? false,
-  };
+  return parseFrontmatter(slug, data);
 }
 
 export function getAllPosts(): Post[] {
@@ -40,12 +44,7 @@ export function getPostBySlug(slug: string): PostDetail {
   const raw = fs.readFileSync(filePath, "utf-8");
   const { data, content } = matter(raw);
   return {
-    slug,
-    title: data.title ?? "",
-    date: data.date ?? "",
-    tags: data.tags ?? [],
-    summary: data.summary ?? "",
-    draft: data.draft ?? false,
+    ...parseFrontmatter(slug, data),
     content,
   };
 }
