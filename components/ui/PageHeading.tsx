@@ -12,4 +12,4 @@ function PageHeading({ children, ...props }: PageHeadingProps) {
   );
 }
 
-export default PageHeading;
+export default React.memo(PageHeading);

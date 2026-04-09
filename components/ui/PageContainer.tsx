@@ -16,4 +16,4 @@ function PageContainer({ children, className, maxWidth = "max-w-3xl" }: PageCont
   );
 }
 
-export default PageContainer;
+export default React.memo(PageContainer);

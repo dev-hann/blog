@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 import React from "react";
 
-export default function NoScriptFallback() {
+function NoScriptFallback() {
   return (
     <noscript data-noscript="true">
       <style
@@ -40,3 +40,5 @@ export default function NoScriptFallback() {
     </noscript>
   );
 }
+
+export default React.memo(NoScriptFallback);

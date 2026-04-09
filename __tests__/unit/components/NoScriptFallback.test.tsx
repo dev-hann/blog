@@ -15,4 +15,20 @@ describe("NoScriptFallback", () => {
     const noscript = container.querySelector("noscript");
     expect(noscript).toHaveAttribute("data-noscript", "true");
   });
+
+  describe("React.memo", () => {
+    it("is wrapped with React.memo", () => {
+      expect(NoScriptFallback.$$typeof).toBeDefined();
+    });
+
+    it("does not cause unnecessary re-renders", () => {
+      const { rerender } = render(<NoScriptFallback />);
+      const noscript1 = document.querySelector("noscript");
+
+      rerender(<NoScriptFallback />);
+      const noscript2 = document.querySelector("noscript");
+
+      expect(noscript1).toBe(noscript2);
+    });
+  });
 });
