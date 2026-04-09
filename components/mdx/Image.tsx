@@ -13,7 +13,7 @@ interface ImageProps {
   priority?: boolean;
 }
 
-export default function MDXImage({ src, alt = "", width, height, caption, priority }: ImageProps) {
+function MDXImage({ src, alt = "", width, height, caption, priority }: ImageProps) {
   const [error, setError] = useState(false);
 
   if (!src) return null;
@@ -53,3 +53,12 @@ export default function MDXImage({ src, alt = "", width, height, caption, priori
     </figure>
   );
 }
+
+export default React.memo(MDXImage, (prevProps, nextProps) => {
+  return prevProps.src === nextProps.src &&
+         prevProps.alt === nextProps.alt &&
+         prevProps.width === nextProps.width &&
+         prevProps.height === nextProps.height &&
+         prevProps.caption === nextProps.caption &&
+         prevProps.priority === nextProps.priority;
+});

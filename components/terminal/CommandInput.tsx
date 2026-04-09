@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { COMMAND_LIST, getCompletions } from "@/lib/terminal/commands";
 
@@ -15,7 +16,7 @@ interface CommandInputProps {
   disabled?: boolean;
 }
 
-export default function CommandInput({
+function CommandInput({
   onSubmit,
   history,
   historyIndex,
@@ -102,3 +103,15 @@ export default function CommandInput({
     </div>
   );
 }
+
+export default React.memo(CommandInput, (prevProps, nextProps) => {
+  return prevProps.onSubmit === nextProps.onSubmit &&
+         prevProps.history === nextProps.history &&
+         prevProps.historyIndex === nextProps.historyIndex &&
+         prevProps.onHistoryUp === nextProps.onHistoryUp &&
+         prevProps.onHistoryDown === nextProps.onHistoryDown &&
+         prevProps.onShowCompletions === nextProps.onShowCompletions &&
+         prevProps.slugs === nextProps.slugs &&
+         prevProps.tagNames === nextProps.tagNames &&
+         prevProps.disabled === nextProps.disabled;
+});
