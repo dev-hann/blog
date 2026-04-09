@@ -27,7 +27,7 @@ export default function NoScriptFallback() {
           `,
         }}
       />
-      <div className="noscript-fallback">
+      <div className="noscript-fallback" role="alert" aria-live="polite">
         <h2>Blog</h2>
         <nav>
           <a href="/posts">Posts</a>

@@ -31,4 +31,4 @@ function Button({ variant = "primary", asChild = false, className = "", children
   );
 }
 
-export default React.memo(Button);
+export default Button;

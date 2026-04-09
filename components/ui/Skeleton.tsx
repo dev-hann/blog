@@ -26,4 +26,4 @@ function Skeleton({ variant = "default", width = "", height = "", className = ""
   );
 }
 
-export default React.memo(Skeleton);
+export default Skeleton;
