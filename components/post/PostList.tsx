@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import type { Post } from "@/types/post";
@@ -11,7 +12,7 @@ interface PostListProps {
   postsPerPage?: number;
 }
 
-export default function PostList({ posts, postsPerPage = POSTS_PER_PAGE }: PostListProps) {
+function PostList({ posts, postsPerPage = POSTS_PER_PAGE }: PostListProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pageFromUrl = Number(searchParams.get("page")) || 1;
@@ -95,3 +96,5 @@ export default function PostList({ posts, postsPerPage = POSTS_PER_PAGE }: PostL
     </div>
   );
 }
+
+export default React.memo(PostList);

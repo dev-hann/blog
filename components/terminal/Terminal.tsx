@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { useState, useRef, useEffect, useCallback } from "react";
 import type { Post } from "@/types/post";
 import { SITE_CONFIG } from "@/lib/constants";
@@ -23,7 +24,7 @@ function createWelcomeLines(): TerminalLine[] {
   ];
 }
 
-export default function Terminal({ posts, tags }: TerminalProps) {
+function Terminal({ posts, tags }: TerminalProps) {
   const [lines, setLines] = useState<TerminalLine[]>(createWelcomeLines);
   const [history, setHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
@@ -129,3 +130,8 @@ export default function Terminal({ posts, tags }: TerminalProps) {
     </div>
   );
 }
+
+export default React.memo(Terminal, (prevProps, nextProps) => {
+  return prevProps.posts === nextProps.posts &&
+         prevProps.tags === nextProps.tags;
+});

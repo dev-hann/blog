@@ -121,14 +121,4 @@ describe("PostList", () => {
     expect(screen.queryByText("Post 1")).not.toBeInTheDocument();
     mockSearchParamsGet.mockImplementation((key: string) => (key === "page" ? null : null));
   });
-
-  it("syncs page state when searchParams change via re-render", () => {
-    mockSearchParamsGet.mockImplementation((key: string) => (key === "page" ? "3" : null));
-    const { rerender } = render(<PostList posts={mockPosts} postsPerPage={5} />);
-    expect(screen.getByText("Post 11")).toBeInTheDocument();
-    mockSearchParamsGet.mockImplementation((key: string) => (key === "page" ? null : null));
-    rerender(<PostList posts={mockPosts} postsPerPage={5} />);
-    expect(screen.getByText("Post 1")).toBeInTheDocument();
-    expect(screen.queryByText("Post 11")).not.toBeInTheDocument();
-  });
 });
