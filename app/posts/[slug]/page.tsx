@@ -1,6 +1,5 @@
 import React from "react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAllPosts, getPostBySlug, getAdjacentPosts, extractHeadings } from "@/lib/posts";
 import { formatDate } from "@/lib/format";
@@ -9,6 +8,7 @@ import { generateMetadata as genMeta } from "@/lib/metadata";
 import { generateJsonLd } from "@/lib/structured-data";
 import { SITE_CONFIG } from "@/lib/constants";
 import PostBody from "@/components/post/PostBody";
+import PostNavigation from "@/components/post/PostNavigation";
 import TableOfContents from "@/components/post/TableOfContents";
 import Giscus from "@/components/comment/Giscus";
 import TagBadge from "@/components/tag/TagBadge";
@@ -83,30 +83,7 @@ export default async function PostDetailPage({ params }: PageProps) {
             }}
           />
 
-          <nav aria-label="Posts navigation" aria-describedby="post-title" className="mt-12 flex justify-between border-t border-[var(--color-border)] pt-6">
-            {prev ? (
-              <Link
-                href={`/posts/${prev.slug}`}
-                aria-label={`Previous post: ${prev.title}`}
-                className="text-sm text-[var(--color-text-accent)] hover:underline"
-              >
-                &larr; {prev.title}
-              </Link>
-            ) : (
-              <span />
-            )}
-            {next ? (
-              <Link
-                href={`/posts/${next.slug}`}
-                aria-label={`Next post: ${next.title}`}
-                className="text-sm text-[var(--color-text-accent)] hover:underline"
-              >
-                {next.title} &rarr;
-              </Link>
-            ) : (
-              <span />
-            )}
-          </nav>
+          <PostNavigation previous={prev} next={next} />
           <Giscus />
         </article>
         <aside className="hidden w-56 shrink-0 pt-24 lg:block">
