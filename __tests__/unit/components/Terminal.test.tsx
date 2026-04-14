@@ -16,9 +16,14 @@ vi.mock("@/lib/constants", () => ({
   },
 }));
 
+let idCounter = 0;
 vi.mock("@/lib/terminal/utils", () => ({
-  genId: vi.fn(() => "mock-id"),
+  genId: vi.fn(() => `mock-id-${++idCounter}`),
 }));
+
+beforeEach(() => {
+  idCounter = 0;
+});
 
 beforeEach(() => {
   mockExecuteCommand.mockReset();

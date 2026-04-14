@@ -43,6 +43,13 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+mark {
+  background: var(--color-accent);
+  color: var(--color-bg-primary);
+  padding: 0.1em 0.2em;
+  border-radius: 2px;
+}
+
 ::selection {
   background: var(--color-accent);
   color: var(--color-bg-primary);

@@ -28,4 +28,20 @@ describe("highlightText", () => {
   it("handles special characters in query", () => {
     expect(highlightText("Test. Case.", ".")).toBe("Test<mark>.</mark> Case<mark>.</mark>");
   });
+
+  it("escapes HTML in text before highlighting", () => {
+    expect(highlightText("Use <div> & React", "React")).toBe(
+      "Use &lt;div&gt; &amp; <mark>React</mark>"
+    );
+  });
+
+  it("escapes HTML in text when no query", () => {
+    expect(highlightText("A < B & C > D", "")).toBe("A &lt; B &amp; C &gt; D");
+  });
+
+  it("escapes HTML in highlighted match", () => {
+    expect(highlightText("find <script> here", "<script>")).toBe(
+      "find <mark>&lt;script&gt;</mark> here"
+    );
+  });
 });
