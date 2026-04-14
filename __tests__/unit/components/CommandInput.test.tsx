@@ -24,6 +24,7 @@ const defaultProps = {
   historyIndex: -1,
   onHistoryUp: vi.fn(),
   onHistoryDown: vi.fn(),
+  onHistoryReset: vi.fn(),
   onShowCompletions: vi.fn(),
   slugs: ["my-post", "another-post"],
   tagNames: ["nextjs", "react"],
@@ -93,5 +94,16 @@ describe("CommandInput", () => {
     render(<CommandInput {...defaultProps} disabled />);
     const input = screen.getByLabelText("Terminal command input") as HTMLInputElement;
     expect(input).toBeDisabled();
+  });
+
+  it("resets history when typing during history navigation", async () => {
+    const user = userEvent.setup();
+    const onHistoryReset = vi.fn();
+    const { default: CommandInput } = await import("@/components/terminal/CommandInput");
+    render(<CommandInput {...defaultProps} historyIndex={0} onHistoryReset={onHistoryReset} />);
+    const input = screen.getByLabelText("Terminal command input") as HTMLInputElement;
+    expect(input.value).toBe("ls");
+    await user.type(input, "h");
+    expect(onHistoryReset).toHaveBeenCalled();
   });
 });

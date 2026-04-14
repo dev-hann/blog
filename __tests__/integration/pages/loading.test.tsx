@@ -4,6 +4,10 @@ import { render, screen } from "@testing-library/react";
 
 async function loadComponent(name: string) {
   switch (name) {
+    case "home": {
+      const mod = await import("@/app/loading");
+      return mod.default;
+    }
     case "posts": {
       const mod = await import("@/app/posts/loading");
       return mod.default;
@@ -26,6 +30,18 @@ async function loadComponent(name: string) {
 }
 
 describe("Loading pages", () => {
+  it("home loading renders terminal-style skeleton", async () => {
+    const Loading = await loadComponent("home");
+    const { container } = render(<Loading />);
+    expect(container.querySelectorAll("[data-testid]").length).toBeGreaterThan(0);
+  });
+
+  it("home loading has accessible status", async () => {
+    const Loading = await loadComponent("home");
+    render(<Loading />);
+    expect(screen.getAllByRole("status", { hidden: true }).length).toBeGreaterThan(0);
+  });
+
   it("posts loading renders skeleton", async () => {
     const Loading = await loadComponent("posts");
     const { container } = render(<Loading />);

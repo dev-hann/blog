@@ -5,7 +5,6 @@ import type { Post } from "@/types/post";
 
 import { formatDate } from "@/lib/format";
 import { highlightText } from "@/lib/highlight";
-
 import TagBadge from "@/components/tag/TagBadge";
 
 interface PostCardProps {

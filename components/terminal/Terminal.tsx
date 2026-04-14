@@ -88,6 +88,10 @@ function Terminal({ posts, tags }: TerminalProps) {
     });
   }, []);
 
+  const handleHistoryReset = useCallback(() => {
+    setHistoryIndex(-1);
+  }, []);
+
   const handleShowCompletions = useCallback((items: string[]) => {
     setCompletions(items);
   }, []);
@@ -121,6 +125,7 @@ function Terminal({ posts, tags }: TerminalProps) {
           historyIndex={historyIndex}
           onHistoryUp={handleHistoryUp}
           onHistoryDown={handleHistoryDown}
+          onHistoryReset={handleHistoryReset}
           onShowCompletions={handleShowCompletions}
           slugs={slugs}
           tagNames={tagNames}

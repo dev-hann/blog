@@ -10,6 +10,7 @@ interface CommandInputProps {
   historyIndex: number;
   onHistoryUp: () => void;
   onHistoryDown: () => void;
+  onHistoryReset: () => void;
   onShowCompletions: (completions: string[]) => void;
   slugs: string[];
   tagNames: string[];
@@ -22,6 +23,7 @@ function CommandInput({
   historyIndex,
   onHistoryUp,
   onHistoryDown,
+  onHistoryReset,
   onShowCompletions,
   slugs,
   tagNames,
@@ -95,6 +97,7 @@ function CommandInput({
         onChange={(e) => {
           setTypedInput(e.target.value);
           savedInputRef.current = e.target.value;
+          if (historyIndex >= 0) onHistoryReset();
         }}
         onKeyDown={handleKeyDown}
         disabled={disabled}
@@ -110,6 +113,7 @@ export default React.memo(CommandInput, (prevProps, nextProps) => {
          prevProps.historyIndex === nextProps.historyIndex &&
          prevProps.onHistoryUp === nextProps.onHistoryUp &&
          prevProps.onHistoryDown === nextProps.onHistoryDown &&
+         prevProps.onHistoryReset === nextProps.onHistoryReset &&
          prevProps.onShowCompletions === nextProps.onShowCompletions &&
          prevProps.slugs === nextProps.slugs &&
          prevProps.tagNames === nextProps.tagNames &&
