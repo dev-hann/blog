@@ -14,7 +14,7 @@ function PostNavigation({ previous, next }: PostNavigationProps) {
   }
 
   return (
-    <nav className="mt-8 flex flex-col gap-4 border-t border-[var(--color-border)] pt-8 sm:flex-row sm:justify-between" aria-label="Post navigation">
+    <nav className="mt-8 flex flex-col gap-4 border-t border-[var(--color-border)] pt-8 sm:flex-row sm:justify-between" aria-label="Posts navigation">
       {previous && (
         <Link
           href={`/posts/${previous.slug}`}

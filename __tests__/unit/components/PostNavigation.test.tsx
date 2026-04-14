@@ -76,6 +76,14 @@ describe("PostNavigation", () => {
     expect(container.firstChild).toBeNull();
   });
 
+  it("nav has aria-label Posts navigation", async () => {
+    const { default: PostNavigation } = await import("@/components/post/PostNavigation");
+    render(<PostNavigation previous={mockPrevPost} next={mockNextPost} />);
+
+    const nav = screen.getByLabelText("Posts navigation");
+    expect(nav.tagName).toBe("NAV");
+  });
+
   it("has proper ARIA labels", async () => {
     const { default: PostNavigation } = await import("@/components/post/PostNavigation");
     render(<PostNavigation previous={mockPrevPost} next={mockNextPost} />);
